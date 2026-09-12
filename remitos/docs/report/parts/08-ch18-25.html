@@ -1,0 +1,455 @@
+<!-- ═══════════════════ CHAPTER 18 ═══════════════════ -->
+<h1 class="chapter" id="c18"><span class="num">18</span>Business model and unit economics</h1>
+
+<p class="lead">How the company makes money, what it refuses to do to make money, and the
+unit-economics model — presented as a model, because the numbers have not been measured.</p>
+
+<h2>18.1 Revenue lines</h2>
+
+<table>
+<thead><tr><th style="width:24%">Line</th><th>Mechanism</th><th style="width:22%">Dependency</th></tr></thead>
+<tbody>
+<tr><td><strong>Transaction take-rate</strong></td><td>Basis points on landed value, set below the incumbent effective cost</td><td>Volume; partner rail cost</td></tr>
+<tr><td><strong>FX spread share</strong></td><td>Shared with the settlement partner, disclosed to the user</td><td>Partner agreement</td></tr>
+<tr><td><strong>Compliance-as-a-service</strong></td><td>Licensing the screening and decisioning stack to smaller PSPs and banks</td><td>Product maturity; this is also what we trade for partner-of-record status</td></tr>
+<tr><td><strong>Agent SaaS</strong></td><td>Float forecasting and reconciliation tooling for agent networks</td><td>Agent adoption</td></tr>
+<tr><td>Data products</td><td><strong>Aggregated, anonymised corridor benchmarks only</strong></td><td>Volume</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">An absolute constraint on the last line</span>
+  Selling anything derived from identifiable user behaviour is <strong>prohibited</strong>,
+  not merely discouraged. The users of this product are people sending subsistence income
+  across a border; their transaction patterns are not an asset to be monetised. Only
+  corridor-level aggregates leave the building.
+</div>
+
+<p>The third line is strategically more important than its likely revenue. Compliance-as-a-service
+is what a licensed partner actually wants from us, and it is therefore the currency in
+which we buy the licence, the float and the payout reach we do not have (Chapter 20).</p>
+
+<h2>18.2 The unit-economics model</h2>
+
+<pre>Contribution per transfer
+   =  (take_rate × landed_value)  +  fx_spread_share
+   −  partner_rail_cost
+   −  payout_cost
+   −  variable_compliance_cost        ← human review minutes × loaded cost
+   −  variable_infrastructure_cost    ← LLM tokens + in-boundary GPU
+
+Break-even monthly volume  =  fixed_cost ÷ contribution_per_transfer</pre>
+
+<p><code>variable_compliance_cost</code> is the term most fintech models omit, and it is the
+one our own architecture makes unavoidable. ADR 0010 mandates a human gate on every
+irreversible action, which means a measurable cost in officer-minutes per escalated
+transfer. Modelling it honestly is what makes the rest of the model credible — and it is
+also why the false-positive rate is a commercial metric as well as an ethical one: every
+unnecessary hold is both a harmed user and a paid review.</p>
+
+<div class="callout">
+  <span class="label">Why no numbers appear here</span>
+  A populated unit-economics table would be easy to produce and would look authoritative.
+  It would also be a fabricated result presented as analysis, which §20.4 prohibits.
+  <br><br>
+  The team fills this model with measured figures during Phase 3 validation — partner
+  quotes, observed review times, actual inference costs. Until then the structure is the
+  deliverable and the numbers are blank, deliberately.
+</div>
+
+<h2>18.3 Market sizing, framed honestly</h2>
+
+<table>
+<thead><tr><th style="width:14%">Layer</th><th>Definition</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td><strong>TAM</strong></td><td>Total formal remittance flow into Bangladesh</td><td>USD 35.56 bn/yr<span class="cite">[5]</span></td></tr>
+<tr><td><strong>SAM</strong></td><td>Flow in corridors where a licensed partner is reachable and a digital path exists</td><td>A subset of the above — the specific corridors are a Phase 3 output, not an assumption</td></tr>
+<tr><td><strong>SOM</strong></td><td>One pilot corridor, capped volume, under a sandbox</td><td>Bounded by the sandbox conditions we have not yet applied for</td></tr>
+</tbody>
+</table>
+
+<p>The informal ≈ 49 % is an <em>expansion</em> opportunity rather than part of TAM as
+measured: it is flow that would have to be converted, and converting it requires winning on
+rate, speed, delivery and paperwork simultaneously (§6.2). It is not counted as addressable
+until a pilot demonstrates conversion.</p>
+
+<h2>18.4 Why the business is defensible</h2>
+
+<table>
+<thead><tr><th style="width:26%">Moat</th><th>Why it holds</th><th style="width:20%">Strength</th></tr></thead>
+<tbody>
+<tr><td>Structural neutrality</td><td>A rail cannot credibly build a product that ranks it against competitors</td><td>Strong</td></tr>
+<tr><td>Routing data flywheel</td><td>Every settled transfer improves cost and ETA prediction; a competitor starting later starts colder</td><td>Strong, once volume exists</td></tr>
+<tr><td>Compliance corpus and evaluation</td><td>A curated, effective-dated regulatory corpus with a regression suite is slow to reproduce</td><td>Medium</td></tr>
+<tr><td>Bangla-first depth</td><td>Regional ASR sets and a reviewed financial glossary are real assets</td><td>Medium</td></tr>
+<tr><td>Domain-pack core</td><td>Hardened five times over rather than once</td><td>Medium, unproven</td></tr>
+<tr><td>Brand</td><td>None yet</td><td><strong>Absent</strong></td></tr>
+</tbody>
+</table>
+
+<!-- ═══════════════════ CHAPTER 19 ═══════════════════ -->
+<h1 class="chapter" id="c19"><span class="num">19</span>Scalability roadmap</h1>
+
+<p class="lead">From one corridor to a regional platform — and what breaks at each step.</p>
+
+<h2>19.1 The five stages</h2>
+
+<table>
+<thead><tr><th style="width:8%">Stage</th><th style="width:22%">Scope</th><th>What must be true to move on</th><th style="width:20%">Binding constraint</th></tr></thead>
+<tbody>
+<tr><td><strong>0</strong></td><td>Prototype</td><td>Architecture proven; vertical slice working; demo credible</td><td>Team hours</td></tr>
+<tr><td><strong>1</strong></td><td>Pilot corridor<br><span class="small">one corridor, capped volume</span></td><td>Sandbox approval; a payout partner; measured landed-amount advantage; models above gate</td><td><strong>Regulatory approval</strong></td></tr>
+<tr><td><strong>2</strong></td><td>Multi-corridor<br><span class="small">Gulf + Malaysia</span></td><td>Sending-side licensing per corridor; partner reach; review capacity scaled</td><td><strong>Human review throughput</strong></td></tr>
+<tr><td><strong>3</strong></td><td>Full national payout</td><td>All major rails integrated; agent tooling adopted; IVR at scale</td><td>Partner cooperation</td></tr>
+<tr><td><strong>4</strong></td><td>Multi-vertical</td><td>Domain packs validated; core proven domain-agnostic</td><td>Product focus</td></tr>
+<tr><td><strong>5</strong></td><td>Regional</td><td>Other receiving markets with comparable structure</td><td>Capital; local licensing</td></tr>
+</tbody>
+</table>
+
+<h2>19.2 What actually breaks, and where</h2>
+
+<p>Technical scaling is the easy part, and saying so is more useful than a capacity table.</p>
+
+<table>
+<thead><tr><th style="width:28%">Limit</th><th>Mechanism</th><th style="width:18%">Difficulty</th></tr></thead>
+<tbody>
+<tr><td>Quote throughput</td><td>Routing engine scales horizontally; predictions cached by corridor-amount band</td><td>Easy</td></tr>
+<tr><td>Ledger write throughput</td><td>Go service, partitioned by account; event-sourced append</td><td>Moderate</td></tr>
+<tr><td>RAG query volume</td><td>Off the synchronous path; in-boundary GPU is the cost driver, not the bottleneck</td><td>Moderate — cost, not capacity</td></tr>
+<tr><td>Graph queries</td><td>Eventually consistent, off the authorisation path</td><td>Moderate</td></tr>
+<tr><td><strong>Human review capacity</strong></td><td><strong>Linear in escalations. No architecture fixes this.</strong></td><td><strong>Hard — the real ceiling</strong></td></tr>
+<tr><td>Partner integration</td><td>Each rail is a bespoke contract and a bespoke integration</td><td><strong>Hard — commercial, not technical</strong></td></tr>
+<tr><td>Per-corridor licensing</td><td>Every sending country has its own regulator</td><td><strong>Hard — years, not sprints</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+  <span class="label">The honest scaling statement</span>
+  This system scales technically to millions of transfers. It scales
+  <em>operationally</em> only as fast as review capacity and partner integrations allow.
+  <br><br>
+  The lever that most improves scalability is therefore not infrastructure — it is
+  <strong>reducing the false-positive rate</strong>, because every avoided unnecessary
+  escalation is simultaneously a user not harmed and a reviewer-hour freed. Fairness and
+  scalability point in the same direction here, which is unusual and worth exploiting.
+</div>
+
+<h2>19.3 Cost curve</h2>
+
+<p>Costs fall into three shapes, and knowing which is which is what makes the model
+predictable:</p>
+
+<ul>
+<li><strong>Fixed</strong> — the platform, the corpus, the evaluation suite. Amortised
+across every transfer, so the curve improves with volume.</li>
+<li><strong>Linear</strong> — partner rail costs, payout costs, human review. These do not
+improve with scale, which is why they must be modelled per transfer rather than assumed
+away.</li>
+<li><strong>Step</strong> — in-boundary GPU capacity, review team headcount, a new corridor
+integration. Each step is a discrete decision with a lead time attached.</li>
+</ul>
+
+<!-- ═══════════════════ CHAPTER 20 ═══════════════════ -->
+<h1 class="chapter" id="c20"><span class="num">20</span>Go-to-market and the regulatory path</h1>
+
+<p class="lead">The chapter most student fintech projects skip, and the one that determines
+whether the product can legally exist.</p>
+
+<h2>20.1 What we are, legally</h2>
+
+<p>RemitOS as designed does not hold customer funds, operate as a money transfer operator,
+issue accounts or wallets, or set exchange rates. It orchestrates across licensed parties.</p>
+
+<p>That is a deliberate regulatory posture, not a limitation discovered late: the
+orchestration layer is both the defensible product <em>and</em> the only position a new
+entrant can occupy without years of licensing first.</p>
+
+<p>We are, however, not licence-free. Processing payment instructions and personal data on
+behalf of licensed institutions carries its own obligations, which is why the compliance,
+audit and ledger services are v1 scope rather than v2 ambitions.</p>
+
+<h2>20.2 The regimes that apply</h2>
+
+<table>
+<thead><tr><th style="width:32%">Regime</th><th style="width:22%">Authority</th><th>Relevance</th></tr></thead>
+<tbody>
+<tr><td>Payment & Settlement Systems regulation</td><td>Bangladesh Bank</td><td>PSP/PSO categories; who may touch an instruction</td></tr>
+<tr><td>MFS regulation</td><td>Bangladesh Bank</td><td>The ceilings encoded in the optimiser</td></tr>
+<tr><td>Foreign Exchange regulation</td><td>Bangladesh Bank</td><td>Inbound treatment; the outbound restriction</td></tr>
+<tr><td>AML/CFT</td><td>BFIU</td><td>CDD, screening, reporting, retention</td></tr>
+<tr><td>FATF Travel Rule</td><td>International, via BFIU</td><td>Originator and beneficiary data with transfers</td></tr>
+<tr><td>Data protection</td><td>Evolving national framework</td><td>Residency, consent, user rights</td></tr>
+<tr><td><strong>Sending-country regimes</strong></td><td>SAMA, CBUAE, BNM, FCA, FinCEN</td><td><strong>A corridor has two regulators.</strong> Origination in Riyadh is SAMA's jurisdiction regardless of what Bangladesh permits</td></tr>
+</tbody>
+</table>
+
+<p>That last row is routinely missed in student projects and is the reason corridor
+expansion is slow: every new sending country is a new licensing conversation, not a
+configuration change.</p>
+
+<h2>20.3 The sequenced path</h2>
+
+<table>
+<thead><tr><th style="width:8%">Stage</th><th style="width:22%">Horizon</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td><strong>0</strong></td><td>Now → Phase 3</td><td><strong>Written legal opinion</strong> on whether the orchestration model is licensable as designed. This precedes engineering commitments rather than following them</td></tr>
+<tr><td><strong>1</strong></td><td>Phase 4–6</td><td>Apply to the Bangladesh Bank sandbox with a bounded pilot: one corridor, capped volume, capped ticket size</td></tr>
+<tr><td><strong>2</strong></td><td>Post-Congress, 6–12 months</td><td><strong>Partner-of-record.</strong> Operate under a licensed PSP or bank's authorisation. They hold the licence and the float; we supply intelligence and orchestration</td></tr>
+<tr><td><strong>3</strong></td><td>12–30 months</td><td>Apply for our own authorisation once volume, controls and audit history justify it</td></tr>
+<tr><td><strong>4</strong></td><td>Continuous</td><td>Corridor expansion — each requires sending-side licensing</td></tr>
+</tbody>
+</table>
+
+<p>Stage 2 is the commercially serious one. It is how a new entrant reaches real users
+without a licence it cannot yet obtain, and it explains why compliance-as-a-service sits in
+the business model: it is the same capability, sold to the partner who is carrying us.</p>
+
+<h2>20.4 Partnership dependencies, including the hard one</h2>
+
+<table>
+<thead><tr><th style="width:18%">Partner</th><th>What we need</th><th>What they get</th><th style="width:22%">Risk</th></tr></thead>
+<tbody>
+<tr><td>Licensed PSP / bank</td><td>Authorisation, settlement, float</td><td>Intelligence layer, better conversion, automated compliance</td><td>They could build it themselves</td></tr>
+<tr><td><strong>MFS operator</strong></td><td>Payout endpoints and rural reach</td><td>Incremental inbound volume; formalised flow</td><td><strong>Low incentive to help a disintermediator</strong></td></tr>
+<tr><td>Sending-side MTO</td><td>Corridor origination</td><td>Better BD payout economics</td><td>Relationship-driven, slow</td></tr>
+<tr><td>Telco aggregator</td><td>USSD short code, IVR</td><td>Revenue share</td><td>Long procurement cycles</td></tr>
+<tr><td>Sanctions / PEP data provider</td><td>Screening data</td><td>Subscription</td><td>Cost scales with volume</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">The strategic tension, stated rather than glossed</span>
+  bKash has no obvious reason to help a layer that sits above it and commoditises it. The
+  counter-arguments — incremental inbound volume it does not currently capture, and
+  formalising flow that presently goes to hundi — are real, but not guaranteed to persuade.
+  <br><br>
+  <strong>If no payout partner agrees, the product does not exist.</strong> This is the
+  single largest commercial risk in the project and it carries a named owner in Chapter 22.
+</div>
+
+<!-- ═══════════════════ CHAPTER 21 ═══════════════════ -->
+<h1 class="chapter" id="c21"><span class="num">21</span>KPIs and measurement</h1>
+
+<p class="lead">What we measure, why each was chosen, and — pointedly — what we refuse to
+measure.</p>
+
+<h2>21.1 The metric set</h2>
+
+<table>
+<thead><tr><th style="width:34%">Metric</th><th>Why this one</th></tr></thead>
+<tbody>
+<tr><td><strong>Landed amount per USD 100 sent, versus the corridor benchmark</strong></td><td>The only user-truthful measure of value. Fee percentages hide the FX margin; this cannot</td></tr>
+<tr><td><strong>Median time to recipient availability</strong></td><td>The hundi-beating metric. Measured to when she can <em>use</em> the money, not when we dispatched it</td></tr>
+<tr><td>Share of transfers completing without human intervention</td><td>Efficiency, measured honestly — including the cases we had to escalate</td></tr>
+<tr><td><strong>Group-wise false-positive rate spread</strong></td><td>Fairness as an operating metric. Also a cost metric: every unnecessary hold is a paid review</td></tr>
+<tr><td>Active monthly senders</td><td>Registration is meaningless here — see §21.2</td></tr>
+<tr><td>Rural recipient share</td><td>Are we reaching the people we claim to serve, or the easy urban segment</td></tr>
+<tr><td>IVR / USSD flow completion rate</td><td>Is the accessibility path real or decorative</td></tr>
+<tr><td>Realised-versus-predicted cost and ETA error</td><td>Are we honest about our own estimates</td></tr>
+<tr><td>Payout-failure rate at the counter</td><td>Direct measure of whether the ceiling remedy works</td></tr>
+<tr><td>Post-hold retention</td><td>Does a held transfer lose the household permanently</td></tr>
+</tbody>
+</table>
+
+<h2>21.2 What we deliberately do not measure</h2>
+
+<table>
+<thead><tr><th style="width:32%">Excluded metric</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><strong>Registered users</strong></td><td>Bangladesh already has more registered MFS accounts than people.<span class="cite">[13]</span> Registration is a vanity number in this market and optimising it would actively mislead the team</td></tr>
+<tr><td>Aggregate model accuracy</td><td>Conceals exactly the group disparity that matters. Per-group only</td></tr>
+<tr><td>Refusal rate as something to minimise</td><td>Tracked, never optimised downward. Driving refusals down is how a safety mechanism gets quietly destroyed</td></tr>
+<tr><td>App downloads</td><td>Irrelevant to a product whose most important users reach it by IVR</td></tr>
+</tbody>
+</table>
+
+<h2>21.3 Measurement discipline</h2>
+
+<p>Three commitments that make the numbers above trustworthy rather than decorative:</p>
+
+<ul>
+<li><strong>Every metric has an owner</strong> and appears in the daily operational digest
+(n8n workflow 10).</li>
+<li><strong>Fairness metrics appear per group</strong> in that digest, never aggregated —
+an aggregate hides the disparity the metric exists to surface.</li>
+<li><strong>Realised-versus-predicted is shown to users</strong>, not only internally. A
+product that publishes its own estimation error finds out quickly when a model is wrong.</li>
+</ul>
+
+<!-- ═══════════════════ CHAPTER 22 ═══════════════════ -->
+<h1 class="chapter" id="c22"><span class="num">22</span>Risk register</h1>
+
+<table>
+<thead><tr><th style="width:4%">#</th><th style="width:24%">Risk</th><th style="width:10%">Likelihood</th><th style="width:10%">Impact</th><th>Mitigation</th><th style="width:14%">Owner</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>No payout partner agrees</strong></td><td>Medium</td><td><strong>Fatal</strong></td><td>Approach multiple partner types in parallel; lead with compliance-as-a-service as the trade; validate appetite in Phase 3, not Phase 5</td><td>Team Leader</td></tr>
+<tr><td>2</td><td>Incumbent builds a competing layer</td><td>Medium</td><td>High</td><td>Structural neutrality argument; speed to a pilot; data flywheel advantage from being first</td><td>Team Leader</td></tr>
+<tr><td>3</td><td>Sandbox application refused or delayed</td><td>Medium</td><td>High</td><td>Legal opinion in Stage 0; partner-of-record route as an alternative entry</td><td>Business Analyst</td></tr>
+<tr><td>4</td><td>Routing gains smaller than assumed</td><td>Medium</td><td>High</td><td>Measure with the corridor cost scraper in Phase 3 rather than assuming; pivot emphasis to compliance automation if so</td><td>Business Analyst</td></tr>
+<tr><td>5</td><td>Human review capacity caps growth</td><td><strong>High</strong></td><td>Medium</td><td>Modelled explicitly in unit economics; false-positive reduction is the primary lever</td><td>Compliance</td></tr>
+<tr><td>6</td><td>Model unfairness reaches production</td><td>Medium</td><td><strong>High</strong></td><td>Per-group release gates; continuous production monitoring; rollback on sustained breach</td><td>Business Analyst</td></tr>
+<tr><td>7</td><td>PII leaves the residency boundary</td><td>Low</td><td><strong>Severe</strong></td><td>Tokenisation + egress filter that fails requests + CI check on templates</td><td>Backend Lead</td></tr>
+<tr><td>8</td><td>Prompt injection via ingested circular</td><td>Medium</td><td>High</td><td>Source allow-list, checksum verification, content-as-data delimiting, quarantine on suspicion</td><td>Backend Lead</td></tr>
+<tr><td>9</td><td>Stale regulatory limits in the optimiser</td><td>Medium</td><td><strong>High</strong></td><td>n8n workflow 07 with a dead-man's switch and a human confirmation gate on every limit change</td><td>Backend Lead</td></tr>
+<tr><td>10</td><td>Demo fails on Congress Day</td><td>Medium</td><td>Medium</td><td>Fully offline demo, second device at state, offline video, printed handout of the split screen</td><td>Presentation Lead</td></tr>
+<tr><td>11</td><td>Bangla rendering breaks on unfamiliar hardware</td><td>Medium</td><td>Medium</td><td>Verified on the projector in Phase 5; subset fonts bundled</td><td>UI/UX Lead</td></tr>
+<tr><td>12</td><td>Team member leaves mid-journey</td><td>Medium</td><td>High</td><td>Named backup per role; no single point of knowledge; ADRs capture reasoning, not just decisions</td><td>Team Leader</td></tr>
+<tr><td>13</td><td>Over-scoping; nothing finished</td><td><strong>High</strong></td><td>High</td><td>One core use case — the routing decision. Domain packs stay declared stubs until it is finished</td><td>Team Leader</td></tr>
+<tr><td>14</td><td>Incentive policy withdrawn</td><td>Low</td><td>Medium</td><td>Unit economics deliberately do not assume the 2.5 % incentive continues</td><td>Business Analyst</td></tr>
+<tr><td>15</td><td>Models untrained by Congress Day</td><td><strong>High</strong></td><td>Low</td><td>Stated plainly. An honest specification with an evaluation plan outscores a fabricated accuracy figure — and §20.4 makes the alternative disqualifiable</td><td>Team Leader</td></tr>
+</tbody>
+</table>
+
+<p>Risk 13 and risk 15 are worth reading together. The highest-likelihood risks in this
+project are not technical. They are over-scoping and the temptation to present
+specification as achievement — which is exactly why Chapter 10 exists and why no measured
+number is claimed anywhere in this document.</p>
+
+<!-- ═══════════════════ CHAPTER 23 ═══════════════════ -->
+<h1 class="chapter" id="c23"><span class="num">23</span>Team, roles and NRB collaboration</h1>
+
+<h2>23.1 Execution roles (§13.2 — mandatory)</h2>
+
+<table>
+<thead><tr><th style="width:24%">Role</th><th>Core responsibilities</th><th style="width:22%">Owns in this repository</th></tr></thead>
+<tbody>
+<tr><td>Team Leader / Coordinator</td><td>Vision, execution, milestones, communication</td><td>ADRs, rubric map, risk register</td></tr>
+<tr><td>Business Analyst / Data Scientist</td><td>Problem, users, KPIs, data strategy, AI logic, validation</td><td><code>ml/</code>, model cards, research data</td></tr>
+<tr><td>UI/UX / Frontend Developer</td><td>Experience and interface; accessibility in Bangla, mobile, low-bandwidth</td><td><code>apps/mobile/</code>, design system, localisation</td></tr>
+<tr><td>Backend / Data Engineer</td><td>APIs, databases, LLM integration, pipelines</td><td><code>services/</code>, <code>infra/</code>, security docs</td></tr>
+<tr><td>Presentation / Communication Lead</td><td>Demo, storytelling, documentation, pitch</td><td>This report, demo and pitch scripts</td></tr>
+</tbody>
+</table>
+
+<p>Every role and responsibility is explicitly owned by a named member, declared in the
+submission and encoded in the repository's <code>CODEOWNERS</code> file so that ownership is
+enforced by tooling rather than remembered.</p>
+
+<h2>23.2 Composition targets (§13.3)</h2>
+
+<table>
+<thead><tr><th style="width:30%">Dimension</th><th>Implementation</th></tr></thead>
+<tbody>
+<tr><td>Technical capability</td><td>2–3 members able to build full-stack AI systems</td></tr>
+<tr><td>Business / domain expertise</td><td>1 member focused on users, value and adoption</td></tr>
+<tr><td>Women participation</td><td>At least one female participant</td></tr>
+<tr><td>Polytechnic / madrasah inclusion</td><td>Cross-institution team composition where possible</td></tr>
+<tr><td>NRB / diaspora participation</td><td>Assigned role in architecture, strategy or data</td></tr>
+</tbody>
+</table>
+
+<h2>23.3 The NRB collaboration (§8)</h2>
+
+<p>The Congress's NRB framework embeds a Non-Resident Bangladeshi or international expert as
+an active participant with a defined role. For this project the highest-value contribution
+is specific rather than general:</p>
+
+<ul>
+<li><strong>Corridor reality.</strong> Someone who has actually sent money from a Gulf
+state or the UK can correct assumptions about the sending experience that no amount of desk
+research reaches.</li>
+<li><strong>Regulatory perspective from the sending side.</strong> A corridor has two
+regulators (§20.2), and the sending-side one is the half a Dhaka-based team sees least.</li>
+<li><strong>Production engineering standards.</strong> Review of the architecture against
+how payment systems are actually operated at scale.</li>
+<li><strong>Introductions.</strong> Partner conversations are relationship-driven, and
+risk 1 in the register is precisely a partnership risk.</li>
+</ul>
+
+<p>Per §8 and §20.8, all NRB contributions are transparently documented in the team
+documentation, and advisors may not influence judging.</p>
+
+<!-- ═══════════════════ CHAPTER 24 ═══════════════════ -->
+<h1 class="chapter" id="c24"><span class="num">24</span>Six-month execution plan</h1>
+
+<p class="lead">Mapped to the Congress's own phase structure, with our deliverables against
+each.</p>
+
+<table>
+<thead><tr><th style="width:8%">Phase</th><th style="width:14%">Window</th><th style="width:24%">Congress focus</th><th>Our deliverables</th></tr></thead>
+<tbody>
+<tr><td><strong>0</strong></td><td>Jul 2026</td><td>Registration, team formation</td><td>Roles assigned; NRB secured; domain locked to FinSphere → Borderless Money</td></tr>
+<tr><td><strong>1</strong></td><td>Aug 2026</td><td>AI-native foundations, architecture, prompt and context engineering</td><td><strong>Complete:</strong> this report, 12 ADRs, C4 architecture, threat model, 8 model cards, evaluation plan, full repository scaffold</td></tr>
+<tr><td><strong>2</strong></td><td>Sep 2026</td><td>Build the AI core, knowledge layer (RAG), a working vertical slice</td><td>RAG over real circulars; routing engine v1; Flutter J1 flow; demo video v1; KPIs instrumented</td></tr>
+<tr><td><strong>3</strong></td><td>Oct 2026</td><td>User testing, market validation, mentor and NRB review</td><td>15+ user interviews <strong>including rural recipients</strong>; measured corridor spreads; real unit economics; legal opinion on licensability; <strong>preliminary submission by 31 Oct</strong></td></tr>
+<tr><td><strong>4</strong></td><td>Nov 2026</td><td>Productionise, secure, localise</td><td>Kubernetes deployment; security review; full Bangla with CI gate; IVR path live; fairness evaluation executed</td></tr>
+<tr><td><strong>5</strong></td><td>Dec 1–25</td><td>Final deployment, demo rehearsal</td><td>Offline demo; fallback video; Q&A drilled; demo rehearsed 10+ times</td></tr>
+<tr><td><strong>6</strong></td><td>Dec 26</td><td>Global Showcase, live judging, Opportunity Connect</td><td>Judged once in the assigned group; 5 minutes per team</td></tr>
+</tbody>
+</table>
+
+<h2>24.1 The three commitments that make this survivable</h2>
+
+<p><strong>One core use case.</strong> The routing decision, finished properly, beats four
+half-built features — and §13.4 lists over-building as mistake #7 for good reason.</p>
+
+<p><strong>Rural user interviews are non-negotiable.</strong> Phase 3 validation that speaks
+only to urban, literate, smartphone-owning users would validate a product for people who
+are not the users. This is scheduled, not aspirational.</p>
+
+<p><strong>Honesty about what is built.</strong> On Congress Day the correct answer to "is
+this running?" is the true one. An honest specification with a rigorous evaluation plan is
+defensible; a fabricated metric is disqualifiable.</p>
+
+<!-- ═══════════════════ CHAPTER 25 ═══════════════════ -->
+<h1 class="chapter" id="c25"><span class="num">25</span>Domain-pack extensibility</h1>
+
+<p class="lead">Why this architecture outlives one idea — and how any FinSphere vertical
+drops into the same core.</p>
+
+<h2>25.1 The split</h2>
+
+<p>Roughly 70 % of what any FinSphere product needs is identical: identity, KYC, a ledger,
+risk scoring, a knowledge layer, agents, automation, observability, audit. The core knows
+nothing about remittance. Each vertical is a <strong>swappable domain pack</strong>
+supplying exactly four things and nothing else:</p>
+
+<table>
+<thead><tr><th style="width:20%">Element</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><strong>Config</strong></td><td>Feature flags, limits, rails, fee schedules, workflow bindings</td></tr>
+<tr><td><strong>Schemas</strong></td><td>Domain entities and events, versioned</td></tr>
+<tr><td><strong>Prompts</strong></td><td>System prompts, tool descriptions, retrieval templates</td></tr>
+<tr><td><strong>Models</strong></td><td>Domain-specific ML models and their cards</td></tr>
+</tbody>
+</table>
+
+<p>The core exposes stable extension points and never imports from a pack. The governing
+rule: <strong>a core change made to accommodate a vertical requires a new ADR</strong> — and
+if that happens twice for the same reason, the abstraction is wrong and gets redrawn.</p>
+
+<h2>25.2 The five FinSphere packs</h2>
+
+<table>
+<thead><tr><th style="width:20%">Pack</th><th style="width:26%">Challenge area</th><th>What it reuses unchanged</th><th style="width:12%">Status</th></tr></thead>
+<tbody>
+<tr><td><code>borderless_money</code></td><td>Cross-border payments and remittance intelligence</td><td>—</td><td><strong>Active</strong></td></tr>
+<tr><td><code>credit</code></td><td>CreditForAll — alternative-data credit scoring</td><td>Identity, KYC, ledger, explainability, fairness gates, audit. <strong>Plus: a verified remittance history is exactly the alternative data a thin-file borrower lacks</strong></td><td>Stub</td></tr>
+<tr><td><code>fraud</code></td><td>FraudShield — real-time transaction defence</td><td>Graph, scoring pipeline, case management, human gates — already built here as a component</td><td>Stub</td></tr>
+<tr><td><code>wealth</code></td><td>WealthPilot — advisory for everyday savers</td><td>RAG with citation enforcement (suitability rules), personalisation, explainability</td><td>Stub</td></tr>
+<tr><td><code>sme</code></td><td>SME Capital Engine — working-capital intelligence</td><td>Ledger, forecasting, document intelligence, compliance decisioning</td><td>Stub</td></tr>
+</tbody>
+</table>
+
+<p>The <code>credit</code> row is the strategically interesting one. A two-year verified
+remittance history is a genuine credit signal for a household with no formal financial
+record — which means the adjacent vertical is not a pivot but a compounding use of the same
+data, created as a by-product of the first product working.</p>
+
+<h2>25.3 Beyond FinSphere</h2>
+
+<p>Nothing in the core is finance-specific. The pattern — a domain-agnostic platform with
+identity, a knowledge layer, bounded agents, human gates, automation and audit — transfers
+to any regulated domain the Congress names. A HealthSphere pack would swap the corpus for
+clinical guidelines and the models for triage; the human gates, the residency boundary, the
+citation enforcement and the fairness machinery are identical because the underlying
+requirement is identical: <strong>an AI system making consequential decisions about people
+who need to be able to challenge them.</strong></p>
+
+<div class="callout good">
+  <span class="label">Why this was built this way</span>
+  A remittance orchestrator that cannot extend into credit or fraud is a feature, not a
+  company. Building the abstraction <em>from</em> a real product — rather than
+  speculatively ahead of one — is what makes it likely to be right. The four stub packs
+  declare their extension points; they do not implement features nobody has validated.
+</div>

@@ -1,0 +1,403 @@
+<!-- ═══════════════════ CHAPTER 8 ═══════════════════ -->
+<h1 class="chapter" id="c8"><span class="num">8</span>The competitive landscape</h1>
+
+<p class="lead">Who currently holds this market, what each is actually good at, and where
+the genuinely unoccupied position is. Qualitative assessments are marked as assessments.</p>
+
+<h2>8.1 The domestic incumbents</h2>
+
+<table>
+<thead><tr><th style="width:14%">Player</th><th class="num" style="width:10%">Share</th><th class="num" style="width:12%">Active users</th><th>What it actually is</th></tr></thead>
+<tbody>
+<tr><td><strong>bKash</strong></td><td class="num">39.9 %</td><td class="num">4.20 crore</td><td>The default MFS wallet and the country's dominant payout endpoint. Enormous agent reach. Not a cross-border originator.<span class="cite">[13]</span></td></tr>
+<tr><td><strong>Nagad</strong></td><td class="num">18.1 %</td><td class="num">2.82 crore</td><td>State-linked challenger; aggressive pricing; being moved toward full privatisation to increase competition.<span class="cite">[13]</span></td></tr>
+<tr><td><strong>Rocket</strong></td><td class="num">11.7 %</td><td class="num">—</td><td>Bank-led MFS (Dutch-Bangla). Deeper bank integration, weaker consumer product.<span class="cite">[13]</span></td></tr>
+<tr><td>Upay and others</td><td class="num">—</td><td class="num">—</td><td>The remainder of fourteen licensed providers.<span class="cite">[12]</span></td></tr>
+</tbody>
+</table>
+
+<p>Two facts frame everything about this group. The industry moves roughly
+<strong>Tk 6,000 crore per day</strong>, and Bangladesh now has <strong>more registered MFS
+accounts than people</strong>.<span class="cite">[13]</span></p>
+
+<p>The second fact is the strategically important one: <strong>distribution is
+saturated</strong>. No new entrant wins by acquiring wallets. Whatever the opportunity is,
+it is not another wallet.</p>
+
+<h2>8.2 The cross-border layer</h2>
+
+<table>
+<thead><tr><th style="width:20%">Player</th><th>Model</th><th>Strength</th><th>Structural weakness</th></tr></thead>
+<tbody>
+<tr><td>Bank wire channels</td><td>Correspondent</td><td>Regulated, high value</td><td>Slow, opaque, expensive on small amounts</td></tr>
+<tr><td>Exchange houses (Gulf)</td><td>MTO</td><td>Physically present where workers live; trusted relationships</td><td>Queues, counter hours, opaque total cost</td></tr>
+<tr><td>Western Union / MoneyGram</td><td>MTO</td><td>Global reach, cash-to-cash, minutes</td><td>Historically the most expensive; margin hidden in the rate</td></tr>
+<tr><td>Wise</td><td>Digital FX</td><td>Genuine rate transparency; strong product</td><td>Bangladesh is receive-only; no agent cash-out</td></tr>
+<tr><td>Remitly</td><td>Digital remittance</td><td>Migrant-focused UX; good compliance automation</td><td>Single-provider routing; no neutrality</td></tr>
+<tr><td>Taptap Send</td><td>Digital remittance</td><td>Simple, corridor-focused, decent localisation</td><td>Narrow feature set; no intelligence layer</td></tr>
+<tr><td><strong>PayPal</strong></td><td>—</td><td>—</td><td><strong>Not available.</strong> Xoom is inbound and non-commercial only.<span class="cite">[25][27]</span></td></tr>
+<tr><td><strong>Hundi</strong></td><td>Informal</td><td><strong>Rate, speed, doorstep delivery, zero paperwork</strong></td><td>Illegal; no record; no recourse; funds crime</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">The competitor most analyses omit</span>
+  Hundi holds an estimated <strong>49 %</strong> of the flow.<span class="cite">[20]</span>
+  It is the market leader. A competitive analysis that lists bKash and Wise but not hundi
+  has analysed the minority of the market.
+</div>
+
+<h2>8.3 The comparison that matters</h2>
+
+<table>
+<thead><tr>
+<th style="width:22%">Dimension</th><th>bKash</th><th>Nagad</th><th>Banks</th><th>MTOs</th><th>Wise</th><th>Remitly</th><th>Hundi</th><th><strong>RemitOS</strong></th>
+</tr></thead>
+<tbody>
+<tr><td>Cross-border origination</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td><strong>via partners</strong></td></tr>
+<tr><td>Rural agent cash-out</td><td>Very high</td><td>High</td><td>Low</td><td>Medium</td><td>None</td><td>None</td><td><strong>Doorstep</strong></td><td>inherits partner</td></tr>
+<tr><td>Bangla-first UX <span class="small">(assessed)</span></td><td>Partial</td><td>Partial</td><td>Weak</td><td>Weak</td><td>Weak</td><td>Weak</td><td>n/a</td><td><strong>By design</strong></td></tr>
+<tr><td>Feature-phone path</td><td>USSD</td><td>USSD</td><td>No</td><td>No</td><td>No</td><td>No</td><td><strong>Human</strong></td><td><strong>USSD + IVR</strong></td></tr>
+<tr><td><strong>Least-cost routing across rails</strong></td><td>No</td><td>No</td><td>No</td><td>No</td><td>Single rail</td><td>Limited</td><td>No</td><td><strong>Core</strong></td></tr>
+<tr><td>Ceilings as pre-quote constraints</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>n/a</td><td><strong>Yes</strong></td></tr>
+<tr><td>Explainable compliance</td><td>Opaque</td><td>Opaque</td><td>Manual</td><td>Rules</td><td>Strong</td><td>Strong</td><td>None</td><td><strong>Cited</strong></td></tr>
+<tr><td>Predictive FX timing</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Alerts</td><td>Alerts</td><td>No</td><td><strong>ML</strong></td></tr>
+<tr><td>Open developer API</td><td>Limited</td><td>Limited</td><td>Rare</td><td>Partner</td><td>Yes</td><td>Partner</td><td>No</td><td><strong>By design</strong></td></tr>
+<tr><td>Verifiable record for the user</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td><strong>None</strong></td><td>Yes</td></tr>
+<tr><td>Regulatory standing</td><td>Licensed</td><td>Licensed</td><td>Licensed</td><td>Licensed</td><td>Licensed</td><td>Licensed</td><td>Illegal</td><td><strong>None yet</strong></td></tr>
+</tbody>
+</table>
+
+<h2>8.4 Three findings</h2>
+
+<p><strong>Nobody owns the routing decision.</strong> Read the table by row. Every player
+is a rail or a wallet. The "least-cost routing across rails" row is empty except for us,
+and it is empty for a structural reason: an incumbent rail has no incentive to build a
+product that compares it against competitors. Neutrality is not something bKash can
+credibly offer.</p>
+
+<p><strong>Compliance is the cost floor, and it is manual.</strong> The cost stack is
+dominated not by technology but by KYC labour, sanctions screening and pre-funding.
+Automating the first two and forecasting the third is where an AI-native entrant can
+actually move price — which is precisely the capability the Congress guide names for this
+challenge area.</p>
+
+<p><strong>The 49 % is not won on features.</strong> It is won on rate, speed, doorstep
+delivery and paperwork. Any feature that does not move one of those four converts nobody
+from the informal channel, however impressive it looks in a demo.</p>
+
+<h2>8.5 Where we lose</h2>
+
+<table>
+<thead><tr><th style="width:26%">Area</th><th>Incumbent advantage</th><th>Our position</th></tr></thead>
+<tbody>
+<tr><td>Agent network density</td><td>Hundreds of thousands of touchpoints, fifteen years of build-out</td><td>Partner. We will never out-build this and should not try.</td></tr>
+<tr><td>Settlement float</td><td>Banks and MTOs hold real balance-sheet capacity</td><td>We orchestrate; we do not warehouse funds.</td></tr>
+<tr><td>Regulatory licence</td><td>Held today</td><td>Sandbox, then partner-of-record, then our own — years, not months.</td></tr>
+<tr><td>Brand trust</td><td>Fifteen years of daily habit</td><td>Earned only through a pilot corridor and verifiable outcomes.</td></tr>
+<tr><td>Consumer marketing</td><td>Deep budgets</td><td>Distribution through partners, not paid acquisition.</td></tr>
+<tr><td>Rate vs hundi</td><td>Hundi can access the kerb rate</td><td>Policy-bounded. We compete on certainty, not rate alone.</td></tr>
+</tbody>
+</table>
+
+<!-- ═══════════════════ CHAPTER 9 ═══════════════════ -->
+<h1 class="chapter" id="c9"><span class="num">9</span>How RemitOS overrides the existing process</h1>
+
+<p class="lead">"Override" does not mean replace. bKash will still be the wallet and the
+bank will still settle. What changes is who decides.</p>
+
+<h2>9.1 The positioning</h2>
+
+<p>The tempting pitch is "a better bKash". It is also the wrong one: distribution is
+saturated, the incumbent has fifteen years of agent build-out, and a new wallet competes
+on exactly the dimension where a new entrant is weakest.</p>
+
+<p>The defensible position is the one nobody occupies: <strong>intelligence and
+orchestration above every rail</strong>, treating bKash, Nagad, Rocket, banks, agents and
+MTOs as interchangeable endpoints rather than as competitors.</p>
+
+<figure>
+<svg viewBox="0 0 560 176" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans, sans-serif">
+  <rect x="60" y="10" width="440" height="44" rx="4" fill="#1b2a4a"/>
+  <text x="280" y="27" fill="#fff" font-size="10.5" font-weight="bold" text-anchor="middle">RemitOS — intelligence and orchestration</text>
+  <text x="280" y="40" fill="#aebbd4" font-size="7.5" text-anchor="middle">routing optimisation · compliance automation · FX timing · payout selection</text>
+  <text x="280" y="50" fill="#d81e5b" font-size="7.5" font-style="italic" text-anchor="middle">the only neutral party computing the decision</text>
+
+  <text x="8" y="72" font-size="7" fill="#5d6675">sender</text>
+  <path d="M8,80 L58,32" stroke="#5d6675" stroke-width="1"/>
+  <text x="516" y="72" font-size="7" fill="#5d6675">recipient</text>
+  <path d="M502,32 L552,80" stroke="#5d6675" stroke-width="1"/>
+
+  <text x="280" y="68" font-size="7" fill="#8a93a3" text-anchor="middle" font-style="italic">every rail below is interchangeable</text>
+  <g font-size="8" text-anchor="middle">
+    <rect x="14" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="55" y="97" fill="#1b2a4a">bKash</text>
+    <rect x="104" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="145" y="97" fill="#1b2a4a">Nagad</text>
+    <rect x="194" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="235" y="97" fill="#1b2a4a">Rocket</text>
+    <rect x="284" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="325" y="97" fill="#1b2a4a">Banks</text>
+    <rect x="374" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="415" y="97" fill="#1b2a4a">MTOs</text>
+    <rect x="464" y="78" width="82" height="30" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="505" y="97" fill="#1b2a4a">Agent cash</text>
+  </g>
+  <g stroke="#d9dee7" stroke-width="0.75">
+    <path d="M55,78 L160,54"/><path d="M145,78 L200,54"/><path d="M235,78 L250,54"/>
+    <path d="M325,78 L310,54"/><path d="M415,78 L360,54"/><path d="M505,78 L400,54"/>
+  </g>
+  <rect x="14" y="124" width="532" height="42" rx="3" fill="#f1f8f4" stroke="#15803d" stroke-width="0.5"/>
+  <text x="24" y="140" font-size="8" font-weight="bold" fill="#15803d">Why an incumbent cannot occupy this position:</text>
+  <text x="24" y="154" font-size="7.5" fill="#1a1f2b">a rail has no incentive to build a product that ranks it against its competitors. Neutrality is structural,</text>
+  <text x="24" y="163" font-size="7.5" fill="#1a1f2b">not a feature — which is why the decision layer is empty and has stayed empty.</text>
+</svg>
+<figcaption><b>Figure 9.1</b> — The positioning. Not a competitor to the rails; the layer
+that chooses among them.</figcaption>
+</figure>
+
+<h2>9.2 Four specific overrides</h2>
+
+<h3>Override 1 · The routing decision becomes computed rather than guessed</h3>
+<p><strong>Today:</strong> the sender picks a provider, sees one price from one rail, and
+has no way to know whether another path would have delivered more. He compares three
+providers by hand, badly, every month.</p>
+<p><strong>With RemitOS:</strong> every feasible path is enumerated, its landed amount and
+arrival time predicted, the illegal ones removed, and the survivors ranked — with a
+one-line Bangla explanation of the trade-off. The user makes an informed choice in
+seconds, which is a decision he could not previously make at all.</p>
+
+<h3>Override 2 · Regulatory limits stop being a counter-side surprise</h3>
+<p><strong>Today:</strong> quote, pay, pay out to wallet, discover the Tk 30,000 cash-out
+ceiling at the agent counter after a 40-minute journey.</p>
+<p><strong>With RemitOS:</strong> the ceiling is a constraint in the optimiser. The system
+proposes a legal split, prices both legs, and explains it in Bangla — before payment. See
+§6.5 and Figure 6.1.</p>
+<p>This is the override that is most visible in thirty seconds on a stage, and the one that
+most clearly demonstrates a system that has read the regulation rather than only the API
+documentation.</p>
+
+<h3>Override 3 · Compliance becomes explainable and fast</h3>
+<p><strong>Today:</strong> a held transfer produces silence, then a customer-service queue,
+then — sometimes — an explanation. Silence during a held emergency transfer is the single
+most effective driver of a household back to hundi.</p>
+<p><strong>With RemitOS:</strong> an immediate notification, a plain-Bangla reason, a stated
+SLA, and a visible appeal route to a human. Behind it, the decision is grounded in cited
+regulation — and if no governing rule can be retrieved with sufficient confidence, the
+system refuses to decide and escalates rather than guessing.</p>
+
+<h3>Override 4 · The payout container becomes a choice rather than an accident</h3>
+<p><strong>Today:</strong> money lands wherever the chosen channel happens to deliver, and
+moving it costs another fee and another trip.</p>
+<p><strong>With RemitOS:</strong> the destination is part of the optimisation. Binimoy
+already provides the rails to move between banks, MFS and PSPs;<span class="cite">[17][19]</span>
+what has been missing is anything choosing on the recipient's behalf.</p>
+
+<h2>9.3 What we do not override</h2>
+
+<table>
+<thead><tr><th style="width:30%">Not overridden</th><th>Why not</th></tr></thead>
+<tbody>
+<tr><td>The rails themselves</td><td>They work. Reach and licensing took fifteen years to build.</td></tr>
+<tr><td>Agent networks</td><td>We partner. Out-building this is not a strategy available to us.</td></tr>
+<tr><td>Settlement and float</td><td>Requires a balance sheet and licences we do not have.</td></tr>
+<tr><td>The regulator's authority</td><td>Ceilings are constraints to design within, not obstacles to route around.</td></tr>
+<tr><td>Outbound restriction</td><td>Policy. Out of scope, stated in Chapter 10.</td></tr>
+</tbody>
+</table>
+
+<div class="callout good">
+  <span class="label">The override in one sentence</span>
+  We do not move money better than bKash. We <strong>decide</strong> better than anyone
+  currently decides — and in a market where the decision is presently made by guesswork
+  roughly half the time, that is where the value is.
+</div>
+
+<!-- ═══════════════════ CHAPTER 10 ═══════════════════ -->
+<h1 class="chapter" id="c10"><span class="num">10</span>Our gaps — an honest accounting</h1>
+
+<p class="lead">What this project does not have, cannot do, and might get wrong. Written
+because a submission without this chapter should be read more sceptically, not less.</p>
+
+<h2>10.1 What we do not have</h2>
+
+<table>
+<thead><tr><th style="width:22%">Gap</th><th>Consequence</th><th style="width:32%">Mitigation and path</th></tr></thead>
+<tbody>
+<tr><td><strong>No payments licence</strong></td><td>We cannot legally operate as a money transfer operator or hold customer funds</td><td>Deliberate orchestration posture. Sandbox → partner-of-record → own authorisation. Chapter 20.</td></tr>
+<tr><td><strong>No settlement float</strong></td><td>Cannot pre-fund; cannot guarantee payout from our own balance sheet</td><td>Partner holds float. Compliance-as-a-service is what we trade for it.</td></tr>
+<tr><td><strong>No agent network</strong></td><td>No physical last mile</td><td>Inherit partner reach. Agent tooling is what we offer agents in return.</td></tr>
+<tr><td><strong>No supervisory relationship</strong></td><td>No standing with Bangladesh Bank or BFIU</td><td>Sandbox entry is the mechanism for building it.</td></tr>
+<tr><td><strong>No transaction history</strong></td><td>Cold start on every model</td><td>§10.3. Stated openly rather than papered over with synthetic labels.</td></tr>
+<tr><td><strong>No brand trust</strong></td><td>Users will not route emergency money through an unknown name</td><td>Earned by a bounded pilot with verifiable outcomes, not by marketing.</td></tr>
+</tbody>
+</table>
+
+<h2>10.2 What we cannot do at all</h2>
+
+<p><strong>Outbound payments from Bangladesh.</strong> This is worth restating as the
+clearest limit. Bangladesh restricts outbound transactions, which is why PayPal is
+unavailable and why Xoom is inbound and non-commercial
+only.<span class="cite">[25][27][28]</span> No application architecture changes a
+capital-account policy. Our freelancer persona's core problem — receiving commercial
+payments and paying for foreign services — is only partially addressable, and we say so.</p>
+
+<p><strong>Beating the kerb rate.</strong> Hundi's rate advantage derives from operating
+outside the official exchange mechanism. We can minimise every controllable cost. We
+cannot match a rate that is available precisely because it is not legal.</p>
+
+<p><strong>Out-building agent density.</strong> Fifteen years and hundreds of thousands of
+touchpoints. Partnership is the only route.</p>
+
+<h2>10.3 The cold-start problem, stated properly</h2>
+
+<p>Every model in this system needs data we do not yet have, and the honest consequences
+differ by model:</p>
+
+<table>
+<thead><tr><th style="width:26%">Model</th><th>Cold-start reality</th><th style="width:26%">Launch behaviour</th></tr></thead>
+<tbody>
+<tr><td>Corridor cost predictor</td><td>No own settlement history</td><td>Published fee schedules only, labelled <strong>provisional</strong> in the UI</td></tr>
+<tr><td>AML risk scoring</td><td>No adjudicated alerts, so no labels</td><td><strong>Model does not exist.</strong> Rules-only, widened human review</td></tr>
+<tr><td>Fraud detection</td><td>No confirmed cases; fraudsters find new products fast</td><td>Deterministic rules plus graph anomaly detection</td></tr>
+<tr><td>FX forecasting</td><td>Public history exists — the least affected</td><td>Operational, with wide intervals stated</td></tr>
+<tr><td>Bangla NLU</td><td>Regional speech corpora are scarce and must be built</td><td>Limited intents; expanded as evaluated coverage grows</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">The tempting shortcut, and why we refuse it</span>
+  The obvious fix is to train on synthetic data and report the resulting accuracy. It
+  would produce impressive numbers for a submission.
+  <br><br>
+  It would also be a fabricated result presented as real, which Congress §20.4 prohibits
+  outright. Synthetic data in this project exists only to exercise pipelines, is labelled
+  synthetic on every surface that renders it, and <strong>never produces a quoted
+  metric</strong>. There is no accuracy figure anywhere in this report, because none has
+  been measured.
+</div>
+
+<h2>10.4 What might be wrong with our thesis</h2>
+
+<p>Three ways the central argument could fail, stated as they would be by a sceptical
+judge:</p>
+
+<p><strong>1. The incumbent simply builds it.</strong> bKash could add routing intelligence.
+The counter-argument is structural rather than optimistic: a rail has no incentive to build
+a product that ranks it against competitors, and neutrality cannot be retrofitted onto a
+party with a stake in the answer. That said, bKash could partner with an independent layer
+— <em>somebody else's</em> independent layer — and this remains the largest single
+commercial risk in the project. It carries a named owner in the risk register.</p>
+
+<p><strong>2. Partners refuse to cooperate.</strong> MFS operators have limited incentive to
+help a layer that commoditises them. The counter-arguments — incremental inbound volume
+they do not currently capture, and formalising flow that presently goes to hundi — are
+real but not guaranteed to persuade. If no payout partner agrees, the product does not
+exist.</p>
+
+<p><strong>3. The routing gains are smaller than assumed.</strong> If, in practice, corridor
+prices are tightly clustered, the value of choosing between them shrinks. We do not yet
+know, because we have not measured it — and the corridor cost scraper (n8n workflow 04)
+exists specifically to find out during Phase 3 validation rather than to assume.</p>
+
+<h2>10.5 Known weaknesses in the design</h2>
+
+<table>
+<thead><tr><th style="width:30%">Weakness</th><th>Why we accept it for now</th></tr></thead>
+<tbody>
+<tr><td>Human review is a throughput ceiling</td><td>ADR 0010 makes human gates mandatory on irreversible actions. This is a real, modelled cost and a real scaling limit — accepted deliberately over the alternative.</td></tr>
+<tr><td>Split transfers add UX complexity</td><td>A split is harder to explain than a single transfer, especially to a low-literacy user. Mitigated by icons and voice; not eliminated.</td></tr>
+<tr><td>Two channels means two test surfaces</td><td>App plus USSD/IVR doubles the QA burden. The alternative is excluding ~69 m connections.</td></tr>
+<tr><td>Tokenisation degrades some reasoning</td><td>ADR 0011 costs model quality in exchange for residency. The degradation must be measured, not assumed acceptable.</td></tr>
+<tr><td>Domain-pack abstraction is unproven</td><td>It has been validated against exactly one vertical. The rule that a core change for a pack requires an ADR is what will surface a leaky abstraction early.</td></tr>
+</tbody>
+</table>
+
+<!-- ═══════════════════ CHAPTER 11 ═══════════════════ -->
+<h1 class="chapter" id="c11"><span class="num">11</span>Designing for rural and universal usability</h1>
+
+<p class="lead">A single principle runs through this chapter: the person who most needs the
+money is usually the person least served by the interface.</p>
+
+<h2>11.1 Who is actually excluded, and by what</h2>
+
+<table>
+<thead><tr><th style="width:26%">Barrier</th><th>Scale</th><th>Excluded by</th></tr></thead>
+<tbody>
+<tr><td>No mobile data</td><td>≈ 69 m connections<span class="cite">[23]</span></td><td>Any app-only product</td></tr>
+<tr><td>No smartphone</td><td>&gt; 27 % of users<span class="cite">[24]</span></td><td>Any app-only product</td></tr>
+<tr><td>Limited text literacy</td><td>Concentrated rural and older</td><td>Any text-led interface</td></tr>
+<tr><td>Limited digital literacy</td><td>Widespread among first-time users</td><td>Multi-screen flows</td></tr>
+<tr><td>Bengali-only reading</td><td>Majority</td><td>English-first design</td></tr>
+<tr><td>Visual impairment / age</td><td>Significant among recipients</td><td>Small targets, low contrast</td></tr>
+</tbody>
+</table>
+
+<h2>11.2 Bangla as the source language</h2>
+
+<p>Covered in §6.4 as a remedy; restated here as a design discipline. Bangla strings drive
+the layout, English fits it. Bengali-complete typography chosen before the Latin face.
+Lakh/crore grouping by default. Bengali numerals selectable and on by default. A financial
+glossary written by native speakers rather than translated. Every AI-generated
+explanation produced in Bangla rather than generated in English and translated — because
+translating an explanation reliably loses the explanation.</p>
+
+<h2>11.3 Voice as a primary interface</h2>
+
+<p>For a recipient with limited literacy, voice is not an accessibility enhancement. It is
+the interface.</p>
+
+<table>
+<thead><tr><th style="width:28%">Element</th><th>Requirement</th></tr></thead>
+<tbody>
+<tr><td>Bangla ASR</td><td>Evaluated <strong>per region</strong> with a per-region gate. An average WER hides one region being unusable.</td></tr>
+<tr><td>Bangla TTS</td><td>Amounts spoken with lakh/hazar convention and Bengali numerals</td></tr>
+<tr><td><strong>Amount read-back</strong></td><td><strong>Mandatory.</strong> Any voice-captured amount is read back and confirmed before money moves. A misheard amount is a direct financial loss</td></tr>
+<tr><td>Code-switching</td><td>Bangla with embedded English terms ("balance", "send") is normal speech and must work</td></tr>
+<tr><td>Escape to a human</td><td>Always reachable without literacy</td></tr>
+<tr><td>Voice as credential</td><td><strong>Never.</strong> Voice cloning is cheap and these users are the ones targeted</td></tr>
+</tbody>
+</table>
+
+<h2>11.4 The IVR and USSD path</h2>
+
+<p>A recipient with a feature phone gets a Bangla voice call announcing arrival, a menu for
+balance and nearest agent, and — critically — <strong>spoken limit guidance before she
+travels</strong>: "আজ এজেন্ট থেকে সর্বোচ্চ ৩০ হাজার টাকা তুলতে পারবেন".</p>
+
+<p>That single sentence, delivered before a 40-minute journey rather than at the counter
+after it, is the entire argument of ADR 0007 rendered for someone who cannot read it.</p>
+
+<h2>11.5 Low-bandwidth and offline design</h2>
+
+<table>
+<thead><tr><th style="width:30%">Constraint</th><th>Mechanism</th></tr></thead>
+<tbody>
+<tr><td>Screen payload &lt; 50 KB</td><td>System fonts, no imagery, vector icons, text-first layout</td></tr>
+<tr><td>Works with no connectivity</td><td>Local-first store; network as an unreliable synchroniser</td></tr>
+<tr><td>No double-sends after a crash</td><td>Durable outbox with a client-generated idempotency key, never regenerated on retry</td></tr>
+<tr><td>Honest state</td><td>"Queued", never "sent", until the server confirms</td></tr>
+<tr><td>Stale quotes</td><td>Shown with a staleness marker; never binding; expire for re-confirmation rather than executing silently</td></tr>
+</tbody>
+</table>
+
+<h2>11.6 Accessibility and trust</h2>
+
+<ul>
+<li><strong>Icon-led navigation.</strong> Every action carries an icon, never text alone.</li>
+<li><strong>Elder mode.</strong> Enlarged targets and type, higher contrast, fewer items
+per screen.</li>
+<li><strong>WCAG 2.2 AA</strong> contrast and target sizing, with semantic labels in both
+languages.</li>
+<li><strong>Agent-assisted mode</strong> with the agent's identity logged on every action —
+protecting honest agents as much as deterring dishonest ones.</li>
+<li><strong>Scam warnings</strong> that are concrete and in Bangla ("Have you spoken to
+this person by voice today?"), dismissible by an adult sending their own money, and not
+repeated so often that people learn to tap through them.</li>
+<li><strong>No amounts or names in lock-screen previews</strong> — many phones in this
+market are shared.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">The design test we apply</span>
+  Every screen and every flow is checked against one question: <strong>could Rahima
+  Begum — 58, limited literacy, feature phone, 40 minutes from an agent — complete this
+  without asking anyone for help?</strong>
+  <br><br>
+  Where the answer is no, the flow is not finished. Where it cannot be yes in the app, the
+  IVR path must carry it.
+</div>

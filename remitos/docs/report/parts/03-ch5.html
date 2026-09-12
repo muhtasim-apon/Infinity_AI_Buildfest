@@ -1,0 +1,258 @@
+<!-- ═══════════════════ CHAPTER 5 ═══════════════════ -->
+<h1 class="chapter" id="c5"><span class="num">5</span>Limitations in Bangladesh — the diagnosis</h1>
+
+<p class="lead">Eleven constraints, in rough order of how much money they move. Each is
+stated with its mechanism, not merely named — because Chapter 6 addresses each one
+individually, and a remedy can only be as good as the diagnosis behind it.</p>
+
+<h2>5.1 Hundi — the informal channel, and why it keeps winning</h2>
+
+<p><em>Hundi</em> is an informal value-transfer system that predates modern banking. Its
+mechanism is elegant and requires no money to cross a border at all: a worker in Riyadh
+hands cash to an operator there; the operator instructs a counterpart in Bangladesh to pay
+out the equivalent in taka from funds already held locally; the two operators settle
+between themselves later, often by netting against flows in the opposite direction, or
+through trade invoicing.</p>
+
+<p>The scale is contested, which is expected for an unrecorded activity, and the report
+states the range rather than picking a convenient number:</p>
+
+<table>
+<thead><tr><th>Estimate</th><th class="num">Value</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Share of inflows via informal channels</td><td class="num"><strong>≈ 49 %</strong> (formal ≈ 51 %)</td><td>Academic review<span class="cite">[20]</span></td></tr>
+<tr><td>Annual value diverted</td><td class="num">≈ USD 7.8 bn (≈ Tk 75,000 crore)</td><td>CID investigation reporting<span class="cite">[21]</span></td></tr>
+<tr><td>Four-month window loss</td><td class="num">≈ Tk 25,000 crore</td><td>Press reporting<span class="cite">[22]</span></td></tr>
+<tr><td>Reserve shortfall attributable</td><td class="num">≈ 19.2 % disparity</td><td>Academic review<span class="cite">[20]</span></td></tr>
+<tr><td>MFS agents implicated in laundering flows</td><td class="num">≥ 5,000</td><td>CID investigation reporting<span class="cite">[21]</span></td></tr>
+</tbody>
+</table>
+
+<p><strong>The mechanism of hundi's advantage is what matters, not its size.</strong> It
+wins on four dimensions simultaneously:</p>
+
+<table>
+<thead><tr><th style="width:20%">Dimension</th><th>Why hundi wins</th></tr></thead>
+<tbody>
+<tr><td><strong>Rate</strong></td><td>Operating outside the official exchange-rate mechanism, hundi can offer a rate closer to the kerb market — sometimes materially better than the official rate available through formal channels.</td></tr>
+<tr><td><strong>Speed</strong></td><td>Frequently same-day, sometimes within hours. No correspondent hops, no settlement wait, because no money crosses a border.</td></tr>
+<tr><td><strong>Delivery</strong></td><td>Cash to the door in a village. No travel to an agent point, no queue, no counter.</td></tr>
+<tr><td><strong>Paperwork</strong></td><td>None. No identity document, no source-of-funds question, no verification delay.</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">The strategic conclusion most projects get wrong</span>
+  Hundi is not chosen out of ignorance, and it is not defeated by explaining that it is
+  illegal. The migrant worker using it usually knows. He uses it because it delivers more
+  taka, faster, to his mother's door, with no forms.
+  <br><br>
+  <strong>Any product that does not compete on those four dimensions will not convert a
+  single hundi user</strong>, however sophisticated its compliance story. This single
+  finding shapes the entire product design that follows.
+</div>
+
+<h2>5.2 Foreign-exchange constraints and the rate gap</h2>
+
+<p>Bangladesh operates a managed exchange-rate regime. Two consequences follow.</p>
+
+<p>First, <strong>"the rate" is not one number</strong>. There is an official rate through
+formal channels and an effective kerb-market rate available informally. When a gap opens
+between them, it is a direct subsidy to hundi — the informal channel can simply pass part
+of the difference to the sender and still profit.</p>
+
+<p>Second, periods of foreign-currency scarcity create pressure on payout institutions to
+ration liquidity, which shows up to users as delays and to the market as a wider effective
+spread.</p>
+
+<p>The government's 2.5 % remittance incentive exists to close this gap by paying formal
+senders a premium. It works, and it is also a market distortion with two side effects: it
+makes channel economics depend on a policy that could change, and the eligibility rules
+are not well understood by the senders they are meant to attract.</p>
+
+<h2>5.3 The outbound restriction — structural, not technical</h2>
+
+<p>Bangladesh restricts outbound current and capital-account transactions. The country is,
+in practice, a <strong>receive-only node</strong> in the global money graph.</p>
+
+<p>The clearest evidence is PayPal. Bangladeshi residents cannot open a standard PayPal
+account, hold a PayPal balance, or send payments with Bangladesh as their registered
+country — because PayPal's two-way model is incompatible with the outbound
+restriction.<span class="cite">[25][26]</span> Xoom, PayPal's remittance subsidiary,
+operates <em>inbound</em> only and is limited to non-commercial transfers; commercial use
+can trigger account termination.<span class="cite">[27][28]</span> A Payoneer–PayPal
+integration launched in late 2025 gives eligible freelancers a partial
+workaround.<span class="cite">[25]</span></p>
+
+<div class="callout">
+  <span class="label">Why the PayPal absence belongs in this report</span>
+  It is the cleanest available proof that Bangladesh's problem is
+  <strong>regulatory-architectural, not technological</strong>. PayPal did not fail to
+  build a Bangladesh product. The country's monetary architecture does not admit one.
+  <br><br>
+  Any honest "borderless money" thesis for Bangladesh must state this and design within
+  it. Chapter 10 accordingly lists outbound payments as explicitly out of scope.
+</div>
+
+<h2>5.4 The last-mile agent bottleneck</h2>
+
+<p>MFS agent networks are the reason mobile money reached rural Bangladesh at all. They
+are also the point where the user experience is thinnest.</p>
+
+<p>A recipient in a rural upazila may travel 30–60 minutes to reach an agent point. On
+arrival, four things can go wrong that have nothing to do with the transfer itself: the
+agent's float has run out; the amount exceeds a daily ceiling; the agent charges above the
+posted rate; or the agent is simply closed. Each failure costs the recipient another
+journey, and a formal channel that fails twice has taught a household to use hundi.</p>
+
+<h2>5.5 Regulatory transaction ceilings</h2>
+
+<p>Bangladesh Bank's Payment Systems Department re-fixed MFS limits in March
+2025:<span class="cite">[15][16]</span></p>
+
+<table>
+<thead><tr><th>Limit</th><th class="num">Daily</th><th class="num">Monthly</th></tr></thead>
+<tbody>
+<tr><td>Cash-in at an agent point</td><td class="num">Tk 50,000</td><td class="num">Tk 300,000</td></tr>
+<tr><td><strong>Cash-out at an agent point</strong></td><td class="num"><strong>Tk 30,000</strong></td><td class="num"><strong>Tk 200,000</strong></td></tr>
+<tr><td>Person-to-person transfer</td><td class="num">Tk 50,000</td><td class="num">Tk 300,000</td></tr>
+<tr><td>Maximum wallet balance</td><td class="num">—</td><td class="num">Tk 500,000</td></tr>
+</tbody>
+</table>
+
+<p>These limits are reasonable financial-crime controls. The problem is not the limits —
+it is that <strong>no consumer product treats them as part of the transaction design</strong>.</p>
+
+<p>Consider the routine case. A worker sends Tk 120,000 for a medical emergency. Every
+conventional product quotes a price, accepts payment, and pays out to a wallet. The
+recipient — often an older woman who has travelled 40 minutes — can withdraw Tk 30,000.
+The remaining Tk 90,000 sits in a wallet she may not know how to move, during an
+emergency.</p>
+
+<p>The money was never lost. The product simply never modelled the constraint. This single
+observation drives the central design decision of RemitOS and is treated at length in
+§6.5 and §9.2.</p>
+
+<h2>5.6 Device and connectivity exclusion</h2>
+
+<p>BTRC data for June 2026:<span class="cite">[23]</span></p>
+
+<table>
+<thead><tr><th>Metric</th><th class="num">Value</th></tr></thead>
+<tbody>
+<tr><td>Active mobile subscribers</td><td class="num"><strong>189.83 m</strong></td></tr>
+<tr><td>Internet subscribers</td><td class="num">135.94 m</td></tr>
+<tr><td>Of which mobile internet</td><td class="num">120.84 m</td></tr>
+<tr><td><strong>Implied connections without mobile data</strong></td><td class="num"><strong>≈ 69 m</strong></td></tr>
+<tr><td>Smartphone adoption, 2023 → 2025</td><td class="num">63.3 % → 72.8 %<span class="cite">[24]</span></td></tr>
+</tbody>
+</table>
+
+<p>Two readings of the same data. The optimistic one: smartphone adoption is rising fast.
+The one that matters here: <strong>more than a quarter of users have no smartphone, and
+roughly 69 million mobile connections carry no data at all.</strong></p>
+
+<p>These are not edge cases. They are disproportionately rural, older and lower-income —
+which is to say, disproportionately the people who depend most on remittance income. A
+product reachable only by a modern smartphone on a data plan excludes its most dependent
+users by construction.</p>
+
+<h2>5.7 Literacy, language and financial vocabulary</h2>
+
+<p>Three distinct barriers that are frequently collapsed into one:</p>
+
+<ul>
+<li><strong>Text literacy.</strong> A recipient who cannot reliably read a transaction SMS
+asks a neighbour — which means her balance is not private, and she is dependent on
+someone else's honesty about her own money.</li>
+<li><strong>Digital literacy.</strong> Navigating a multi-screen flow is a learned skill.
+Someone who has never used an app does not fail at remittance; they fail at menus.</li>
+<li><strong>Financial vocabulary.</strong> Terms like "exchange rate", "settlement" and
+"beneficiary" have no comfortable everyday Bangla equivalent, and literal translation
+produces English-in-Bengali-script that native speakers do not actually use.</li>
+</ul>
+
+<p>To which a fourth, usually invisible, problem must be added: <strong>numeral and
+grouping conventions</strong>. Bangladesh groups digits as 1,20,000 (lakh convention), not
+120,000. Many older users read Bengali numerals (১২৩) fluently and Arabic numerals slowly.
+A money screen that gets either wrong signals, instantly and correctly, that the product
+was not built for this country.</p>
+
+<h2>5.8 Interoperability gaps</h2>
+
+<p>Binimoy, launched November 2022, is the national platform allowing banks, MFS operators
+and PSPs to move money between one another.<span class="cite">[17][18]</span> Published
+costs are Tk 5 per thousand for MFS-to-MFS and MFS-to-PSP, and Tk 10 per thousand for
+MFS-to-bank.<span class="cite">[19]</span></p>
+
+<p>The infrastructure exists and is under-used. The practical effect is that a recipient's
+money frequently lands in the wrong container: in a wallet when they need it in a bank
+account, or at an agent point when a bank transfer would have cleared the ceiling problem.
+The rails to move between them exist; almost nothing chooses between them on the user's
+behalf.</p>
+
+<h2>5.9 Identity verification friction</h2>
+
+<p>KYC is required and is the largest single source of onboarding abandonment. The
+specific Bangladeshi difficulties compound each other:</p>
+
+<ul>
+<li>National ID cards are frequently old, laminated, worn or physically damaged — the
+normal case, not the edge case.</li>
+<li>Bengali-script document faces are harder to read automatically than Latin ones.</li>
+<li><strong>Name transliteration is non-deterministic</strong>: রহিমা legitimately
+romanises as Rahima, Rohima or Rahema. Systems doing exact string matching on names
+therefore both miss real sanctions hits and generate false positives against ordinary
+people with common names.</li>
+<li>Address verification is difficult where formal addressing is thin.</li>
+</ul>
+
+<h2>5.10 Trust deficit and fraud exposure</h2>
+
+<p>Social-engineering fraud is widespread and specifically targets the remittance
+relationship: a caller claims a relative is in hospital and money must be sent now.
+Urgency is the attack vector, and urgency is also the genuine condition of many real
+transfers — which makes the two hard to separate.</p>
+
+<p>The consequence is structural rather than incidental. Once defrauded, a household's
+response is rarely to switch providers. It is to revert to the channel it already trusts —
+a known local hundi operator, who is a person rather than an interface.</p>
+
+<h2>5.11 The incentive as a distortion</h2>
+
+<p>The 2.5 % government remittance incentive is effective at pulling flow into formal
+channels. It also has three side effects worth stating: channel economics become dependent
+on a policy decision that could be withdrawn; eligibility rules are poorly understood by
+the senders they target; and it masks the underlying cost problem rather than solving it,
+because a channel that is uncompetitive at 6.4 % remains uncompetitive — it is simply
+being subsidised.</p>
+
+<h2>5.12 The eleven constraints, ranked</h2>
+
+<table>
+<thead><tr><th style="width:5%">#</th><th style="width:26%">Constraint</th><th style="width:14%">Type</th><th>Binding effect</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Hundi competition</strong></td><td>Market</td><td>≈ 49 % of flow never enters the formal system</td></tr>
+<tr><td>2</td><td>FX rate gap</td><td>Policy</td><td>Directly subsidises the informal channel</td></tr>
+<tr><td>3</td><td><strong>Outbound restriction</strong></td><td>Policy</td><td>Receive-only node; no PayPal; freelancers stranded</td></tr>
+<tr><td>4</td><td>Agent last-mile friction</td><td>Operational</td><td>Failed journeys teach households to leave</td></tr>
+<tr><td>5</td><td><strong>Transaction ceilings</strong></td><td>Regulatory</td><td>Payout failure discovered at the counter</td></tr>
+<tr><td>6</td><td>Device and data exclusion</td><td>Infrastructure</td><td>≈ 69 m connections unreachable by an app</td></tr>
+<tr><td>7</td><td>Literacy and language</td><td>Social</td><td>Interface excludes the most dependent users</td></tr>
+<tr><td>8</td><td>Interoperability under-use</td><td>Systemic</td><td>Money lands in the wrong container</td></tr>
+<tr><td>9</td><td>KYC friction</td><td>Regulatory</td><td>Largest source of onboarding abandonment</td></tr>
+<tr><td>10</td><td>Trust deficit and fraud</td><td>Social</td><td>One bad experience returns a household to hundi</td></tr>
+<tr><td>11</td><td>Incentive distortion</td><td>Policy</td><td>Masks the cost problem; policy-dependent economics</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+  <span class="label">What the ranking reveals</span>
+  Constraints 2, 3 and 11 are <strong>policy</strong>, and no application can solve them —
+  they are stated here so that Chapter 10 can state honestly which of our limits are
+  self-imposed and which are not.
+  <br><br>
+  Constraints 4 through 10 are <strong>addressable by design</strong>, and Chapter 6
+  addresses each one with a named mechanism, a component that implements it, and a metric
+  that says whether it worked.
+</div>

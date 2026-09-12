@@ -1,0 +1,177 @@
+/* RemitOS — Borderless Money master report
+   Print stylesheet for WeasyPrint. A4, two-level running heads, numbered references.
+   Visual language deliberately echoes the Congress Participants Guide:
+   navy headings, magenta rule, restrained tables. */
+
+@page {
+  size: A4;
+  margin: 22mm 20mm 20mm 20mm;
+  @top-center {
+    content: "RemitOS · Borderless Money · International AI Builders Congress 2026";
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 7.5pt;
+    color: #8a93a3;
+    padding-bottom: 3mm;
+  }
+  @bottom-center {
+    content: "Build Locally. Lead Globally.   |   Page " counter(page);
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 7.5pt;
+    color: #8a93a3;
+    padding-top: 3mm;
+  }
+}
+
+@page :first { @top-center { content: none; } @bottom-center { content: none; } }
+
+@page cover { margin: 0; @top-center { content: none; } @bottom-center { content: none; } }
+
+:root {
+  --navy: #1b2a4a;
+  --navy-soft: #2d4270;
+  --magenta: #d81e5b;
+  --ink: #1a1f2b;
+  --muted: #5d6675;
+  --rule: #d9dee7;
+  --tint: #f4f6fa;
+  --tint-warn: #fdf3f6;
+  --tint-good: #f1f8f4;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  font-family: "DejaVu Sans", "Noto Sans", sans-serif;
+  font-size: 10pt;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+body { margin: 0; padding: 0; hyphens: auto; text-align: justify; }
+
+/* ── Cover ───────────────────────────────────────────────────────────────── */
+.cover {
+  position: relative;
+  height: 250mm;              /* A4 297mm less the 22/20mm print margins */
+  box-sizing: border-box;
+  padding: 34mm 16mm 16mm 16mm;
+  background: var(--navy);
+  color: #fff;
+  page-break-after: always;
+  break-after: page;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.cover .eyebrow {
+  font-size: 9pt; letter-spacing: 2.6pt; text-transform: uppercase;
+  color: var(--magenta); font-weight: bold; margin-bottom: 6mm;
+}
+.cover h1 { font-size: 36pt; line-height: 1.08; margin: 0 0 4mm 0; color: #fff; font-weight: bold; }
+.cover .sub { font-size: 15pt; color: #aebbd4; margin: 0 0 12mm 0; font-weight: normal; }
+.cover hr { border: 0; border-top: 2.5pt solid var(--magenta); width: 55mm; margin: 0 0 12mm 0; }
+.cover .meta { font-size: 9.5pt; color: #c6d0e2; line-height: 1.9; }
+.cover .meta strong { color: #fff; }
+.cover .meta { flex: 1 1 auto; }
+.cover .footer-line {
+  margin-top: auto;
+  font-size: 8.5pt; color: #8fa0c0; border-top: 1px solid #3a4b73; padding-top: 4mm;
+}
+
+/* ── Structure ───────────────────────────────────────────────────────────── */
+.cover + h1.chapter { page-break-before: auto; break-before: auto; }
+
+h1.chapter {
+  font-size: 19pt; color: var(--navy); margin: 0 0 2mm 0; padding: 0 0 2.5mm 0;
+  border-bottom: 2pt solid var(--magenta); page-break-before: always;
+  page-break-after: avoid; text-align: left; line-height: 1.2;
+}
+h1.chapter .num { color: var(--magenta); margin-right: 3mm; }
+h2 { font-size: 13pt; color: var(--navy); margin: 8mm 0 2mm 0; page-break-after: avoid; text-align: left; }
+h3 { font-size: 10.5pt; color: var(--navy-soft); margin: 6mm 0 1.5mm 0; page-break-after: avoid; text-align: left; }
+h4 { font-size: 10pt; color: var(--muted); margin: 4mm 0 1mm 0; page-break-after: avoid; text-align: left; font-weight: bold; }
+p { margin: 0 0 3mm 0; orphans: 2; widows: 2; }
+strong { color: var(--navy); }
+a { color: var(--navy-soft); text-decoration: none; }
+
+.lead { font-size: 11pt; color: var(--muted); font-style: italic; margin-bottom: 5mm; text-align: left; }
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+table {
+  width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0;
+  font-size: 8.5pt; page-break-inside: auto;
+}
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; }
+th {
+  background: var(--navy); color: #fff; text-align: left;
+  padding: 2mm 2.5mm; font-weight: bold; font-size: 8.5pt; line-height: 1.35;
+}
+td { padding: 1.8mm 2.5mm; border-bottom: 0.5pt solid var(--rule); vertical-align: top; line-height: 1.4; text-align: left; }
+tbody tr:nth-child(even) { background: var(--tint); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+
+/* ── Callouts ────────────────────────────────────────────────────────────── */
+.callout {
+  border-left: 3pt solid var(--magenta); background: var(--tint);
+  padding: 3mm 4mm; margin: 4mm 0; font-size: 9.5pt; page-break-inside: avoid;
+}
+.callout.warn { border-left-color: #c2410c; background: var(--tint-warn); }
+.callout.good { border-left-color: #15803d; background: var(--tint-good); }
+.callout .label {
+  display: block; font-size: 7.5pt; letter-spacing: 1.4pt; text-transform: uppercase;
+  color: var(--magenta); font-weight: bold; margin-bottom: 1.5mm;
+}
+.callout.warn .label { color: #c2410c; }
+.callout.good .label { color: #15803d; }
+
+/* ── Stat row ────────────────────────────────────────────────────────────── */
+.stats { display: flex; gap: 3mm; margin: 5mm 0; page-break-inside: avoid; }
+.stat {
+  flex: 1; border: 0.75pt solid var(--rule); border-top: 2.5pt solid var(--magenta);
+  padding: 3mm; text-align: center; background: #fff;
+}
+.stat .v { display: block; font-size: 17pt; font-weight: bold; color: var(--navy); line-height: 1.1; }
+.stat .l { display: block; font-size: 7pt; color: var(--muted); margin-top: 1.5mm; line-height: 1.35; }
+
+/* ── Figures ─────────────────────────────────────────────────────────────── */
+figure { margin: 5mm 0; page-break-inside: avoid; text-align: center; }
+figure svg { max-width: 100%; }
+figcaption {
+  font-size: 8pt; color: var(--muted); margin-top: 2mm; text-align: left;
+  border-top: 0.5pt solid var(--rule); padding-top: 1.5mm;
+}
+figcaption b { color: var(--navy); }
+
+/* ── Lists ───────────────────────────────────────────────────────────────── */
+ul, ol { margin: 0 0 3mm 0; padding-left: 6mm; }
+li { margin-bottom: 1.2mm; }
+
+/* ── TOC ─────────────────────────────────────────────────────────────────── */
+.toc { page-break-after: always; }
+.toc h1 { font-size: 19pt; color: var(--navy); border-bottom: 2pt solid var(--magenta); padding-bottom: 2.5mm; margin-bottom: 5mm; }
+.toc ol { list-style: none; padding: 0; margin: 0; }
+.toc li { margin-bottom: 1.4mm; font-size: 9pt; }
+.toc li.part {
+  margin-top: 4mm; font-size: 7.5pt; letter-spacing: 1.6pt; text-transform: uppercase;
+  color: var(--magenta); font-weight: bold; border-bottom: 0.5pt solid var(--rule); padding-bottom: 1mm;
+}
+.toc a::after { content: "  ·  " target-counter(attr(href), page); color: var(--muted); }
+.toc .n { color: var(--magenta); font-weight: bold; display: inline-block; min-width: 7mm; }
+
+/* ── References ──────────────────────────────────────────────────────────── */
+.refs { font-size: 8pt; }
+/* Left-aligned: justifying a line that is mostly one long URL stretches the
+   inter-word spacing into rivers. */
+.refs li { margin-bottom: 1.8mm; word-wrap: break-word; text-align: left; }
+.cite { font-size: 7.5pt; vertical-align: super; color: var(--magenta); font-weight: bold; }
+
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.5pt; background: var(--tint); padding: 0 0.8mm; }
+pre {
+  font-family: "DejaVu Sans Mono", monospace; font-size: 7.5pt; background: var(--tint);
+  border-left: 2pt solid var(--rule); padding: 3mm; white-space: pre; overflow: hidden;
+  page-break-inside: avoid; line-height: 1.4; text-align: left;
+}
+.bangla { font-family: "Noto Sans Bengali", "DejaVu Sans", sans-serif; }
+.small { font-size: 8pt; color: var(--muted); }
+.nobreak { page-break-inside: avoid; }

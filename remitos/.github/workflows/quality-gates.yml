@@ -1,0 +1,184 @@
+# RemitOS — quality gates
+#
+# NOTE: this workflow has never been executed. It declares the gates the team commits
+# to, so that the rules stated in CLAUDE.md are enforced mechanically rather than
+# remembered.
+#
+# Three of these gates are unusual and deliberate. They exist because the corresponding
+# failure modes are invisible in ordinary review:
+#
+#   bangla-completeness  — an English-only string reaching main (ADR 0012)
+#   pii-egress-scan      — a prompt template that would leak PII (ADR 0011)
+#   fairness-gates       — a model release that is accurate overall and unjust per group
+#
+name: Quality Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  # ── Flutter ─────────────────────────────────────────────────────────────────
+  flutter:
+    name: Flutter analyse & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.x"
+      - run: flutter pub get
+        working-directory: apps/mobile
+      - run: dart format --set-exit-if-changed .
+        working-directory: apps/mobile
+      - run: flutter analyze --fatal-infos
+        working-directory: apps/mobile
+      - run: flutter test --coverage
+        working-directory: apps/mobile
+      # Golden tests run in BOTH locales. A layout that only survives English is a
+      # layout that was designed in English (ADR 0012).
+      - run: flutter test --tags golden
+        working-directory: apps/mobile
+
+  # ── Bangla completeness — ADR 0012 ──────────────────────────────────────────
+  bangla-completeness:
+    name: Bangla string completeness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every user-facing string must exist in app_bn.arb
+        run: |
+          # TODO(ci): compare key sets of app_en.arb and app_bn.arb.
+          # FAIL on any key present in en and missing in bn.
+          #
+          # Bangla is the SOURCE locale. A key that exists only in English means a
+          # string was authored in English and shipped untranslated — which is
+          # Congress §13.4 mistake #6 arriving through the back door, one PR at a time.
+          echo "stub"
+
+  # ── Services ────────────────────────────────────────────────────────────────
+  services:
+    name: Services lint, type & test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          [gateway, identity, kyc, payments-orchestrator, routing-engine,
+           fx-service, compliance, fraud, rag-service, agent-orchestrator,
+           notification, reporting, audit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[dev]"
+        working-directory: services/${{ matrix.service }}
+      - run: ruff check .
+        working-directory: services/${{ matrix.service }}
+      - run: mypy --strict app
+        working-directory: services/${{ matrix.service }}
+      - run: pytest --cov=app --cov-fail-under=80
+        working-directory: services/${{ matrix.service }}
+
+  # ── Contracts ───────────────────────────────────────────────────────────────
+  contracts:
+    name: API contract verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate OpenAPI specs
+        run: echo "stub — spectral lint packages/api-contracts/"
+      - name: Pact provider verification
+        run: echo "stub"
+      - name: Fail on breaking event-schema change
+        run: |
+          # Schema evolution is additive. A breaking change is a NEW VERSION, never an
+          # edit — a consumer deployed last week must keep working.
+          echo "stub"
+
+  # ── Security ────────────────────────────────────────────────────────────────
+  security:
+    name: Security scans
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency vulnerabilities
+        run: echo "stub — trivy fs ."
+      - name: Secret scan
+        run: echo "stub — gitleaks detect"
+      - name: Container scan
+        run: echo "stub — trivy image"
+
+  # ── PII egress — ADR 0011 ───────────────────────────────────────────────────
+  pii-egress-scan:
+    name: PII egress boundary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prompt templates must not admit PII
+        run: |
+          # Runs the SAME detector used at runtime by the egress filter, against every
+          # prompt template and every test fixture.
+          #
+          # FAIL on: NID number patterns, Bangladeshi phone formats, account-number
+          # shapes, and real names in fixtures.
+          #
+          # Why in CI and not only at runtime: a runtime filter catches the leak at the
+          # moment it would happen, in production, on a real user's data. CI catches it
+          # before the template is merged. Both are needed; only one is preventive.
+          echo "stub"
+
+  # ── ML ──────────────────────────────────────────────────────────────────────
+  ml:
+    name: ML pipeline & evaluation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every referenced model has a model card
+        run: |
+          # A model referenced in code without a card in docs/ai/model-cards/ fails the
+          # build. Cards are how the fairness gates and known limitations stay attached
+          # to the model rather than drifting into someone's memory.
+          echo "stub"
+      - name: RAG regression
+        run: echo "stub — citation precision must be 1.00; stale-rule leakage must be 0"
+      - name: Red-team suite
+        run: echo "stub — injection, authority escalation, cross-user data elicitation"
+
+  # ── Fairness gates ──────────────────────────────────────────────────────────
+  fairness-gates:
+    name: Model fairness gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Per-group metrics must pass — never aggregate
+        run: |
+          # Gates (docs/ai/eval-plan.md §3):
+          #   false-positive rate ratio, worst vs best group  <= 1.25
+          #   equal opportunity difference                    <= 0.05
+          #   demographic parity difference                   <= 0.05
+          #
+          # Evaluated across gender, age band, division (rural/urban), corridor,
+          # transfer-size band, account tenure and DEVICE TIER.
+          #
+          # Device tier is a wealth proxy. A model that flags older, cheaper handsets
+          # has learned to penalise poverty, and it will do so while reporting excellent
+          # aggregate accuracy. A single-number gate cannot see this; that is precisely
+          # why this job exists separately.
+          echo "stub"
+
+  # ── Docs ────────────────────────────────────────────────────────────────────
+  docs:
+    name: Documentation integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No uncited statistics
+        run: |
+          # Any numeric claim in docs/ must trace to docs/research/data/*.md with a
+          # source URL and access date.
+          echo "stub"
+      - name: Link check
+        run: echo "stub"
+      - name: Build report PDF
+        run: python scripts/build_report.py

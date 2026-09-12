@@ -1,0 +1,278 @@
+<!-- ═══════════════════ CHAPTER 6 ═══════════════════ -->
+<h1 class="chapter" id="c6"><span class="num">6</span>Overcoming each limitation</h1>
+
+<p class="lead">One section per constraint, in the same order as Chapter 5. Each states the
+mechanism, the component that implements it, the metric that proves it, and — where
+relevant — what we cannot fix.</p>
+
+<h2>6.1 The map</h2>
+
+<table>
+<thead><tr><th style="width:4%">#</th><th style="width:20%">Constraint</th><th style="width:32%">Mechanism</th><th style="width:20%">Component</th><th>Metric</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Hundi competition</td><td>Compete on rate, speed, delivery and paperwork — the four dimensions hundi actually wins on</td><td>Whole product</td><td>Landed amount per USD 100 vs corridor benchmark</td></tr>
+<tr><td>2</td><td>FX rate gap</td><td><em>Not solvable.</em> Mitigate by minimising every controllable cost and by timing guidance</td><td><code>fx-service</code></td><td>Realised benefit when guidance followed</td></tr>
+<tr><td>3</td><td>Outbound restriction</td><td><em>Not solvable.</em> Explicitly out of scope</td><td>—</td><td>—</td></tr>
+<tr><td>4</td><td>Agent friction</td><td>Float forecasting; advance notice of large payouts; agent identity logging</td><td>Agent mode, n8n 06</td><td>Failed-journey rate</td></tr>
+<tr><td>5</td><td><strong>Transaction ceilings</strong></td><td><strong>Ceilings as optimiser constraints; legal split proposal before payment</strong></td><td><code>routing-engine</code></td><td>Payout-failure rate at counter</td></tr>
+<tr><td>6</td><td>Device exclusion</td><td>Offline-first client; USSD and Bangla IVR as a first-class path</td><td>Flutter + <code>notification</code></td><td>IVR/USSD flow completion</td></tr>
+<tr><td>7</td><td>Literacy and language</td><td>Bangla-first design; voice at every step; lakh grouping; Bengali numerals</td><td>Design system, <code>bangla_nlu</code></td><td>Task completion by literacy band</td></tr>
+<tr><td>8</td><td>Interoperability</td><td>Treat every rail as an interchangeable endpoint; route into the right container</td><td><code>routing-engine</code></td><td>Share requiring a second move</td></tr>
+<tr><td>9</td><td>KYC friction</td><td>OCR extraction; agent-assisted capture; transliteration-aware matching</td><td><code>kyc</code>, <code>compliance</code></td><td>Onboarding completion; time to verdict</td></tr>
+<tr><td>10</td><td>Trust and fraud</td><td>Contextual Bangla scam warnings; second-channel confirmation; visible appeal route</td><td><code>fraud</code>, <code>notification</code></td><td>Confirmed fraud rate; post-hold retention</td></tr>
+<tr><td>11</td><td>Incentive distortion</td><td>Make eligibility explicit and automatic; do not build economics that require it</td><td>Quote surface</td><td>Contribution excluding incentive</td></tr>
+</tbody>
+</table>
+
+<h2>6.2 Competing with hundi on its own four dimensions</h2>
+
+<p>Since hundi wins on rate, speed, delivery and paperwork, each must be answered
+specifically. Answering three of four does not convert a user.</p>
+
+<table>
+<thead><tr><th style="width:16%">Dimension</th><th>Our answer</th><th style="width:20%">Honest assessment</th></tr></thead>
+<tbody>
+<tr><td><strong>Rate</strong></td><td>We cannot beat the kerb rate. We can ensure the user captures every controllable advantage: the cheapest compliant path, the 2.5 % incentive applied automatically, no hidden FX margin, and timing guidance where it is safe to give it.</td><td>Partial. Policy-bounded.</td></tr>
+<tr><td><strong>Speed</strong></td><td>Route by predicted arrival time, not published SLA. Re-route automatically when a partner degrades rather than queuing behind it.</td><td>Achievable on the fastest rails.</td></tr>
+<tr><td><strong>Delivery</strong></td><td>Route to the endpoint that suits the recipient, including their existing wallet. Advance notice to the agent for large payouts so the float is there. Home-delivery partners where available.</td><td>Partner-dependent.</td></tr>
+<tr><td><strong>Paperwork</strong></td><td>OCR extraction instead of typing; agent-assisted capture; a clear time commitment instead of silence.</td><td>Reducible, not removable. KYC is law.</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+  <span class="label">The realistic claim</span>
+  We will not win every hundi user. We can win the segment for which
+  <strong>certainty, a verifiable record and recourse</strong> outweigh a marginally
+  better rate — households saving for a land purchase, paying institutional school fees,
+  or building a credit history. Claiming the whole 49 % would be a fabrication; naming the
+  winnable segment is a strategy.
+</div>
+
+<h2>6.3 Reaching the users an app cannot reach</h2>
+
+<p>Roughly 69 million mobile connections carry no data. Two mechanisms, not one.</p>
+
+<p><strong>Offline-first in the app.</strong> The network is treated as an unreliable
+synchroniser rather than a prerequisite. Transfers compose offline into a durable outbox
+with a client-generated idempotency key, so a retry after a crash cannot double-send. The
+UI says <em>queued</em>, never <em>sent</em>, until the server confirms — a distinction
+that matters enormously when the money is for a hospital. Quotes cached offline are shown
+with a staleness marker and are never presented as binding.</p>
+
+<p><strong>USSD and IVR for feature phones.</strong> A parallel channel sharing the same
+backend contracts. USSD for balance and transfer status; <strong>Bangla IVR</strong> for
+users who cannot read a USSD menu at all; SMS in Bengali script with a transliterated
+fallback for handsets lacking Bengali font support — a real device limitation that is
+routinely overlooked.</p>
+
+<h2>6.4 Making the interface work for the people who need it most</h2>
+
+<p>Bangla is treated as the <strong>source language of design</strong>, not a translation
+target. Screens are laid out with Bangla strings first and English must fit that layout,
+because Bengali is frequently 20–40 % longer for the same meaning and an English-first
+layout will overflow or truncate.</p>
+
+<table>
+<thead><tr><th style="width:28%">Failure mode</th><th>Mechanism</th></tr></thead>
+<tbody>
+<tr><td>Layout breaks in Bangla</td><td>Designed in Bangla first; golden tests run in both locales in CI</td></tr>
+<tr><td>Conjuncts render wrongly</td><td>Bengali-complete typeface chosen before the Latin face, with verified coverage</td></tr>
+<tr><td>Amounts grouped wrongly</td><td>Lakh/crore grouping by default; enforced through a single formatter, never <code>NumberFormat.currency</code></td></tr>
+<tr><td>Numerals unreadable</td><td>Bengali digits (১২৩) user-selectable and default on</td></tr>
+<tr><td>Vocabulary is calqued English</td><td>Reviewed glossary written by native speakers, not generated</td></tr>
+<tr><td>Voice fails on dialect</td><td>ASR evaluated per region with a per-region gate, never an average</td></tr>
+<tr><td>English-only strings ship</td><td>CI fails on any key missing from the Bangla resource file</td></tr>
+</tbody>
+</table>
+
+<p>The last row is the one that makes the rest survive contact with a deadline. Without a
+mechanical gate, English-only strings enter the product one pull request at a time, and
+the localisation claim quietly becomes false.</p>
+
+<h2>6.5 The transaction-ceiling remedy — the central design decision</h2>
+
+<p>This is the mechanism that most distinguishes RemitOS, and it is worth stating
+precisely.</p>
+
+<p><strong>Regulatory ceilings are inputs to the routing optimiser, not validations
+performed after the fact.</strong> Before any price is shown, the constraint filter
+computes the remaining legal capacity at each endpoint, given the recipient's usage today
+and this month and — for wallets — the balance ceiling. The engine then returns one of
+three honest outcomes:</p>
+
+<ol>
+<li><strong>A single compliant path</strong>, where one endpoint can clear the full amount
+legally.</li>
+<li><strong>A proposed legal split</strong>: for example Tk 30,000 to the wallet for
+same-day cash-out and Tk 90,000 to a linked bank account tomorrow, both legs priced,
+timed, and explained in Bangla on one screen.</li>
+<li><strong>Explicit infeasibility</strong>, stated <em>before</em> the sender pays, with
+concrete alternatives.</li>
+</ol>
+
+<p>A subtlety worth noting: headroom is a property of the <em>recipient</em>, not of the
+partner, and it is consumed across every sender paying that recipient. A route that looks
+available in isolation may not be — which is exactly the case a post-hoc validation
+misses.</p>
+
+<figure>
+<svg viewBox="0 0 560 210" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans, sans-serif">
+  <text x="8" y="12" font-size="8.5" font-weight="bold" fill="#c2410c">Every other product</text>
+  <g font-size="7.5">
+    <rect x="8" y="20" width="88" height="24" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="52" y="35" text-anchor="middle" fill="#1a1f2b">Quote shown</text>
+    <rect x="104" y="20" width="88" height="24" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="148" y="35" text-anchor="middle" fill="#1a1f2b">Sender pays</text>
+    <rect x="200" y="20" width="88" height="24" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="244" y="35" text-anchor="middle" fill="#1a1f2b">Paid to wallet</text>
+    <rect x="296" y="20" width="110" height="24" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="351" y="35" text-anchor="middle" fill="#1a1f2b">40-min journey</text>
+    <rect x="414" y="14" width="138" height="36" rx="3" fill="#c2410c"/>
+    <text x="483" y="28" text-anchor="middle" fill="#fff" font-weight="bold">FAILS at the counter</text>
+    <text x="483" y="40" text-anchor="middle" fill="#fde8dd" font-size="7">"you can take Tk 30,000"</text>
+  </g>
+  <path d="M96,32 L104,32 M192,32 L200,32 M288,32 L296,32 M406,32 L414,32" stroke="#5d6675" stroke-width="1"/>
+
+  <line x1="8" y1="64" x2="552" y2="64" stroke="#d9dee7"/>
+
+  <text x="8" y="82" font-size="8.5" font-weight="bold" fill="#15803d">RemitOS</text>
+  <g font-size="7.5">
+    <rect x="8" y="90" width="100" height="24" rx="3" fill="#f4f6fa" stroke="#d9dee7"/><text x="58" y="105" text-anchor="middle" fill="#1a1f2b">Amount entered</text>
+    <rect x="116" y="84" width="120" height="36" rx="3" fill="#1b2a4a"/>
+    <text x="176" y="98" text-anchor="middle" fill="#fff" font-weight="bold">Constraint filter</text>
+    <text x="176" y="110" text-anchor="middle" fill="#aebbd4" font-size="7">recipient headroom, not partner</text>
+    <rect x="244" y="84" width="120" height="36" rx="3" fill="#2d4270"/>
+    <text x="304" y="98" text-anchor="middle" fill="#fff" font-weight="bold">Optimiser</text>
+    <text x="304" y="110" text-anchor="middle" fill="#c6d0e2" font-size="7">minimum legal legs</text>
+    <rect x="372" y="84" width="180" height="36" rx="3" fill="#15803d"/>
+    <text x="462" y="98" text-anchor="middle" fill="#fff" font-weight="bold">Split proposed BEFORE payment</text>
+    <text x="462" y="110" text-anchor="middle" fill="#dcf0e3" font-size="7">priced · timed · explained in Bangla</text>
+  </g>
+  <path d="M108,102 L116,102 M236,102 L244,102 M364,102 L372,102" stroke="#5d6675" stroke-width="1"/>
+
+  <rect x="8" y="136" width="544" height="66" rx="3" fill="#f4f6fa" stroke="#d9dee7"/>
+  <text x="18" y="152" font-size="8" font-weight="bold" fill="#1b2a4a">What the recipient is told, before her son pays:</text>
+  <text x="18" y="168" font-size="8" fill="#1a1f2b">৳৩০,০০০ → বিকাশ ওয়ালেট · আজই তোলা যাবে</text>
+  <text x="18" y="182" font-size="8" fill="#1a1f2b">৳৯০,০০০ → ব্যাংক হিসাব · আগামীকাল</text>
+  <text x="18" y="196" font-size="7.5" fill="#5d6675" font-style="italic">Spoken by voice call for users who cannot read. Both legs priced. Fully legal.</text>
+</svg>
+<figcaption><b>Figure 6.1</b> — The ceiling remedy. The difference is not the rule; every
+provider is subject to the same Tk 30,000 daily cash-out cap. The difference is
+<b>when the rule is applied</b> — before the quote rather than at the counter.</figcaption>
+</figure>
+
+<h2>6.6 Reducing KYC friction without weakening due diligence</h2>
+
+<p>The response to KYC-driven abandonment is not lighter due diligence. It is due
+diligence that is fast, assisted, and honest about its timeline.</p>
+
+<ul>
+<li><strong>OCR extraction</strong> trained on the documents people actually carry —
+worn, laminated, photographed on a low-end camera in poor light. A model trained on clean
+scans fails precisely for the users who most need it to work.</li>
+<li><strong>Transliteration-aware matching.</strong> Fuzzy and phonetic comparison, never
+exact string equality, so that a legitimately variant romanisation of a common Bangla name
+is neither a missed sanctions hit nor an unfair false positive.</li>
+<li><strong>Agent-assisted capture</strong> for users who cannot self-serve, with the
+agent's identity logged on every action — which protects honest agents as much as it
+deters dishonest ones.</li>
+<li><strong>A stated time commitment.</strong> A ten-minute clear answer beats a two-day
+silence, and silence is what returns a household to hundi.</li>
+</ul>
+
+<h2>6.7 What we explicitly cannot fix</h2>
+
+<table>
+<thead><tr><th style="width:28%">Constraint</th><th>Why it is beyond any application</th></tr></thead>
+<tbody>
+<tr><td><strong>Outbound restriction</strong></td><td>A capital-account policy decision. It is why PayPal is unavailable, and no product architecture changes it. Out of scope, stated plainly.</td></tr>
+<tr><td><strong>The official/kerb rate gap</strong></td><td>A monetary-policy outcome. We can minimise every controllable cost so that the formal channel is as close to competitive as policy allows — we cannot close the gap itself.</td></tr>
+<tr><td><strong>The 2.5 % incentive's existence</strong></td><td>A fiscal decision. We make eligibility explicit and automatic, and we deliberately do not build unit economics that depend on it continuing.</td></tr>
+<tr><td><strong>Agent network density</strong></td><td>bKash and Nagad have hundreds of thousands of touchpoints built over fifteen years. We partner; we will never out-build this.</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+  <span class="label">Why this section exists</span>
+  It would be straightforward to omit §6.7 and let the reader assume every constraint is
+  addressed. Congress §20.9 prohibits misrepresenting technical capability, and the same
+  standard reasonably applies to regulatory capability. A remedy chapter without a limits
+  section is not a stronger submission — it is a less trustworthy one.
+</div>
+
+<!-- ═══════════════════ CHAPTER 7 ═══════════════════ -->
+<h1 class="chapter" id="c7"><span class="num">7</span>Why it matters</h1>
+
+<p class="lead">The case for working on this rather than something else — at three scales.</p>
+
+<h2>7.1 At the scale of a household</h2>
+
+<p>Remittance in Bangladesh is not discretionary income. It is, for millions of households,
+the income — paying for school fees, medicine, roof repairs, and the debt taken on to fund
+the migration in the first place.</p>
+
+<p>Two consequences follow that are invisible in aggregate statistics. First, cost is not
+an inconvenience but a direct reduction in a household's consumption. Second, <em>delay</em>
+is not an inconvenience either: a household waiting three days for emergency funds
+frequently borrows locally at rates that dwarf anything the transfer cost. That
+second-order cost appears in no remittance-price index anywhere.</p>
+
+<h2>7.2 At the scale of the country</h2>
+
+<table>
+<thead><tr><th>Fact</th><th class="num">Value</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Formal inflow, FY 2025-26</td><td class="num">USD 35.56 bn</td><td><span class="cite">[5]</span></td></tr>
+<tr><td>Year-on-year growth</td><td class="num">+17.3 %</td><td><span class="cite">[5]</span></td></tr>
+<tr><td>World rank</td><td class="num">7th</td><td><span class="cite">[6]</span></td></tr>
+<tr><td>Share of GDP</td><td class="num">5.26 % (2023)</td><td><span class="cite">[7]</span></td></tr>
+<tr><td>Estimated reserve shortfall from hundi</td><td class="num">≈ 19.2 % disparity</td><td><span class="cite">[20]</span></td></tr>
+</tbody>
+</table>
+
+<p>Remittance is one of Bangladesh's principal sources of foreign exchange. Formal inflows
+enter reserves; informal inflows do not. Moving flow from informal to formal is therefore
+not only a consumer-welfare outcome — it is a macroeconomic one, which is why the state
+pays a 2.5 % incentive to achieve it.</p>
+
+<h3>An arithmetic illustration</h3>
+
+<p>One percent of USD 35.56 bn is approximately <strong>USD 355 million per year</strong>.
+That is the scale of value attached to each percentage point of cost in this flow.</p>
+
+<div class="callout warn">
+  <span class="label">Read that figure precisely</span>
+  It is an illustration of the flow's <em>scale</em> — arithmetic on a published inflow
+  figure. It is <strong>not</strong> a claim that this project will save USD 355 million,
+  and no such claim is made anywhere in this report. The distinction between "one percent
+  of this flow is USD 355 m" and "we will save USD 355 m" is the distinction between an
+  honest submission and a disqualifiable one under §20.4.
+</div>
+
+<h2>7.3 At the scale of the goal</h2>
+
+<p>UN Sustainable Development Goal 10.c commits to reducing remittance transaction costs
+to <strong>less than 3 %</strong> by 2030 and eliminating corridors costing more than
+5 %.<span class="cite">[3]</span> The global average stands at 6.36 %, and the trajectory
+across recent quarters is flat.<span class="cite">[1][2]</span></p>
+
+<p>The target will not be met by waiting for costs to fall. It will be met, if at all, by
+building the systems that make the digital channel — already 2.71 points cheaper — both
+universally reachable and genuinely optimised. That is a specific, buildable engineering
+agenda rather than an aspiration.</p>
+
+<h2>7.4 Why this is an AI problem specifically</h2>
+
+<p>Re-reading the cost structure from Chapter 2 makes the case without rhetoric:</p>
+
+<table>
+<thead><tr><th style="width:30%">Cost driver</th><th>The problem underneath it</th><th style="width:22%">Problem class</th></tr></thead>
+<tbody>
+<tr><td>Manual compliance labour</td><td>Reading regulation and applying it to a case</td><td><strong>Retrieval + reasoning</strong></td></tr>
+<tr><td>Unoptimised routing</td><td>Choosing among paths with unknown outcomes</td><td><strong>Prediction + optimisation</strong></td></tr>
+<tr><td>Payout failure</td><td>Constraints applied at the wrong moment</td><td><strong>Constrained optimisation</strong></td></tr>
+<tr><td>Pre-funding cost</td><td>Guessing liquidity needs ahead of demand</td><td><strong>Forecasting</strong></td></tr>
+<tr><td>False-positive compliance holds</td><td>Poor discrimination between risk and noise</td><td><strong>Classification + ranking</strong></td></tr>
+<tr><td>Exclusion by literacy</td><td>Interfaces that require reading</td><td><strong>Speech + NLU</strong></td></tr>
+</tbody>
+</table>
+
+<p>Every row is a machine-learning or retrieval problem. This is why the AI in RemitOS is
+not a layer added to a payments product — remove it and there is no product left, only
+another wallet in a market that already has fourteen.</p>

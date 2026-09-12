@@ -1,0 +1,114 @@
+# RemitOS Flutter client — Android · iOS · Web from one codebase (ADR 0001)
+#
+# NOTE: dependencies are DECLARED, never resolved. `flutter pub get` has not been run
+# and this repository ships no lockfile. Versions are pinned to a minor range so the
+# intent is unambiguous when the team does resolve them.
+
+name: remitos
+description: RemitOS — the intelligence and orchestration layer for borderless money.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # ── State management ────────────────────────────────────────────────────────
+  flutter_bloc: ^8.1.6          # BLoC per CLAUDE.md; no logic in widgets
+  equatable: ^2.0.5
+  freezed_annotation: ^2.4.4    # sealed unions for Result and state
+  json_annotation: ^4.9.0
+
+  # ── Dependency injection ────────────────────────────────────────────────────
+  get_it: ^7.7.0
+  injectable: ^2.4.4
+
+  # ── Routing ─────────────────────────────────────────────────────────────────
+  go_router: ^14.2.0            # declarative, deep-link and web-URL capable
+
+  # ── Network ─────────────────────────────────────────────────────────────────
+  dio: ^5.6.0
+  retrofit: ^4.2.0
+  connectivity_plus: ^6.0.5     # drives the offline banner and outbox flush
+
+  # ── Storage ─────────────────────────────────────────────────────────────────
+  flutter_secure_storage: ^9.2.2  # tokens + device binding key (secure enclave)
+  drift: ^2.19.0                  # local-first store, outbox queue (ADR 0008)
+  sqlite3_flutter_libs: ^0.5.24
+  shared_preferences: ^2.3.2      # non-sensitive preferences only
+
+  # ── Localisation (ADR 0012 — Bangla-first) ──────────────────────────────────
+  intl: ^0.19.0
+  # NOTE: intl's default grouping is western (120,000). BDT amounts must render as
+  # lakh/crore (1,20,000) — see core/l10n/bdt_formatter.dart. Do NOT use
+  # NumberFormat.currency for BDT without that wrapper.
+
+  # ── Security ────────────────────────────────────────────────────────────────
+  local_auth: ^2.3.0            # biometric unlock
+  crypto: ^3.0.5
+
+  # ── Voice (ADR 0008 / 0012) ─────────────────────────────────────────────────
+  speech_to_text: ^7.0.0        # Bangla ASR front-end; model served in-boundary
+  flutter_tts: ^4.0.2           # amounts are ALWAYS read back before execution
+
+  # ── UI ──────────────────────────────────────────────────────────────────────
+  flutter_svg: ^2.0.10          # vector icons keep the <50 KB screen budget
+  cached_network_image: ^3.4.0
+
+  # ── Observability ───────────────────────────────────────────────────────────
+  logger: ^2.4.0
+  sentry_flutter: ^8.9.0        # PII scrubbing configured in core/analytics/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.12
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  injectable_generator: ^2.6.2
+  retrofit_generator: ^8.1.0
+  drift_dev: ^2.19.0
+  mocktail: ^1.0.4
+  bloc_test: ^9.1.7
+  golden_toolkit: ^0.15.0       # golden tests run in BOTH bn and en
+
+flutter:
+  uses-material-design: true
+
+  # Bangla-first: the Bengali face is chosen first and the Latin face must fit its
+  # metrics, not the reverse (ADR 0012). Faces are SUBSET to the glyphs actually used
+  # so the low-bandwidth budget survives Bengali conjunct coverage.
+  fonts:
+    - family: NotoSansBengali
+      fonts:
+        - asset: assets/fonts/NotoSansBengali-Regular.ttf
+        - asset: assets/fonts/NotoSansBengali-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansBengali-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+
+  assets:
+    - assets/icons/
+    - assets/config/
+
+flutter_intl:
+  enabled: true
+  main_locale: bn        # ← Bangla is the SOURCE locale, not a translation target
+  arb_dir: lib/core/l10n
+  output_dir: lib/core/l10n/generated

@@ -1,0 +1,252 @@
+<!-- ═══════════════════ CHAPTER 12 ═══════════════════ -->
+<h1 class="chapter" id="c12"><span class="num">12</span>Technical architecture</h1>
+
+<p class="lead">A production architecture for a system that touches identity documents,
+money and regulation. Full detail lives in the repository; this chapter is the argument
+for why it is shaped this way.</p>
+
+<h2>12.1 The one-paragraph version</h2>
+
+<p>A send request enters through the Flutter client, is authenticated and risk-scored, and
+is handed to the <strong>routing engine</strong>, which solves a constrained optimisation
+over every available payout path. Compliance runs as a RAG-grounded process that cites the
+regulation behind each verdict or refuses to decide. The winning route is executed by a
+<strong>saga orchestrator</strong> against partner rails, written to a double-entry
+<strong>ledger</strong>, and reconciled nightly. Every step emits an immutable audit event.</p>
+
+<h2>12.2 Mapped to the Congress reference architecture</h2>
+
+<p>The Participants Guide §7 sets out an eight-layer AI-native reference architecture. Our
+implementation maps to it directly:</p>
+
+<table>
+<thead><tr><th style="width:26%">Congress layer</th><th>RemitOS implementation</th></tr></thead>
+<tbody>
+<tr><td>User Interaction</td><td>Flutter for Android, iOS and Web; USSD and Bangla IVR bridge via <code>notification</code></td></tr>
+<tr><td>Application Logic</td><td><code>gateway</code> (BFF) and <code>payments-orchestrator</code> (saga state machine)</td></tr>
+<tr><td>AI Intelligence</td><td><code>agent-orchestrator</code> plus eight specialist ML models</td></tr>
+<tr><td>Knowledge Retrieval</td><td><code>rag-service</code>: hybrid dense + BM25 + reranker, with GraphRAG</td></tr>
+<tr><td>Agent Orchestration</td><td>Five agents with an MCP tool registry and human-in-the-loop gates</td></tr>
+<tr><td>Data Infrastructure</td><td>PostgreSQL, Kafka, Qdrant (vectors), Neo4j (entity graph), object store, dbt warehouse</td></tr>
+<tr><td>Automation & Integration</td><td>n8n — twelve workflows</td></tr>
+<tr><td>Deployment</td><td>Docker, Kubernetes with environment overlays, Terraform</td></tr>
+</tbody>
+</table>
+
+<h2>12.3 Why bounded contexts rather than layers</h2>
+
+<p>The common failure is a "microservice" architecture that is really a distributed
+monolith: an api-service, a db-service, a logic-service, all sharing one database. Those
+are layers. They deploy together, fail together and scale together — all the cost of
+distribution with none of the benefit.</p>
+
+<p>Our load profile is genuinely uneven, and that is the actual justification. The routing
+engine is CPU-bound and bursty. The ledger is write-heavy and must never lose data. The
+RAG service is embedding-bound. These cannot share a scaling policy.</p>
+
+<p>So: <strong>one service per bounded context, each owning its own datastore</strong>.
+Services communicate by published event or by explicit API contract. No service reads
+another service's database.</p>
+
+<h2>12.4 The fourteen services</h2>
+
+<table>
+<thead><tr><th style="width:22%">Service</th><th style="width:20%">Bounded context</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td><code>gateway</code></td><td>Edge</td><td>BFF; REST + GraphQL; cost-aware rate limiting — a quote invokes ML inference, so quote endpoints are throttled harder than reads</td></tr>
+<tr><td><code>identity</code></td><td>Who the user is</td><td>OIDC, RBAC, device binding, step-up auth. Device binding is primary; SMS OTP alone is insufficient for high value, because SIM swap is a live attack in this market</td></tr>
+<tr><td><code>kyc</code></td><td>Proving who they are</td><td>Document OCR, liveness, screening hooks, CDD tiering</td></tr>
+<tr><td><code>ledger</code></td><td>What is owed</td><td>Double-entry, event-sourced. Specified in Go for predictable latency under concurrent posting</td></tr>
+<tr><td><code>payments-orchestrator</code></td><td>Making it happen</td><td>Saga with compensating transactions; re-routes a failed leg rather than failing the transfer</td></tr>
+<tr><td><strong><code>routing-engine</code></strong></td><td>Which path</td><td><strong>Commercial core.</strong> §12.5</td></tr>
+<tr><td><code>fx-service</code></td><td>What rate</td><td>Produces the <em>binding</em> quote; the cost model only predicts and ranks</td></tr>
+<tr><td><strong><code>compliance</code></strong></td><td>Is it allowed</td><td><strong>Core differentiator.</strong> Chapter 14 and 16</td></tr>
+<tr><td><code>fraud</code></td><td>Is it genuine</td><td>Synchronous, 150 ms p95. Distinct from AML: fraud is against the user, laundering is through the system</td></tr>
+<tr><td><code>rag-service</code></td><td>What the rules say</td><td>Citation-enforced retrieval; returns NOT_FOUND rather than guessing</td></tr>
+<tr><td><code>agent-orchestrator</code></td><td>Multi-step reasoning</td><td>MCP tool registry with authority enforced at the tool boundary</td></tr>
+<tr><td><code>notification</code></td><td>Telling people</td><td>Carries the feature-phone path: push, SMS, Bangla IVR, USSD</td></tr>
+<tr><td><code>reporting</code></td><td>Telling the regulator</td><td>Regulatory returns, STR/CTR assembly</td></tr>
+<tr><td><code>audit</code></td><td>Proving what happened</td><td>Append-only, hash-chained; powers the audit report</td></tr>
+</tbody>
+</table>
+
+<h2>12.5 Inside the routing engine</h2>
+
+<p>The engine answers one question: <em>given this send request, which path delivers the
+most BDT to the recipient, soonest, legally?</em></p>
+
+<figure>
+<svg viewBox="0 0 560 168" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans, sans-serif">
+  <defs><marker id="a2" markerWidth="7" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5 z" fill="#5d6675"/></marker></defs>
+  <g font-size="7.5" text-anchor="middle">
+    <rect x="6" y="46" width="76" height="34" rx="3" fill="#f4f6fa" stroke="#d9dee7"/>
+    <text x="44" y="61" fill="#1b2a4a" font-weight="bold">SendRequest</text><text x="44" y="72" fill="#5d6675">amount · corridor</text>
+    <rect x="98" y="46" width="80" height="34" rx="3" fill="#2d4270"/>
+    <text x="138" y="61" fill="#fff" font-weight="bold">Candidates</text><text x="138" y="72" fill="#c6d0e2">all feasible paths</text>
+    <rect x="194" y="46" width="80" height="34" rx="3" fill="#2d4270"/>
+    <text x="234" y="61" fill="#fff" font-weight="bold">ML predict</text><text x="234" y="72" fill="#c6d0e2">cost + ETA</text>
+    <rect x="290" y="40" width="86" height="46" rx="3" fill="#d81e5b"/>
+    <text x="333" y="56" fill="#fff" font-weight="bold">Constraint filter</text>
+    <text x="333" y="67" fill="#fde4ec">BB ceilings</text><text x="333" y="77" fill="#fde4ec">liquidity · risk</text>
+    <rect x="392" y="46" width="72" height="34" rx="3" fill="#2d4270"/>
+    <text x="428" y="61" fill="#fff" font-weight="bold">Optimise</text><text x="428" y="72" fill="#c6d0e2">max landed</text>
+    <rect x="480" y="40" width="74" height="46" rx="3" fill="#1b2a4a"/>
+    <text x="517" y="56" fill="#fff" font-weight="bold">Explain</text>
+    <text x="517" y="67" fill="#aebbd4">reason codes</text><text x="517" y="77" fill="#aebbd4">Bangla rationale</text>
+  </g>
+  <g stroke="#5d6675" stroke-width="1" marker-end="url(#a2)">
+    <path d="M82,63 L98,63"/><path d="M178,63 L194,63"/><path d="M274,63 L290,63"/><path d="M376,63 L392,63"/><path d="M464,63 L480,63"/>
+  </g>
+  <g font-size="7" fill="#5d6675" text-anchor="middle">
+    <rect x="290" y="8" width="86" height="14" rx="2" fill="#fdf3f6" stroke="#d81e5b" stroke-width="0.5"/>
+    <text x="333" y="18" fill="#d81e5b" font-weight="bold">headroom per RECIPIENT</text>
+    <path d="M333,22 L333,40" stroke="#d81e5b" stroke-width="0.75"/>
+    <text x="392" y="30" fill="#5d6675">FX forecast →</text>
+    <path d="M428,34 L428,46" stroke="#5d6675" stroke-width="0.75"/>
+  </g>
+  <rect x="6" y="104" width="548" height="58" rx="3" fill="#f4f6fa" stroke="#d9dee7"/>
+  <text x="16" y="120" font-size="8" font-weight="bold" fill="#1b2a4a">Three possible outcomes — all delivered before the sender pays:</text>
+  <text x="16" y="134" font-size="7.5" fill="#1a1f2b">1 · a single compliant path        2 · a proposed legal split, priced and timed        3 · explicit infeasibility, with alternatives</text>
+  <text x="16" y="150" font-size="7.5" fill="#d81e5b" font-style="italic">Budget: p95 under 400 ms including inference. With tens of candidates this is a filter-and-rank, not a solver.</text>
+</svg>
+<figcaption><b>Figure 12.1</b> — Routing engine internals. The constraint filter sits
+<b>before</b> the optimiser and before any price is shown — the ordering that distinguishes
+this from post-hoc validation.</figcaption>
+</figure>
+
+<h2>12.6 Non-functional targets</h2>
+
+<table>
+<thead><tr><th style="width:34%">Attribute</th><th style="width:22%">Target</th><th>Rationale</th></tr></thead>
+<tbody>
+<tr><td>Quote latency, p95</td><td>&lt; 400 ms</td><td>The routing decision must feel instant or users will not compare</td></tr>
+<tr><td>Payout initiation, p95</td><td>&lt; 3 s</td><td>Perceived speed is the hundi-beating metric</td></tr>
+<tr><td>Availability</td><td>99.9 % core / 99.5 % intelligence</td><td>Intelligence degrades gracefully to rules</td></tr>
+<tr><td>RPO / RTO, ledger</td><td>0 / 15 min</td><td>Money state cannot be lost</td></tr>
+<tr><td>Screen payload, low-bandwidth</td><td>&lt; 50 KB</td><td>≈ 69 m connections have no data plan</td></tr>
+<tr><td>PII residency</td><td>In-country only</td><td>Chapter 16</td></tr>
+</tbody>
+</table>
+
+<h2>12.7 Graceful degradation</h2>
+
+<p>AI is an enhancement, never a dependency for correctness. When the intelligence layer is
+unavailable the system steps down — and says that it has:</p>
+
+<table>
+<thead><tr><th style="width:22%">Level</th><th>Behaviour</th></tr></thead>
+<tbody>
+<tr><td><strong>1 · Full</strong></td><td>ML routing, RAG-grounded compliance, FX forecast</td></tr>
+<tr><td><strong>2 · Degraded</strong></td><td>Cached model predictions, deterministic compliance rules</td></tr>
+<tr><td><strong>3 · Rules-only</strong></td><td>Static routing table, conservative compliance, human review on all escalations</td></tr>
+<tr><td><strong>4 · Read-only</strong></td><td>New quotes disabled; existing transfers still settle and reconcile</td></tr>
+</tbody>
+</table>
+
+<p>At every level the ledger and audit log remain authoritative. A system that cannot
+explain what it did while its models were down is not production-grade — and this is also
+the mechanism by which a detected concept drift is handled: step down, rather than continue
+deciding confidently on a stale model.</p>
+
+<!-- ═══════════════════ CHAPTER 13 ═══════════════════ -->
+<h1 class="chapter" id="c13"><span class="num">13</span>AI, machine learning and data science</h1>
+
+<p class="lead">Eight models, what each is for, and — equally important — what each must
+never be used for.</p>
+
+<h2>13.1 The model inventory</h2>
+
+<table>
+<thead><tr><th style="width:22%">Model</th><th style="width:10%">Tier</th><th>Purpose</th><th style="width:22%">Primary gate</th></tr></thead>
+<tbody>
+<tr><td><strong>AML risk scoring</strong></td><td><strong>High</strong></td><td>Prioritise human review of transfers</td><td>Recall ≥ 0.90 at fixed review capacity</td></tr>
+<tr><td><strong>Fraud detection</strong></td><td><strong>High</strong></td><td>Real-time defence against takeover and social engineering</td><td>Recall ≥ 0.85 at 1 % FPR</td></tr>
+<tr><td><strong>Document intelligence</strong></td><td><strong>High</strong></td><td>NID and passport extraction</td><td>Field exact match ≥ 0.97 degraded</td></tr>
+<tr><td>Corridor cost predictor</td><td>Medium</td><td>Landed cost and ETA per rail</td><td>MAPE ≤ 8 %; ETA p90 error ≤ 30 min</td></tr>
+<tr><td>FX forecasting</td><td>Medium</td><td>Send-timing guidance</td><td>Directional accuracy ≥ 58 %</td></tr>
+<tr><td>Bangla NLU</td><td>Medium</td><td>ASR, intent, TTS for voice flows</td><td>WER ≤ 0.15 <strong>per region</strong></td></tr>
+<tr><td>Recipient recommender</td><td>Low</td><td>Reduce entry error and friction</td><td>Top-3 accuracy ≥ 0.92</td></tr>
+<tr><td>Churn / LTV</td><td>Low</td><td>Internal retention analytics</td><td>AUC ≥ 0.78</td></tr>
+</tbody>
+</table>
+
+<p>Each has a model card in the repository stating intended use, out-of-scope use, training
+data, features, evaluation including per-group fairness, known limitations, ethical
+considerations, and an owner. <strong>A model referenced in code without a card fails the
+build.</strong></p>
+
+<h2>13.2 Three out-of-scope statements worth quoting</h2>
+
+<p>Boundaries do more work than capabilities in a system that touches money:</p>
+
+<table>
+<thead><tr><th style="width:24%">Model</th><th>The prohibition, and why</th></tr></thead>
+<tbody>
+<tr><td>AML risk scoring</td><td><strong>Never the sole basis for blocking a transfer or closing an account.</strong> It is a triage tool that orders a queue. It does not decide.</td></tr>
+<tr><td>Churn / LTV</td><td><strong>Never used to price differentially by predicted value.</strong> Charging a high-LTV user more on a remittance product used for subsistence income is discriminatory pricing, and it is prohibited here rather than merely discouraged.</td></tr>
+<tr><td>Bangla NLU</td><td><strong>Voice is never a credential.</strong> Voice cloning is cheap and these users are exactly the ones who would be targeted.</td></tr>
+</tbody>
+</table>
+
+<h2>13.3 Data science practice</h2>
+
+<h3>Temporal splits, never random</h3>
+<p>A random split on transaction data leaks the future into the training set and produces a
+model that evaluates beautifully and fails in production. Every split in this project is by
+time. This is stated because it is the single most common methodological error in applied
+fintech ML, and it is invisible in the reported metrics — which is precisely what makes it
+dangerous.</p>
+
+<h3>Failures are retained in training</h3>
+<p>The corridor cost model trains on attempted legs <em>including failures</em>. A model
+trained only on successes systematically underestimates both cost and time, because retries
+are exactly where both accumulate.</p>
+
+<h3>Calibration, not just accuracy</h3>
+<p>A risk score that orders cases correctly but is badly calibrated misleads the officer
+reading it. Expected calibration error is a gate on every risk-bearing model.</p>
+
+<h3>Feature store and lineage</h3>
+<p>Features are defined once and served identically to training and inference, eliminating
+training-serving skew. Every feature carries lineage back to its source, so a prediction
+can be reconstructed years later — which is a regulatory requirement, not an engineering
+nicety.</p>
+
+<h2>13.4 Explainability</h2>
+
+<table>
+<thead><tr><th style="width:30%">Requirement</th><th>Mechanism</th></tr></thead>
+<tbody>
+<tr><td>Every money-affecting decision has a reason code</td><td>Enforced in the service contract, not by convention</td></tr>
+<tr><td>Tabular model attribution</td><td>SHAP values stored with the prediction and the model version</td></tr>
+<tr><td>Retrieval attribution</td><td>Citations, mechanically verified by a claim checker</td></tr>
+<tr><td>Officer-facing explanation</td><td>Evidence bundle plus a rendered subgraph — far more legible in a case file than a score</td></tr>
+<tr><td><strong>User-facing explanation</strong></td><td><strong>Plain Bangla, no jargon, no bare numbers</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+  <span class="label">The distinction that matters</span>
+  "Your transfer is being checked because of the amount and how recently the account was
+  opened — this usually takes about two hours" is an <em>explanation</em>.
+  <br><br>
+  "Risk score 0.73" is a <em>disclosure</em>. It satisfies a transparency checkbox and
+  explains nothing to the person it is about. Only the first is acceptable on a user
+  surface.
+</div>
+
+<h2>13.5 Drift monitoring</h2>
+
+<table>
+<thead><tr><th style="width:22%">Type</th><th style="width:32%">Detection</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>Data drift</td><td>PSI &gt; 0.2 on any top-10 feature</td><td>Alert and investigate</td></tr>
+<tr><td>Concept drift</td><td>Rolling performance below gate</td><td><strong>Freeze auto-decisions; widen human review</strong></td></tr>
+<tr><td>Prediction drift</td><td>Output distribution shift</td><td>Alert</td></tr>
+<tr><td>Corpus drift</td><td>New or superseded circular ingested</td><td>Re-run RAG regression before promoting the index</td></tr>
+</tbody>
+</table>
+
+<p>Two of these models decay <em>by design</em> rather than by accident. Laundering
+typologies and fraud techniques change deliberately in response to detection, which means
+continuous retraining is a structural requirement rather than good hygiene.</p>

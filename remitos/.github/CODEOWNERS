@@ -1,0 +1,28 @@
+# Ownership maps to the Congress-mandated team roles (Participants Guide section 13.2).
+# Every role and responsibility must be explicitly owned by a named member.
+# Replace the placeholders before the preliminary submission on 31 October 2026.
+
+*                           @team-leader
+
+apps/mobile/                @uiux-frontend-dev
+apps/mobile/lib/core/l10n/  @uiux-frontend-dev @presentation-lead
+
+services/                   @backend-data-engineer
+services/compliance/        @backend-data-engineer @business-analyst
+services/routing-engine/    @backend-data-engineer @business-analyst
+
+ml/                         @business-analyst
+docs/ai/model-cards/        @business-analyst @team-leader
+
+docs/security/              @backend-data-engineer @team-leader
+infra/security/             @backend-data-engineer @team-leader
+
+docs/report/                @presentation-lead
+docs/congress/              @presentation-lead @team-leader
+docs/research/              @business-analyst
+
+docs/architecture/adr/      @team-leader @backend-data-engineer
+
+# NRB / global advisor reviews architecture and strategy (section 8). Contributions must
+# be transparently documented. Advisors may not influence judging (section 20.8).
+docs/architecture/          @nrb-advisor
