@@ -1,0 +1,47 @@
+flowchart TB
+  subgraph Client["Browser — phone-first PWA (Render static site)"]
+    UI[React + TS UI<br/>bn default / en]
+    SW[Service worker<br/>asset cache]
+    OB[(IndexedDB<br/>offline outbox)]
+    UI --- SW
+    UI --- OB
+  end
+
+  subgraph API["Crop Guardian API — FastAPI on Render free (1 instance)"]
+    R[Routers<br/>auth · scans · advisory · review · alerts · admin · audit · hooks · health]
+    SEC[Security<br/>JWT · roles · rate limit · upload sanitiser · HMAC]
+    INF[Inference<br/>ONNX Runtime int8]
+    ADV[Advisory agent]
+    RAG[RAG retriever + citation validator]
+    OUT[Outbreak engine<br/>cluster + weather rules]
+    AUD[Audit chain]
+    R --> SEC
+    R --> INF
+    R --> ADV
+    ADV --> RAG
+    R --> OUT
+    R --> AUD
+  end
+
+  subgraph SB["Supabase (free)"]
+    AUTH[Auth]
+    PG[(Postgres + pgvector<br/>RLS)]
+    ST[(Storage<br/>scans/ · models/)]
+  end
+
+  LLM[LLM provider<br/>Claude — swappable]
+  OM[Open-Meteo]
+  N8N[n8n workflows]
+  CH[SMS / email / Telegram]
+
+  UI -->|REST + JWT| R
+  UI -->|login / signed PUT| AUTH
+  UI -->|signed PUT| ST
+  INF --> ST
+  RAG --> PG
+  R --> PG
+  ADV -->|chunks + disease only, no PII| LLM
+  OUT --> OM
+  N8N -->|HMAC webhooks| R
+  R -->|approved alert| N8N
+  N8N --> CH

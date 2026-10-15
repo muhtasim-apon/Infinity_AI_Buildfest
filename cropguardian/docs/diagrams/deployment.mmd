@@ -1,0 +1,10 @@
+flowchart LR
+  GH[GitHub main] -->|auto-deploy| RS[Render static site<br/>cropguardian-web<br/>never sleeps]
+  GH -->|auto-deploy, Docker| RA[Render web service<br/>cropguardian-api · free<br/>sleeps after 15 min idle]
+  RA -->|service-role key| SBP[(Supabase Postgres<br/>+ pgvector)]
+  RA --> SBS[(Supabase Storage)]
+  RS -->|anon key| SBA[Supabase Auth]
+  N8N[n8n] -->|keep-warm GET /healthz<br/>during demo windows| RA
+  N8N -->|daily heartbeat query| SBP
+  RA --> LLM[LLM API]
+  RA --> OM[Open-Meteo]

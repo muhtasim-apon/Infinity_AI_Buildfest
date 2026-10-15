@@ -4,13 +4,15 @@ Working folder for the Congress submission.
 
 | | |
 |---|---|
-| **Track** | Idea to Unicorn (team project, six-month journey) |
-| **Domain** | FinSphere AI — Reimagining Global Financial Services |
-| **Challenge area** | **Borderless Money** — cross-border payments and remittance intelligence |
-| **Capabilities to demonstrate** | Compliance automation · Routing optimisation |
-| **Winning signal** | Lower cost · Faster settlement |
-| **Congress Day** | 26 December 2026, Daffodil International University, Ashulia, Dhaka |
+| **Track** | Idea to Unicorn (team project) |
+| **Domain** | AgriSphere AI — Agriculture, Food Security & Rural Prosperity |
+| **Challenge area** | **Crop Guardian** — early pest and disease detection from imagery |
+| **Capabilities to demonstrate** | Vision models · Alerts · Local-language UX |
+| **Winning signal** | Loss reduction at the field level |
+| **Product** | Web application only (mobile-first PWA) |
+| **Team** | Apon (lead · backend · DB · ML integration · deploy) · Taeen (ML & data) · Salwa (AI — RAG) · Raisa (AI — agent & Bangla · presentation) · Sara (frontend) |
 | **Preliminary deadline** | **31 October 2026, 12:00 BST** |
+| **Congress Day** | 26 December 2026, Daffodil International University, Ashulia, Dhaka |
 
 ---
 
@@ -18,74 +20,39 @@ Working folder for the Congress submission.
 
 ```
 .
-├── AI Builders Congress 2026 - Participants Guide.pdf    the source brief (30 pages)
-└── remitos/                                              the project
-    ├── docs/report/RemitOS-Borderless-Money-Report.pdf   ← THE REPORT (82 pages)
-    └── …                                                 the production template
+├── AI Builders Congress 2026 - Participants Guide.pdf   the source brief (30 pages)
+└── cropguardian/                                        the project template
+    ├── prototype/index.html                             ← CLICKABLE PROTOTYPE (open in a browser)
+    ├── docs/system-design/SDD.md                        ← THE SYSTEM DESIGN DOCUMENT
+    ├── docs/report/CropGuardian-System-Design-Report.pdf ← the same design as a 67-page PDF
+    ├── docs/plan/gantt.md                               ← day-by-day plan, 16–29 Oct, per member
+    └── …                                                docs, schema, API/web stubs, ML, tests, n8n
 ```
 
-### 1. The report
+### 1. The clickable prototype
+Open **`cropguardian/prototype/index.html`** — no install, no server. Bangla by default (English
+toggle), phone-first, dark mode. Every Congress §10.8 route has a page: `/app`, `/demo-user`,
+`/demo-admin`, `/admin`, `/data`, `/security`, `/architecture`, `/presentation`, `/pitchdeck`, `/audit`.
 
-**`remitos/docs/report/RemitOS-Borderless-Money-Report.pdf`** — 82 pages, 26 chapters,
-4 appendices, 30 numbered sources.
+### 2. The design
+Architecture & ADRs · ER model & SQL schema with RLS · data flow & sequence diagrams · vision-model
+selection & statistics · RAG with citation enforcement · advisory agent · security (STRIDE, OWASP,
+OWASP LLM) · Render free-tier deployment with a full **challenges & recovery playbook** · test strategy
+(unit, whitebox, blackbox, integration, timeout, concurrency, security, ML, E2E, manual, n8n) ·
+rubric map · video-pitch script. Index: [`cropguardian/docs/README.md`](cropguardian/docs/README.md).
 
-It is written for a reader who knows nothing about cross-border payments and works up to
-a full production architecture: what borderless money is · how money physically moves ·
-the global statistics · Bangladesh's eleven constraints · how each is overcome · the
-competitive landscape including *hundi* and the PayPal gap · an honest chapter on what
-this project cannot do · rural usability · the technical architecture · AI/ML/RAG/agents ·
-security and sovereignty · responsible AI · business model · roadmap · risk register.
+### 3. The template
+`cropguardian/` is a GitHub-ready repository: React/Vite web stubs, FastAPI stubs, PostgreSQL schema,
+ML configs, n8n workflow specs, test stubs, CI quality gates, `render.yaml`.
 
-Rebuild it with `python remitos/scripts/build_report.py`.
-
-### 2. The production template
-
-**`remitos/`** — a GitHub-style repository: Flutter (Android · iOS · Web), 14
-microservices, 8 ML models, RAG with GraphRAG, 5 AI agents, 12 n8n workflows, Kubernetes
-and Terraform, 12 ADRs, 8 model cards, threat model, evaluation plan.
-
-> **Nothing in it has been compiled, installed, deployed or run.** Every source file is a
-> typed, documented stub. It is the blueprint a team builds from across the six-month
-> journey — not a running system.
-
-Start at [`remitos/README.md`](remitos/README.md).
-
----
-
-## The argument, in four numbers
-
-| | |
-|---|---|
-| **6.36 %** | global average cost to send USD 200 (World Bank, Q3 2025) — against a UN target of 3 % |
-| **2.71 pp** | the measured gap between non-digital (7.30 %) and digital (4.59 %) cost |
-| **≈ 49 %** | estimated share of remittances to Bangladesh arriving through informal *hundi* |
-| **USD 35.56 bn** | Bangladesh's FY 2025-26 formal inflow — 7th largest in the world |
-
-Bangladesh does not have a remittance volume problem. It has a **routing, compliance and
-trust** problem. Every rail already exists; what does not exist is a neutral party that
-computes which rail, which FX window and which payout endpoint delivers the most taka,
-soonest, within the law.
-
-**RemitOS is that decision layer** — not another wallet.
-
----
-
-## Switching to a different fintech vertical
-
-The core is domain-agnostic. Each FinSphere challenge area is a swappable **domain pack**
-supplying four things and nothing else: config, schemas, prompts, models.
-`borderless_money` ships active; `credit`, `fraud`, `wealth` and `sme` ship as stubs with
-their extension points declared. See
-[ADR 0002](remitos/docs/architecture/adr/0002-domain-pack-architecture.md).
+> **Nothing has been installed, trained, deployed or run.** Source files are typed, documented stubs;
+> the prototype uses synthetic data and says so on every screen. No accuracy or impact figure is
+> claimed anywhere (Congress §15, §20.4).
 
 ## Next steps
+1. Read the [Gantt](cropguardian/docs/plan/gantt.md) at today's stand-up; confirm Raisa as presentation lead.
+2. Replace the handles in `cropguardian/.github/CODEOWNERS`; create the GitHub repo from `cropguardian/`.
+3. Day-1 critical path: datasets (Taeen) and Bangla knowledge-base documents (Salwa).
+4. Work [`submission-checklist.md`](cropguardian/docs/congress/submission-checklist.md) toward 30 Oct.
 
-1. Fill the team roles in `remitos/CONTRIBUTING.md` and `remitos/.github/CODEOWNERS`
-2. Secure the NRB advisor (Congress §8)
-3. Work `remitos/docs/congress/submission-checklist.md` against the phase plan
-4. Phase 3 validation — including rural recipient interviews — fills the blank
-   unit-economics model in the PRD with measured numbers
-
-Everything not yet measured is marked as such, deliberately: Congress §20.4 prohibits
-fabricated results presented as real, and no accuracy, cost or performance figure is
-claimed anywhere in this work.
+Rebuild the PDF: `python cropguardian/scripts/build_report.py`.

@@ -1,0 +1,11 @@
+pytest
+pytest-asyncio
+pytest-cov
+hypothesis
+respx
+schemathesis
+ruff
+mypy
+bandit
+pip-audit
+locust

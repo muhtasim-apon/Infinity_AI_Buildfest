@@ -1,0 +1,56 @@
+# Product Requirements Document — Crop Guardian (web)
+
+## 1. Vision
+Every farmer can know, within a minute, what is wrong with a crop and what to do about it — in
+their own language, from a trusted source — and every village hears about an outbreak before it
+reaches their field.
+
+## 2. Problem
+See SDD §1. Short: diagnosis is slow, advice is biased or unavailable, outbreaks are noticed late,
+and there is no national field-level disease data [S4].
+
+## 3. Target users
+Farmer (primary), agronomist/extension officer (secondary), admin (operator). Personas: `personas.md`.
+
+## 4. Jobs to be done
+- *When* I see unusual spots on my rice, *I want* to know what it is and what to do today, *so* I
+  don't lose my crop or waste money on the wrong spray.
+- *When* many farmers in my area report the same disease, *I want* to be warned early, *so* I can
+  protect my field.
+- (Agronomist) *When* the app is unsure, *I want* to see the photo and decide, *so* farmers get a
+  correct answer and the model improves.
+
+## 5. MVP features (31 Oct)
+P0: demo access · scan with compression/offline outbox · diagnosis with confidence + abstain ·
+cited Bangla advice · history · review queue · alerts (draft → approve) · admin thresholds/model
+versions · audit page · architecture/data/security pages.
+P1 (stretch): voice playback · map view · Grad-CAM gallery · SMS channel.
+Later: lesion severity · more crops · Precision Farm pack · on-device inference.
+
+## 6. Value proposition & how we will measure it
+| For | Value | Measure (pilot) |
+|---|---|---|
+| Farmer | faster correct action; fewer unnecessary sprays | time-to-correct-treatment; spray count vs comparison group |
+| Extension service | triage at scale; disease map | cases handled per officer; alert lead time |
+| Ecosystem | first field-level disease dataset | labelled images per season |
+
+## 7. Business model (hypotheses to validate in Phase 3–4)
+| Segment | Offer | Pricing hypothesis |
+|---|---|---|
+| Farmers | app free forever | ৳0 |
+| Government extension (DAE) / projects | regional dashboard, alerting, review tools, data exports (aggregate) | annual licence / project contract |
+| NGOs & development programmes | white-label deployment for their farmer groups | per-programme fee |
+| Agri-insurers | aggregate outbreak risk by area (no personal data) | data-subscription |
+| Agri-input companies | **non-promotional**: anonymised demand signals; never product placement in advice | subscription, with ethics clause |
+Costs today: ৳0 infra (free tiers) + LLM usage (cached → low). Unit economics to be measured.
+
+## 8. Competitors / alternatives
+Neighbour/shopkeeper advice, DAE hotlines and Krishi call centres, generic plant-ID apps, general
+chatbots. Our difference: Bangla + local datasets + abstention + citations + outbreak alerts +
+agronomist loop. (Competitive facts to be sourced in `docs/research/sources.md` before being stated.)
+
+## 9. Success criteria for preliminary
+Working public prototype, honest metrics, complete docs, 3-min video.
+
+## 10. Open questions
+Which extension office will partner? Which SMS provider? Final Bangla disease names (agronomist sign-off).

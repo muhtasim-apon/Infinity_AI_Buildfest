@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Guardian Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="card" style="background:var(--brand);color:var(--brand-ink);border:0">
+    <p class="small" style="opacity:.85;margin-bottom:.25rem">AgriSphere AI · Crop Guardian · International AI Builders Congress 2026</p>
+    <h1 style="font-size:1.9rem"><span class="bn">ফসল রক্ষী</span><span class="en">Crop Guardian</span></h1>
+    <p style="font-size:1.08rem;max-width:42rem">
+      <span class="bn">পাতার একটি ছবি তুলুন — সম্ভাব্য রোগ, এআই কতটা নিশ্চিত, আর কী করবেন তা বাংলায় জানুন, প্রতিটি পরামর্শের উৎসসহ। এআই নিশ্চিত না হলে কৃষি কর্মকর্তার কাছে পাঠায়। আশেপাশে একই রোগ ছড়ালে আগাম সতর্কতা।</span>
+      <span class="en">Photograph a leaf — get the likely disease, how sure the AI is, and what to do, in Bangla, with a source for every recommendation. When unsure, it routes to an agronomist. When the same disease clusters nearby, the area gets an early warning.</span>
+    </p>
+    <div class="row">
+      <a class="btn" style="background:#fff;color:#1f6f43" href="demo-user.html"><span class="bn">ডেমো কৃষক হিসেবে দেখুন</span><span class="en">Try as demo farmer</span></a>
+      <a class="btn" style="background:transparent;border:1px solid #fff;color:#fff" href="demo-admin.html"><span class="bn">ডেমো অ্যাডমিন</span><span class="en">Demo admin</span></a>
+    </div>
+  </section>
+
+  <h2 style="margin-top:1.5rem"><span class="bn">সব পাতা (Congress §10.8 রুট)</span><span class="en">All pages (Congress §10.8 routes)</span></h2>
+  <div class="grid cols-3">
+    <a class="card route-card" href="app.html"><div class="path">/app</div><h3><span class="bn">কৃষকের অ্যাপ</span><span class="en">Farmer app</span></h3><p class="muted small"><span class="bn">স্ক্যান → ফলাফল → পরামর্শ → ইতিহাস → সতর্কতা</span><span class="en">Scan → result → advice → history → alerts</span></p></a>
+    <a class="card route-card" href="demo-user.html"><div class="path">/demo-user</div><h3><span class="bn">এক ক্লিকে ডেমো কৃষক</span><span class="en">One-click demo user</span></h3><p class="muted small"><span class="bn">লগইন ছাড়াই</span><span class="en">No login needed</span></p></a>
+    <a class="card route-card" href="demo-admin.html"><div class="path">/demo-admin</div><h3><span class="bn">এক ক্লিকে ডেমো অ্যাডমিন</span><span class="en">One-click demo admin</span></h3><p class="muted small"><span class="bn">পর্যালোচনা, সতর্কতা, সেটিংস</span><span class="en">Review, alerts, settings</span></p></a>
+    <a class="card route-card" href="admin.html"><div class="path">/admin</div><h3><span class="bn">অ্যাডমিন</span><span class="en">Admin</span></h3><p class="muted small"><span class="bn">ব্যবহারকারী, মডেল, জ্ঞানভান্ডার, সীমা</span><span class="en">Users, models, knowledge base, thresholds</span></p></a>
+    <a class="card route-card" href="data.html"><div class="path">/data</div><h3><span class="bn">ডেটা</span><span class="en">Data</span></h3><p class="muted small"><span class="bn">ডেটাসেট, লাইসেন্স, লিনিয়েজ</span><span class="en">Datasets, licences, lineage</span></p></a>
+    <a class="card route-card" href="security.html"><div class="path">/security</div><h3><span class="bn">নিরাপত্তা ও দায়িত্বশীল এআই</span><span class="en">Security & responsible AI</span></h3><p class="muted small">STRIDE · OWASP · <span class="bn">গোপনীয়তা</span><span class="en">privacy</span></p></a>
+    <a class="card route-card" href="architecture.html"><div class="path">/architecture</div><h3><span class="bn">আর্কিটেকচার</span><span class="en">Architecture</span></h3><p class="muted small"><span class="bn">সিস্টেম, ডেটা প্রবাহ, ডিপ্লয়</span><span class="en">System, data flow, deployment</span></p></a>
+    <a class="card route-card" href="presentation.html"><div class="path">/presentation</div><h3><span class="bn">উপস্থাপনা</span><span class="en">Presentation</span></h3><p class="muted small"><span class="bn">সমস্যা, সমাধান, প্রভাব</span><span class="en">Problem, solution, impact</span></p></a>
+    <a class="card route-card" href="pitchdeck.html"><div class="path">/pitchdeck</div><h3><span class="bn">পিচ ডেক</span><span class="en">Pitch deck</span></h3><p class="muted small"><span class="bn">← → কী দিয়ে স্লাইড</span><span class="en">Use ← → keys</span></p></a>
+    <a class="card route-card" href="audit.html"><div class="path">/audit</div><h3><span class="bn">এক ক্লিকে অডিট</span><span class="en">One-click audit</span></h3><p class="muted small"><span class="bn">নিরাপত্তা, গোপনীয়তা, গভর্নেন্স, ঝুঁকি</span><span class="en">Security, privacy, governance, risk</span></p></a>
+  </div>
+
+  <div class="callout warn" style="margin-top:1.25rem">
+    <strong><span class="bn">সততার বিবৃতি</span><span class="en">Honesty statement</span></strong><br>
+    <span class="bn">এটি একটি ক্লিকযোগ্য প্রোটোটাইপ। কোনো মডেল প্রশিক্ষিত বা চালু হয়নি, কোনো সার্ভার নেই। দেখানো রোগ, সম্ভাবনা ও পরামর্শ হাতে লেখা কৃত্রিম উদাহরণ। কোনো নির্ভুলতার সংখ্যা দাবি করা হয়নি (Congress §20.4)।</span>
+    <span class="en">This is a clickable prototype. No model has been trained or deployed and there is no server. Diseases, probabilities and advice shown are hand-written synthetic examples. No accuracy figure is claimed (Congress §20.4).</span>
+  </div>
+</main>
+<footer class="footer">Crop Guardian · Apon · Taeen · Salwa · Raisa · Sara · <span class="bn">বাংলাদেশ থেকে বিশ্বে</span><span class="en">From Bangladesh to the world</span></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

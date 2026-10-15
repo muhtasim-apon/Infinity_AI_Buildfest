@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+.vite/
+
+# Secrets - never commit
+.env
+.env.local
+.env.production
+*.pem
+*.key
+automation/n8n/credentials/*.json
+
+# Datasets and ML artefacts — datasets are downloaded, never committed (licences, size)
+data/raw/
+data/processed/
+ml/**/artifacts/
+ml/**/checkpoints/
+ml/**/runs/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.joblib
+
+# Test output
+tests/**/reports/
+playwright-report/
+k6-results/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

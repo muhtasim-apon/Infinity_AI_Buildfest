@@ -1,0 +1,38 @@
+# Ownership maps to the Congress-mandated team roles (Participants Guide §13.2).
+# Replace the handles with real GitHub usernames before the 31 October 2026 submission.
+
+*                               @apon
+
+# Frontend & prototype — Sara
+apps/web/                       @sara
+prototype/                      @sara
+apps/web/src/i18n/              @sara @raisa
+
+# Backend, database, deployment — Apon (lead), Taeen
+services/api/                   @apon @taeen
+db/                             @apon
+render.yaml                     @apon
+automation/n8n/                 @apon @taeen
+
+# ML training & statistics — Taeen; integration — Apon
+ml/vision/                      @taeen @apon
+ml/outbreak/                    @taeen
+ml/evaluation/                  @taeen
+docs/ai/statistics.md           @taeen
+docs/ai/model-cards/            @taeen @apon
+
+# AI integration — Salwa (RAG), Raisa (agent)
+ml/rag/                         @salwa
+services/api/app/rag/           @salwa @apon
+services/api/app/services/advisory.py  @raisa @salwa
+docs/ai/rag-design.md           @salwa
+docs/ai/agent-design.md         @raisa
+
+# Security & testing
+docs/security/                  @apon
+tests/security/                 @apon @salwa
+tests/e2e/                      @sara
+
+# Presentation
+docs/congress/                  @raisa @apon
+docs/report/                    @raisa @apon

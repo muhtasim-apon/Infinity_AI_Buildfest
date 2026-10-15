@@ -1,0 +1,18 @@
+# Runtime dependencies — pin exact versions when first installed (pip freeze), then Dependabot keeps them current.
+fastapi
+uvicorn[standard]
+pydantic>=2
+pydantic-settings
+httpx
+asyncpg
+pgvector
+supabase
+pyjwt[crypto]
+onnxruntime
+numpy
+pillow
+anthropic
+tokenizers              # query embeddings: multilingual-e5-small exported to ONNX offline (ml/rag/ingest.md),
+                        # run with onnxruntime — keeps PyTorch out of the runtime image (ADR 0004)
+slowapi
+sentry-sdk

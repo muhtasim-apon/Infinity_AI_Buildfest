@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Guardian Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <div class="card deck" id="deck">
+    <section class="slide"><p class="muted">AgriSphere AI · Crop Guardian</p><h2 style="font-size:2rem"><span class="bn">ফসল রক্ষী</span><span class="en">Crop Guardian</span></h2><p><span class="bn">একটি পাতা থেকে প্রতিটি মাঠ পর্যন্ত।</span><span class="en">From one leaf to every field.</span></p></section>
+    <section class="slide"><h2><span class="bn">সমস্যা</span><span class="en">Problem</span></h2><ul><li><span class="bn">রোগ চেনা ধীর, পরামর্শ পক্ষপাতদুষ্ট</span><span class="en">Diagnosis is slow; advice is biased</span></li><li><span class="bn">স্থানীয় ব্লাস্টে কিছু এলাকায় ৮০% পর্যন্ত ফলন ক্ষতির খবর [S3]</span><span class="en">Up to 80% yield loss reported locally from blast [S3]</span></li><li><span class="bn">মাঠ-পর্যায়ের রোগ-তথ্য নেই [S4]</span><span class="en">No field-level disease data [S4]</span></li></ul></section>
+    <section class="slide"><h2><span class="bn">সমাধান</span><span class="en">Solution</span></h2><p>📷 → 🧠 → 📚 → 🔔</p><p><span class="bn">ছবি → নির্ণয় (নিশ্চয়তাসহ) → উৎসসহ বাংলা পরামর্শ → আগাম সতর্কতা</span><span class="en">Photo → diagnosis with confidence → cited Bangla advice → early warning</span></p></section>
+    <section class="slide"><h2><span class="bn">কেন আলাদা</span><span class="en">Why different</span></h2><ul><li><span class="bn">"জানি না" বলতে পারে → বিশেষজ্ঞ</span><span class="en">Can say "I don't know" → expert</span></li><li><span class="bn">প্রতিটি পরামর্শে উৎস</span><span class="en">Every advice cites a source</span></li><li><span class="bn">বাংলাদেশের মাঠের ছবিতে প্রশিক্ষণ</span><span class="en">Trained on Bangladeshi field images</span></li><li><span class="bn">ব্যক্তিগত রোগ নির্ণয় → সমষ্টিগত সতর্কতা</span><span class="en">Individual diagnoses → collective alerts</span></li></ul></section>
+    <section class="slide"><h2><span class="bn">পণ্য</span><span class="en">Product</span></h2><p><span class="bn">ওয়েব অ্যাপ (PWA), অফলাইনে ছবি, ভয়েস, কৃষি কর্মকর্তার পর্যালোচনা, অ্যাডমিন ও এক ক্লিকে অডিট।</span><span class="en">Web app (PWA), offline capture, voice, agronomist review, admin and one-click audit.</span></p><p><a class="btn" href="app.html"><span class="bn">ডেমো দেখুন</span><span class="en">See demo</span></a></p></section>
+    <section class="slide"><h2><span class="bn">প্রযুক্তি</span><span class="en">Technology</span></h2><p class="small">React PWA · FastAPI · Supabase (Postgres + pgvector) · ONNX Runtime · RAG · n8n · Render</p><p><a href="architecture.html"><span class="bn">আর্কিটেকচার →</span><span class="en">Architecture →</span></a></p></section>
+    <section class="slide"><h2><span class="bn">ব্যবসায়িক মডেল</span><span class="en">Business model</span></h2><ul><li><span class="bn">কৃষক: বিনামূল্যে</span><span class="en">Farmers: free</span></li><li><span class="bn">সম্প্রসারণ সেবা ও প্রকল্প: লাইসেন্স</span><span class="en">Extension services & projects: licence</span></li><li><span class="bn">এনজিও: হোয়াইট-লেবেল</span><span class="en">NGOs: white-label</span></li><li><span class="bn">বীমা: সমষ্টিগত ঝুঁকি তথ্য</span><span class="en">Insurers: aggregate risk</span></li></ul><p class="small muted"><span class="bn">অনুমান — যাচাই করা হবে</span><span class="en">Hypotheses — to validate</span></p></section>
+    <section class="slide"><h2><span class="bn">ট্র্যাকশন</span><span class="en">Traction</span></h2><p><span class="bn">এখনও নেই — আমরা সৎ থাকছি। পরবর্তী ধাপ: ব্যবহারকারী সাক্ষাৎকার, কৃষি অফিসের সাথে পাইলট।</span><span class="en">None yet — we're being honest. Next: user interviews, pilot with an agriculture office.</span></p></section>
+    <section class="slide"><h2><span class="bn">বৃদ্ধি</span><span class="en">Growth</span></h2><p><span class="bn">আরও ফসল → Precision Farm ও YieldMax প্যাক → অন্যান্য ভাষা ও দেশ।</span><span class="en">More crops → Precision Farm & YieldMax packs → other languages and countries.</span></p></section>
+    <section class="slide"><h2><span class="bn">দল</span><span class="en">Team</span></h2><ul><li>Apon — <span class="bn">লিড, ব্যাকএন্ড, ডেটাবেস, ডিপ্লয়</span><span class="en">lead, backend, database, deploy</span></li><li>Taeen — <span class="bn">এমএল ও ডেটা</span><span class="en">ML & data</span></li><li>Salwa — <span class="bn">RAG ও জ্ঞানভান্ডার</span><span class="en">RAG & knowledge base</span></li><li>Raisa — <span class="bn">এজেন্ট, বাংলা, উপস্থাপনা</span><span class="en">agent, Bangla, presentation</span></li><li>Sara — <span class="bn">ফ্রন্টএন্ড ও UX</span><span class="en">frontend & UX</span></li></ul></section>
+    <section class="slide"><h2><span class="bn">চাওয়া</span><span class="en">The ask</span></h2><p><span class="bn">কৃষি সম্প্রসারণ অংশীদার, কৃষিবিদ পর্যালোচক, এবং একজন NRB পরামর্শক।</span><span class="en">An extension-service partner, agronomist reviewers, and an NRB advisor.</span></p><p><strong><span class="bn">বাংলাদেশ থেকে বিশ্বে।</span><span class="en">From Bangladesh to the world.</span></strong></p></section>
+    <div class="deck-nav"><button class="btn secondary" type="button" id="prev">←</button><span class="small muted" id="count"></span><button class="btn" type="button" id="next">→</button></div>
+  </div>
+</main>
+<footer class="footer"><a href="index.html">← <span class="bn">সব পাতা</span><span class="en">All pages</span></a></footer>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var slides = document.querySelectorAll(".slide"), i = 0;
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle("active", k === i); });
+    document.getElementById("count").textContent = (i + 1) + " / " + slides.length;
+  }
+  document.getElementById("prev").addEventListener("click", function () { go(i - 1); });
+  document.getElementById("next").addEventListener("click", function () { go(i + 1); });
+  document.addEventListener("keydown", function (e) { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1); });
+  go(0);
+})();
+</script>
+</body>
+</html>

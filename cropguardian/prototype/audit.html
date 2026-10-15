@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Guardian Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap stack">
+  <div class="row"><h1 style="margin:0"><span class="bn">এক ক্লিকে অডিট রিপোর্ট</span><span class="en">One-click audit report</span></h1><span style="flex:1"></span>
+    <button class="btn" type="button" id="gen"><span class="bn">রিপোর্ট তৈরি করুন</span><span class="en">Generate report</span></button>
+    <button class="btn secondary" type="button" onclick="window.print()"><span class="bn">প্রিন্ট / PDF</span><span class="en">Print / PDF</span></button></div>
+  <p class="muted small"><span class="bn">যা এখনও মাপা হয়নি তা "এখনও পরিমাপ করা হয়নি" দেখায় — কখনো বানানো সংখ্যা নয়।</span><span class="en">Anything not yet measured shows "not yet measured" — never a made-up number.</span></p>
+  <div id="report" class="stack"></div>
+</main>
+<footer class="footer"><a href="index.html">← <span class="bn">সব পাতা</span><span class="en">All pages</span></a></footer>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var L = function (bn, en) { return '<span class="bn">' + bn + '</span><span class="en">' + en + '</span>'; };
+  var NM = '<span class="chip warn">' + L("এখনও পরিমাপ করা হয়নি", "not yet measured") + '</span>';
+  var DESIGNED = '<span class="chip info">' + L("নকশা সম্পন্ন", "designed") + '</span>';
+  var TODO = '<span class="chip danger">' + L("বাকি", "open") + '</span>';
+  var sections = [
+    [L("নিরাপত্তা", "Security"), [
+      [L("প্রতিটি টেবিলে RLS", "RLS on every table"), DESIGNED],
+      [L("হুমকি মডেল (STRIDE, ১৯টি)", "Threat model (STRIDE, 19)"), DESIGNED],
+      [L("নির্ভরতা স্ক্যান (pip-audit, npm audit)", "Dependency scan (pip-audit, npm audit)"), NM],
+      [L("OWASP ZAP বেসলাইন", "OWASP ZAP baseline"), NM],
+      [L("খোলা নিরাপত্তা সমস্যা", "Open security findings"), NM]]],
+    [L("গোপনীয়তা", "Privacy"), [
+      [L("উদ্দেশ্যভিত্তিক সম্মতি", "Purpose-specific consent"), DESIGNED],
+      [L("EXIF মুছে ফেলা, ~১ কিমি অবস্থান", "EXIF stripped, ~1 km location"), DESIGNED],
+      [L("মুছে ফেলার অনুরোধ সম্পন্নের সময়", "Deletion request completion time"), NM]]],
+    [L("গভর্নেন্স", "Governance"), [
+      [L("সক্রিয় মডেল", "Active model"), '<code>0.0.0-placeholder</code> ' + L("(প্রশিক্ষিত নয়)", "(not trained)")],
+      [L("মডেল কার্ড", "Model card"), DESIGNED],
+      [L("সীমা পরিবর্তনের ইতিহাস", "Threshold change history"), L("অ্যাডমিন → সারসংক্ষেপ দেখুন", "see Admin → Overview")]]],
+    [L("দায়িত্বশীল এআই", "Responsible AI"), [
+      [L("নিশ্চিত-নয় হার", "Abstain rate"), NM],
+      [L("কৃষিবিদ-মডেল মিলের হার", "Agronomist agreement rate"), NM],
+      [L("উৎস-কভারেজ (লক্ষ্য ১০০%)", "Citation coverage (target 100%)"), NM],
+      [L("অঞ্চলভিত্তিক মূল্যায়ন", "Per-region evaluation"), NM]]],
+    [L("ডেটা সার্বভৌমত্ব", "Data sovereignty"), [
+      [L("এলএলএম-এ ব্যক্তিগত তথ্য", "Personal data sent to LLM"), L("কোনোটিই নয় (নকশা অনুযায়ী)", "none (by design)")],
+      [L("হোস্টিং অঞ্চল", "Hosting region"), TODO],
+      [L("ডেটাসেট লাইসেন্স", "Dataset licences"), L("D1–D3 CC BY 4.0 · D4 যাচাই বাকি", "D1–D3 CC BY 4.0 · D4 to confirm")]]],
+    [L("পরিচালনাগত প্রস্তুতি", "Operational readiness"), [
+      [L("আপটাইম", "Uptime"), NM], [L("কোল্ড স্টার্ট সংখ্যা", "Cold starts"), NM], ["p95 latency", NM]]],
+    [L("ঝুঁকি", "Risk"), [
+      [L("জ্ঞানভান্ডারের দলিল সময়মতো না পাওয়া", "KB documents not obtained in time"), TODO],
+      [L("মাঠের ছবিতে মডেল দুর্বল", "Model weak on field photos"), TODO],
+      [L("বিচারের সময় কোল্ড স্টার্ট", "Cold start during judging"), TODO]]],
+    [L("অখণ্ডতা", "Integrity"), [[L("অডিট-শৃঙ্খল যাচাই", "Audit chain verification"), NM]]]
+  ];
+  function render() {
+    document.getElementById("report").innerHTML = '<p class="small muted">' + L("তৈরি: ", "Generated: ") + new Date().toLocaleString() + ' · <span class="chip warn">synthetic / prototype</span></p>' +
+      sections.map(function (s) {
+        return '<div class="card"><h2>' + s[0] + '</h2><div class="table-wrap"><table><tbody>' +
+          s[1].map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join("") + '</tbody></table></div></div>';
+      }).join("");
+  }
+  document.getElementById("gen").addEventListener("click", render);
+})();
+</script>
+</body>
+</html>

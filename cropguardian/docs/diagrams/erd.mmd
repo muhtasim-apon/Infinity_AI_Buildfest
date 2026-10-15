@@ -1,0 +1,187 @@
+erDiagram
+  PROFILES ||--o{ FARMS : owns
+  PROFILES ||--o{ SCANS : submits
+  PROFILES ||--o{ CONSENTS : gives
+  PROFILES ||--o{ ALERT_SUBSCRIPTIONS : has
+  PROFILES ||--o{ EXPERT_REVIEWS : performs
+  FARMS ||--o{ FIELDS : contains
+  CROPS ||--o{ FIELDS : planted_in
+  CROPS ||--o{ DISEASE_CATALOG : affected_by
+  FIELDS ||--o{ SCANS : located_in
+  SCANS ||--o| DIAGNOSES : produces
+  MODEL_VERSIONS ||--o{ DIAGNOSES : made_by
+  DISEASE_CATALOG ||--o{ DIAGNOSES : predicted_as
+  DIAGNOSES ||--o| ADVISORIES : explained_by
+  ADVISORIES ||--o{ CITATIONS : cites
+  KB_CHUNKS ||--o{ CITATIONS : referenced_by
+  KB_DOCUMENTS ||--o{ KB_CHUNKS : split_into
+  SCANS ||--o{ EXPERT_REVIEWS : reviewed_in
+  EXPERT_REVIEWS ||--o| FEEDBACK_LABELS : yields
+  DISEASE_CATALOG ||--o{ ALERTS : about
+  PROFILES ||--o{ ALERTS : approves
+
+  PROFILES {
+    uuid id PK "= auth.users.id"
+    text role "farmer|agronomist|admin|demo"
+    text display_name
+    text phone_e164 "restricted"
+    text locale "bn|en"
+    text district
+    text upazila
+    timestamptz created_at
+  }
+  FARMS {
+    uuid id PK
+    uuid owner_id FK
+    text name
+    timestamptz created_at
+  }
+  FIELDS {
+    uuid id PK
+    uuid farm_id FK
+    int crop_id FK
+    numeric area_decimal
+    numeric lat_coarse "rounded 0.01 deg"
+    numeric lon_coarse
+    text variety
+    date sowing_date
+    timestamptz created_at
+  }
+  CROPS {
+    int id PK
+    text code "rice"
+    text name_bn
+    text name_en
+  }
+  DISEASE_CATALOG {
+    int id PK
+    int crop_id FK
+    text code "rice_blast"
+    text name_bn
+    text name_en
+    text pathogen_type "fungal|bacterial|viral|pest|healthy"
+    boolean is_notifiable
+  }
+  SCANS {
+    uuid id PK
+    uuid user_id FK
+    uuid field_id FK
+    text storage_path
+    char sha256
+    text status "pending_upload|uploaded|diagnosed|needs_review|failed"
+    numeric lat_coarse
+    numeric lon_coarse
+    text client_quality_flag
+    timestamptz captured_at
+    timestamptz created_at
+  }
+  DIAGNOSES {
+    uuid id PK
+    uuid scan_id FK "unique"
+    uuid model_version_id FK
+    int top1_disease_id FK
+    real top1_prob
+    jsonb top3
+    boolean abstained
+    int latency_ms
+    timestamptz created_at
+  }
+  MODEL_VERSIONS {
+    uuid id PK
+    text name
+    text semver
+    text architecture
+    text onnx_sha256
+    real threshold
+    real temperature
+    jsonb eval_summary
+    boolean is_active
+    timestamptz created_at
+  }
+  ADVISORIES {
+    uuid id PK
+    uuid diagnosis_id FK
+    text language
+    jsonb content "steps, dosage, safety"
+    text llm_model
+    text status "ok|fallback|blocked"
+    timestamptz created_at
+  }
+  CITATIONS {
+    uuid id PK
+    uuid advisory_id FK
+    uuid chunk_id FK
+    real score
+  }
+  KB_DOCUMENTS {
+    uuid id PK
+    text title
+    text publisher "DAE|BRRI|BARI|other"
+    text source_url
+    text licence_note
+    date edition_date
+    text language
+    timestamptz created_at
+  }
+  KB_CHUNKS {
+    uuid id PK
+    uuid document_id FK
+    int page
+    text content
+    vector embedding "384"
+    jsonb meta "crop, disease, stage"
+  }
+  EXPERT_REVIEWS {
+    uuid id PK
+    uuid scan_id FK
+    uuid reviewer_id FK
+    text verdict "confirm|correct|unclear"
+    int corrected_disease_id
+    text note
+    timestamptz created_at
+  }
+  FEEDBACK_LABELS {
+    uuid id PK
+    uuid review_id FK
+    int disease_id
+    boolean consent_training
+    boolean exported
+    timestamptz created_at
+  }
+  ALERTS {
+    uuid id PK
+    int disease_id FK
+    numeric center_lat
+    numeric center_lon
+    real radius_km
+    int report_count
+    text risk_level "low|medium|high"
+    text status "draft|approved|sent|dismissed"
+    uuid approved_by FK
+    timestamptz created_at
+  }
+  ALERT_SUBSCRIPTIONS {
+    uuid id PK
+    uuid user_id FK
+    text channel "inapp|sms|email|telegram"
+    real radius_km
+    timestamptz created_at
+  }
+  CONSENTS {
+    uuid id PK
+    uuid user_id FK
+    text purpose "service|training_use|sms_alerts"
+    boolean granted
+    timestamptz created_at
+  }
+  AUDIT_LOG {
+    bigint id PK
+    uuid actor_id
+    text action
+    text entity
+    text entity_id
+    jsonb detail
+    char prev_hash
+    char row_hash
+    timestamptz created_at
+  }

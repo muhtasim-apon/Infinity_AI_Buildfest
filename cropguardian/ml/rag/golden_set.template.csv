@@ -1,0 +1,3 @@
+id,disease_code,stage,question_bn,question_en,expected_document_title,expected_page,expected_points,author,reviewed_by_agronomist
+G001,blast,tillering,,"How do I control leaf blast at tillering stage?",,,"cultural practice; fungicide if source recommends; safety",Salwa,no
+G002,tungro,,,"How does tungro spread and what should I do?",,,"vector (leafhopper) management; remove infected plants",Salwa,no

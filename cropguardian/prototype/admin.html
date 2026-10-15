@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Guardian Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+  <h1><span class="bn">অ্যাডমিন কনসোল</span><span class="en">Admin console</span></h1>
+  <div class="tabs" data-tabs="admin">
+    <button type="button" data-tab="overview"><span class="bn">সারসংক্ষেপ</span><span class="en">Overview</span></button>
+    <button type="button" data-tab="review"><span class="bn">পর্যালোচনা</span><span class="en">Review queue</span></button>
+    <button type="button" data-tab="alerts"><span class="bn">সতর্কতা খসড়া</span><span class="en">Alert drafts</span></button>
+    <button type="button" data-tab="settings"><span class="bn">সেটিংস</span><span class="en">Settings</span></button>
+    <button type="button" data-tab="models"><span class="bn">মডেল</span><span class="en">Models</span></button>
+    <button type="button" data-tab="kb"><span class="bn">জ্ঞানভান্ডার</span><span class="en">Knowledge base</span></button>
+    <button type="button" data-tab="users"><span class="bn">ব্যবহারকারী</span><span class="en">Users</span></button>
+  </div>
+
+  <section class="tab-panel" data-group="admin" id="overview">
+    <div class="grid cols-3" id="stats"></div>
+    <div class="callout warn small" style="margin-top:1rem">
+      <span class="bn">এগুলো কৃত্রিম গণনা, শুধু লেআউট দেখানোর জন্য। নির্ভুলতা বা কার্যকারিতার কোনো দাবি নয়।</span>
+      <span class="en">These are synthetic counts to show layout only — not accuracy or effectiveness claims.</span>
+    </div>
+    <div class="card" style="margin-top:1rem">
+      <h3><span class="bn">সাম্প্রতিক পরিবর্তন (অডিট লগ)</span><span class="en">Recent changes (audit log)</span></h3>
+      <div class="table-wrap"><table id="changes"></table></div>
+    </div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="review">
+    <p class="muted"><span class="bn">এআই নিশ্চিত না হলে কেস এখানে আসে। আপনার রায় কৃষককে জানানো হবে এবং (সম্মতি থাকলে) প্রশিক্ষণ ডেটা হবে।</span><span class="en">Cases land here when the AI is not sure. Your verdict is sent to the farmer and (with consent) becomes training data.</span></p>
+    <div class="grid cols-2" id="review-list"></div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="alerts">
+    <p class="muted"><span class="bn">নিয়ম v1: ৫ কিমি, ৭ দিনে একই রোগের ৩+ রিপোর্ট → খসড়া। অনুমোদন ছাড়া কিছুই পাঠানো হয় না।</span><span class="en">Rules v1: 3+ reports of the same disease within 5 km / 7 days → draft. Nothing is sent without approval.</span></p>
+    <div class="stack" id="draft-list"></div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="settings">
+    <div class="card stack" style="max-width:560px">
+      <div>
+        <label for="tau"><span class="bn">নিশ্চয়তার সীমা (τ)</span><span class="en">Confidence threshold (τ)</span>: <span id="tau-v">0.70</span></label>
+        <input id="tau" type="range" min="0.50" max="0.95" step="0.01" value="0.70">
+        <p class="small muted"><span class="bn">বাড়ালে: কম উত্তর, বেশি নির্ভরযোগ্য; বেশি কেস বিশেষজ্ঞের কাছে যায়। আসল মান ক্যালিব্রেশন থেকে নির্ধারিত হবে (placeholder 0.70)।</span><span class="en">Raise it: fewer answers, more reliable; more cases go to experts. The real value comes from calibration (0.70 is a placeholder).</span></p>
+      </div>
+      <div class="grid cols-3">
+        <div><label for="rad"><span class="bn">ব্যাসার্ধ (কিমি)</span><span class="en">Radius (km)</span></label><input id="rad" type="number" value="5" min="1" max="50"></div>
+        <div><label for="minr"><span class="bn">ন্যূনতম রিপোর্ট</span><span class="en">Min reports</span></label><input id="minr" type="number" value="3" min="2" max="50"></div>
+        <div><label for="win"><span class="bn">সময় (দিন)</span><span class="en">Window (days)</span></label><input id="win" type="number" value="7" min="1" max="30"></div>
+      </div>
+      <div>
+        <label for="reason"><span class="bn">পরিবর্তনের কারণ (বাধ্যতামূলক, অডিটে যাবে)</span><span class="en">Reason for change (required, goes to audit)</span></label>
+        <textarea id="reason" rows="2"></textarea>
+      </div>
+      <button class="btn" type="button" id="save"><span class="bn">সংরক্ষণ</span><span class="en">Save</span></button>
+      <p class="small" id="save-msg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="models">
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th><span class="bn">নাম</span><span class="en">Name</span></th><th><span class="bn">সংস্করণ</span><span class="en">Version</span></th><th><span class="bn">আর্কিটেকচার</span><span class="en">Architecture</span></th><th>τ / T</th><th><span class="bn">মূল্যায়ন</span><span class="en">Evaluation</span></th><th><span class="bn">অবস্থা</span><span class="en">Status</span></th></tr></thead>
+        <tbody><tr><td>crop-disease-classifier</td><td>0.0.0-placeholder</td><td><span class="bn">নির্বাচন বাকি</span><span class="en">to be selected</span></td><td>0.70 / 1.0</td><td><span class="chip warn"><span class="bn">এখনও প্রশিক্ষিত নয়</span><span class="en">not trained yet</span></span></td><td><span class="chip"><span class="bn">প্লেসহোল্ডার</span><span class="en">placeholder</span></span></td></tr></tbody>
+      </table></div>
+      <p class="small muted"><span class="bn">প্রার্থী: MobileNetV3-L · EfficientNetV2-B0 · ConvNeXt-T · DeiT-S · ক্লাসিক্যাল বেসলাইন। মূল্যায়ন রিপোর্ট ছাড়া কোনো সংস্করণ সক্রিয় করা যাবে না।</span><span class="en">Candidates: MobileNetV3-L · EfficientNetV2-B0 · ConvNeXt-T · DeiT-S · classical baseline. No version can be activated without an evaluation report.</span></p>
+    </div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="kb">
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th><span class="bn">দলিল</span><span class="en">Document</span></th><th><span class="bn">প্রকাশক</span><span class="en">Publisher</span></th><th><span class="bn">লাইসেন্স/অনুমতি</span><span class="en">Licence / permission</span></th><th><span class="bn">অবস্থা</span><span class="en">Status</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="bn">ধানের রোগ ও দমন নির্দেশিকা</span><span class="en">Rice disease management guide</span></td><td>BRRI</td><td><span class="bn">সংগ্রহ বাকি</span><span class="en">to obtain</span></td><td><span class="chip warn"><span class="bn">উৎস খোঁজা চলছে</span><span class="en">to source</span></span></td></tr>
+          <tr><td><span class="bn">ফসল সুরক্ষা লিফলেট</span><span class="en">Crop protection leaflets</span></td><td>DAE</td><td><span class="bn">সংগ্রহ বাকি</span><span class="en">to obtain</span></td><td><span class="chip warn"><span class="bn">উৎস খোঁজা চলছে</span><span class="en">to source</span></span></td></tr>
+          <tr><td><span class="bn">নিষিদ্ধ কীটনাশক তালিকা</span><span class="en">Banned pesticide list</span></td><td><span class="bn">সরকারি</span><span class="en">Government</span></td><td><span class="bn">সংগ্রহ বাকি</span><span class="en">to obtain</span></td><td><span class="chip danger"><span class="bn">না পাওয়া পর্যন্ত সব রাসায়নিক পরামর্শ বন্ধ</span><span class="en">all chemical advice blocked until sourced</span></span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="tab-panel" data-group="admin" id="users">
+    <div class="card"><div class="table-wrap"><table id="users-table"></table></div></div>
+  </section>
+</main>
+<footer class="footer"><a href="index.html">← <span class="bn">সব পাতা</span><span class="en">All pages</span></a> · <a href="audit.html"><span class="bn">অডিট</span><span class="en">Audit</span></a></footer>
+
+<script src="assets/synthetic-data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  "use strict";
+  var D = window.CG_SYNTHETIC, T = function (o) { return window.CG_T(o); };
+  var L = function (bn, en) { return '<span class="bn">' + bn + '</span><span class="en">' + en + '</span>'; };
+  var S = window.CG_STORE;
+  function dname(c) { return T(D.diseases[c]); }
+  function loadChanges() { try { return JSON.parse(S.get("cg.changes") || "[]"); } catch (e) { return []; } }
+
+  function renderStats() {
+    var c = D.counts;
+    var tiles = [[c.scans_7d, L("স্ক্যান (৭ দিন)", "Scans (7 days)")], [c.abstained_7d, L("নিশ্চিত নয় (৭ দিন)", "Not sure (7 days)")], [c.reviews_open, L("পর্যালোচনা বাকি", "Reviews open")]];
+    document.getElementById("stats").innerHTML = tiles.map(function (t) {
+      return '<div class="card stat"><div class="v">' + t[0] + '</div><div class="l">' + t[1] + ' · <span class="chip warn">synthetic</span></div></div>';
+    }).join("");
+    var rows = loadChanges();
+    document.getElementById("changes").innerHTML = '<thead><tr><th>' + L("সময়", "Time") + '</th><th>' + L("পরিবর্তন", "Change") + '</th><th>' + L("কারণ", "Reason") + '</th></tr></thead><tbody>' +
+      (rows.length ? rows.map(function (r) { return '<tr><td class="small">' + r.t + '</td><td><code>' + r.what + '</code></td><td>' + r.why.replace(/</g, "&lt;") + '</td></tr>'; }).join("")
+        : '<tr><td colspan="3" class="muted">' + L("এখনও কোনো পরিবর্তন নেই", "No changes yet") + '</td></tr>') + '</tbody>';
+  }
+
+  function renderReview() {
+    document.getElementById("review-list").innerHTML = D.reviewQueue.map(function (r) {
+      return '<div class="card stack" data-id="' + r.id + '"><div class="row"><code>' + r.id + '</code><span class="chip">' + r.upazila + '</span><span class="chip">' + r.variety + '</span><span class="small muted">' + r.age_h + L(" ঘণ্টা আগে", " h ago") + '</span></div>' +
+        '<div class="small">' + r.top3.map(function (p) { return dname(p[0]) + " " + Math.round(p[1] * 100) + "%"; }).join(" · ") + ' <span class="chip warn">synthetic</span></div>' +
+        '<div class="row"><button class="btn" type="button" data-v="confirm">' + L("ঠিক আছে", "Confirm") + '</button>' +
+        '<select aria-label="Corrected disease">' + Object.keys(D.diseases).map(function (k) { return '<option value="' + k + '">' + dname(k) + '</option>'; }).join("") + '</select>' +
+        '<button class="btn secondary" type="button" data-v="correct">' + L("সংশোধন", "Correct") + '</button>' +
+        '<button class="btn secondary" type="button" data-v="unclear">' + L("অস্পষ্ট", "Unclear") + '</button></div></div>';
+    }).join("");
+    document.querySelectorAll("#review-list [data-v]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var card = b.closest("[data-id]");
+        card.innerHTML = '<p class="callout">✅ ' + card.getAttribute("data-id") + " — <code>" + b.getAttribute("data-v") + "</code>" + L(" — কৃষককে জানানো হয়েছে (সিমুলেশন)।", " — farmer notified (simulated).") + '</p>';
+      });
+    });
+  }
+
+  function renderDrafts() {
+    document.getElementById("draft-list").innerHTML = D.alerts.map(function (a) {
+      var chip = a.status === "draft" ? '<span class="chip warn">' + L("খসড়া", "Draft") + '</span>' : '<span class="chip ok">' + L("অনুমোদিত", "Approved") + '</span>';
+      var act = a.status === "draft" ? '<textarea rows="2" aria-label="Message">' + L("আপনার এলাকায় " + dname(a.disease) + " রোগের খবর পাওয়া গেছে। ক্ষেত পরীক্ষা করুন।", "Reports of " + dname(a.disease) + " in your area. Please check your field.") + '</textarea><div class="row"><button class="btn" type="button" data-approve>' + L("অনুমোদন ও পাঠান", "Approve & send") + '</button><button class="btn secondary" type="button" data-dismiss>' + L("বাতিল", "Dismiss") + '</button></div>' : "";
+      return '<div class="card stack"><div class="row"><strong>' + dname(a.disease) + '</strong>' + chip + '<span class="small muted">' + T(a.area) + ' · ' + a.reports + L(" রিপোর্ট", " reports") + ' · ' + a.risk + '</span></div>' + act + '</div>';
+    }).join("");
+    document.querySelectorAll("[data-approve],[data-dismiss]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        b.closest(".card").innerHTML = '<p class="callout">' + (b.hasAttribute("data-approve") ? L("✅ অনুমোদিত — n8n এর মাধ্যমে পাঠানো হবে (সিমুলেশন)।", "✅ Approved — would be sent via n8n (simulated).") : L("বাতিল করা হয়েছে।", "Dismissed.")) + '</p>';
+      });
+    });
+  }
+
+  function renderUsers() {
+    document.getElementById("users-table").innerHTML = '<thead><tr><th>' + L("নাম", "Name") + '</th><th>' + L("ভূমিকা", "Role") + '</th><th>' + L("উপজেলা", "Upazila") + '</th></tr></thead><tbody>' +
+      D.users.map(function (u) { return '<tr><td>' + u.name + '</td><td><span class="chip info">' + u.role + '</span></td><td>' + u.upazila + '</td></tr>'; }).join("") + '</tbody>';
+  }
+
+  function all() { renderStats(); renderReview(); renderDrafts(); renderUsers(); }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var tau = document.getElementById("tau");
+    tau.addEventListener("input", function () { document.getElementById("tau-v").textContent = Number(tau.value).toFixed(2); });
+    document.getElementById("save").addEventListener("click", function () {
+      var why = document.getElementById("reason").value.trim(), msg = document.getElementById("save-msg");
+      if (why.length < 5) { msg.innerHTML = '<span class="chip danger">' + L("কারণ লিখুন (কমপক্ষে ৫ অক্ষর)", "Enter a reason (at least 5 characters)") + '</span>'; return; }
+      var rows = loadChanges();
+      rows.unshift({ t: new Date().toLocaleString(), what: "τ=" + Number(tau.value).toFixed(2) + " radius=" + document.getElementById("rad").value + " min=" + document.getElementById("minr").value + " window=" + document.getElementById("win").value, why: why });
+      S.set("cg.changes", JSON.stringify(rows.slice(0, 20)));
+      document.getElementById("reason").value = "";
+      msg.innerHTML = '<span class="chip ok">' + L("সংরক্ষিত ও অডিটে লগ করা হয়েছে (এই ব্রাউজারে)", "Saved and audit-logged (in this browser)") + '</span>';
+      renderStats();
+    });
+    document.addEventListener("cg:lang", all);
+    all();
+  });
+})();
+</script>
+</body>
+</html>

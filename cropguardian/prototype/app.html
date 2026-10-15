@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Guardian App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap narrow" id="app">
+
+  <!-- HOME -->
+  <section class="screen" id="s-home">
+    <div class="card hero-scan">
+      <h1><span class="bn">আজ আপনার ফসল কেমন?</span><span class="en">How is your crop today?</span></h1>
+      <p class="muted"><span class="bn">অসুস্থ পাতার একটি ছবি তুলুন। ফলাফল ও করণীয় বাংলায় পাবেন।</span><span class="en">Photograph a sick leaf. Get the result and what to do, in Bangla.</span></p>
+      <a class="btn huge block" href="#scan">📷 <span class="bn">পাতার ছবি তুলুন</span><span class="en">Photograph a leaf</span></a>
+      <p class="small muted" id="outbox-note" style="margin-top:.75rem"></p>
+    </div>
+    <div class="card" style="margin-top:1rem" id="home-alert"></div>
+    <div class="card flat" style="margin-top:1rem">
+      <h3><span class="bn">কীভাবে কাজ করে</span><span class="en">How it works</span></h3>
+      <ol class="steps small">
+        <li><span class="bn">ছবি ফোনেই ছোট করা হয়, অবস্থান ও মেটাডেটা মুছে ফেলা হয়।</span><span class="en">The photo is shrunk on the phone; location metadata is removed.</span></li>
+        <li><span class="bn">এআই সম্ভাব্য রোগ ও নিশ্চয়তা জানায় — নিশ্চিত না হলে বলে "নিশ্চিত নই"।</span><span class="en">The AI gives the likely disease and confidence — or says "not sure".</span></li>
+        <li><span class="bn">পরামর্শ আসে DAE/BRRI নির্দেশিকা থেকে, উৎসসহ।</span><span class="en">Advice comes from DAE/BRRI guides, with the source shown.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SCAN -->
+  <section class="screen" id="s-scan">
+    <h1><span class="bn">ছবি দিন</span><span class="en">Add a photo</span></h1>
+    <div class="card stack">
+      <div class="leaf-preview" id="scan-preview"></div>
+      <label class="btn secondary block" for="file-input">🖼️ <span class="bn">ক্যামেরা / গ্যালারি</span><span class="en">Camera / gallery</span></label>
+      <input id="file-input" class="sr-only" type="file" accept="image/*" capture="environment">
+      <p class="small muted"><span class="bn">টিপস: একটি পাতা কাছ থেকে, দিনের আলোতে তুলুন। (প্রোটোটাইপ: আপনার ছবি ফোনেই থাকে, কোথাও পাঠানো হয় না।)</span><span class="en">Tip: one leaf, close up, in daylight. (Prototype: your photo stays on this device; nothing is uploaded.)</span></p>
+      <div>
+        <label><span class="bn">ডেমো দৃশ্য বেছে নিন (কোনো মডেল নেই)</span><span class="en">Pick a demo scenario (no model exists)</span></label>
+        <div class="row" id="scenario-picker">
+          <button class="btn secondary" type="button" data-scenario="blast"><span class="bn">নমুনা: ব্লাস্ট</span><span class="en">Sample: blast</span></button>
+          <button class="btn secondary" type="button" data-scenario="tungro"><span class="bn">নমুনা: টুংরো</span><span class="en">Sample: tungro</span></button>
+          <button class="btn secondary" type="button" data-scenario="unsure"><span class="bn">নমুনা: অস্পষ্ট ছবি</span><span class="en">Sample: unclear photo</span></button>
+        </div>
+      </div>
+      <label class="row small" style="font-weight:400"><input type="checkbox" id="sim-offline"> <span class="bn">ইন্টারনেট নেই — সিমুলেট করুন</span><span class="en">Simulate no internet</span></label>
+      <button class="btn huge block" id="send-btn" type="button">➤ <span class="bn">পাঠান</span><span class="en">Send</span></button>
+    </div>
+  </section>
+
+  <!-- WAKING / ANALYSING -->
+  <section class="screen" id="s-wait">
+    <div class="card hero-scan stack" aria-live="polite">
+      <div class="spinner" role="status"></div>
+      <h2 id="wait-title"></h2>
+      <p class="muted" id="wait-body"></p>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result"><div id="result-body"></div></section>
+
+  <!-- HISTORY -->
+  <section class="screen" id="s-history">
+    <h1><span class="bn">আমার স্ক্যান</span><span class="en">My scans</span></h1>
+    <div class="card"><div class="table-wrap"><table id="history-table"></table></div></div>
+  </section>
+
+  <!-- ALERTS -->
+  <section class="screen" id="s-alerts">
+    <h1><span class="bn">আশেপাশের সতর্কতা</span><span class="en">Alerts near you</span></h1>
+    <div class="card" style="padding:.5rem">
+      <svg viewBox="0 0 100 80" role="img" aria-label="Synthetic outbreak map" id="alert-map" style="width:100%;height:auto;display:block"></svg>
+      <p class="small muted" style="margin:.25rem .5rem"><span class="bn">কৃত্রিম মানচিত্র — বৃত্ত = সতর্কতার এলাকা (৫ কিমি)।</span><span class="en">Synthetic map — circles = alert areas (5 km).</span></p>
+    </div>
+    <div class="stack" id="alert-list" style="margin-top:1rem"></div>
+    <div class="card" style="margin-top:1rem">
+      <label class="row" style="font-weight:600"><input type="checkbox" checked> <span class="bn">আমার এলাকায় রোগ ছড়ালে জানান</span><span class="en">Notify me when disease spreads in my area</span></label>
+      <p class="small muted"><span class="bn">সতর্কতায় শুধু রোগ, এলাকা ও ঝুঁকি থাকে — কারও নাম বা ফোন নম্বর নয়। কৃষি কর্মকর্তা অনুমোদন করলে তবেই পাঠানো হয়।</span><span class="en">Alerts carry only disease, area and risk — never names or phone numbers. Sent only after an agronomist approves.</span></p>
+    </div>
+  </section>
+
+  <div style="height:1rem"></div>
+</main>
+
+<nav class="bottom-nav" aria-label="App">
+  <a href="#home" data-nav="home"><span class="ico">🏠</span><span class="bn">হোম</span><span class="en">Home</span></a>
+  <a href="#scan" data-nav="scan"><span class="ico">📷</span><span class="bn">স্ক্যান</span><span class="en">Scan</span></a>
+  <a href="#history" data-nav="history"><span class="ico">🗂️</span><span class="bn">ইতিহাস</span><span class="en">History</span></a>
+  <a href="#alerts" data-nav="alerts"><span class="ico">🔔</span><span class="bn">সতর্কতা</span><span class="en">Alerts</span></a>
+</nav>
+
+<script src="assets/synthetic-data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  "use strict";
+  var D = window.CG_SYNTHETIC, T = function (o) { return window.CG_T(o); };
+  var L = function (bn, en) { return '<span class="bn">' + bn + '</span><span class="en">' + en + '</span>'; };
+  var state = { scenario: "blast", userImage: null, queued: 0, current: null };
+
+  function dname(code) { return code ? T(D.diseases[code]) : "—"; }
+  function pct(p) { return Math.round(p * 100) + "%"; }
+
+  function leafSvg(code) {
+    var spots = { blast: "#7a4a2a", tungro: "#d39a2b", unsure: "#8a6a3a" }[code] || "#7a4a2a";
+    var tint = code === "tungro" ? "#b9c64a" : "#4f9a4a";
+    var s = '<svg viewBox="0 0 100 75" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated leaf (synthetic)">' +
+      '<rect width="100" height="75" fill="#d9e6cf"/>' +
+      '<path d="M6 60 C 30 10, 70 0, 96 12 C 80 40, 50 70, 6 60 Z" fill="' + tint + '"/>' +
+      '<path d="M8 59 C 40 40, 70 22, 94 13" stroke="#2f6b2c" stroke-width="1.2" fill="none"/>';
+    if (code === "blast") s += '<ellipse cx="55" cy="38" rx="6" ry="2.6" fill="' + spots + '" transform="rotate(-25 55 38)"/><ellipse cx="62" cy="44" rx="4" ry="1.8" fill="' + spots + '" transform="rotate(-25 62 44)"/><ellipse cx="45" cy="44" rx="3.5" ry="1.6" fill="' + spots + '" transform="rotate(-25 45 44)"/>';
+    if (code === "tungro") s += '<path d="M20 55 C 40 35, 55 25, 70 20 C 60 40, 40 55, 20 55 Z" fill="#e2a33a" opacity=".7"/>';
+    if (code === "unsure") s += '<circle cx="40" cy="45" r="2" fill="' + spots + '"/><circle cx="58" cy="33" r="1.5" fill="' + spots + '"/><rect width="100" height="75" fill="#fff" opacity=".35"/>';
+    return s + "</svg>";
+  }
+
+  function heatSvg(h) {
+    if (!h) return "";
+    return '<svg class="heat" viewBox="0 0 100 75" aria-hidden="true"><defs><radialGradient id="hg"><stop offset="0" stop-color="#ff3b30" stop-opacity=".9"/><stop offset=".6" stop-color="#ffcc00" stop-opacity=".45"/><stop offset="1" stop-color="#ffcc00" stop-opacity="0"/></radialGradient></defs><circle cx="' + h.cx + '" cy="' + (h.cy * .75) + '" r="' + h.r + '" fill="url(#hg)"/></svg>';
+  }
+
+  function show(id) {
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("active", s.id === "s-" + id); });
+    document.querySelectorAll("[data-nav]").forEach(function (a) { a.classList.toggle("active", a.getAttribute("data-nav") === id); });
+    window.scrollTo(0, 0);
+  }
+
+  function renderHome() {
+    document.getElementById("outbox-note").innerHTML = state.queued
+      ? L("📦 " + state.queued + "টি ছবি অপেক্ষমাণ — ইন্টারনেট এলে নিজে থেকেই যাবে।", "📦 " + state.queued + " photo(s) waiting — will send automatically when online.")
+      : "";
+    var a = D.alerts.filter(function (x) { return x.status === "approved"; })[0];
+    document.getElementById("home-alert").innerHTML =
+      '<div class="row"><span class="chip danger">' + L("সতর্কতা", "Alert") + '</span><strong>' + dname(a.disease) + '</strong><span class="muted small">' + T(a.area) + '</span></div>' +
+      '<p class="small" style="margin:.4rem 0 0">' + L("আশেপাশে " + a.reports + "টি রিপোর্ট। ", a.reports + " reports nearby. ") + '<a href="#alerts">' + L("বিস্তারিত", "Details") + '</a></p>';
+  }
+
+  function renderScanPreview() {
+    var box = document.getElementById("scan-preview");
+    box.innerHTML = state.userImage ? '<img alt="Your photo (stays on this device)" src="' + state.userImage + '">' : leafSvg(state.scenario);
+    document.querySelectorAll("[data-scenario]").forEach(function (b) {
+      b.classList.toggle("secondary", b.getAttribute("data-scenario") !== state.scenario);
+    });
+  }
+
+  function renderResult(code) {
+    var sc = D.scenarios[code], body = document.getElementById("result-body"), h = "";
+    var top = sc.top3[0];
+    h += '<div class="card stack"><div class="leaf-preview">' + (state.userImage ? '<img alt="" src="' + state.userImage + '">' : leafSvg(code)) + heatSvg(sc.heat) + '</div>';
+    if (sc.heat) h += '<p class="small muted">🔥 ' + L("লাল অংশ: এআই পাতার যে অংশ দেখে সিদ্ধান্ত নিয়েছে (নমুনা)", "Red area: where the AI looked on the leaf (sample)") + '</p>';
+
+    if (sc.status === "needs_review") {
+      h += '<div class="callout warn"><h2>🤔 ' + L("নিশ্চিত নই", "Not sure") + '</h2><p>' +
+        L("ছবিটি কৃষি কর্মকর্তার কাছে পাঠানো হয়েছে। সাধারণত ২৪ ঘণ্টার মধ্যে উত্তর আসবে (লক্ষ্য)। উত্তর এলে আপনাকে জানানো হবে।",
+          "The photo was sent to an agronomist. Target response within 24 hours. You will be notified.") + '</p>' +
+        '<p class="small">' + L("ততক্ষণ: অনুমানে কোনো ওষুধ ছিটাবেন না। আক্রান্ত গাছ আলাদা করে লক্ষ করুন।", "Meanwhile: do not spray on a guess. Keep watching the affected plants.") + '</p></div>' +
+        '<details><summary class="small muted">' + L("কেন নিশ্চিত নয়?", "Why not sure?") + '</summary><p class="small">' +
+        L("সবচেয়ে সম্ভাব্য উত্তরের নিশ্চয়তা নির্ধারিত সীমার (τ) নিচে। ভুল উত্তর দেওয়ার চেয়ে \"জানি না\" বলা নিরাপদ।",
+          "The top answer's calibrated confidence is below the threshold (τ). Saying \"I don't know\" is safer than guessing.") + '</p></details>';
+    } else {
+      var band = sc.band === "high" ? L("নিশ্চয়তা: উচ্চ", "Confidence: high") : L("নিশ্চয়তা: মাঝারি", "Confidence: medium");
+      h += '<div><p class="small muted" style="margin:0">' + L("সম্ভাব্য রোগ", "Likely disease") + '</p><h1 style="margin:.1rem 0">' + dname(top[0]) + '</h1>' +
+        '<span class="chip ' + (sc.band === "high" ? "ok" : "warn") + '">' + band + '</span></div>';
+    }
+    h += '<details><summary class="small">' + L("অন্যান্য সম্ভাবনা (সিনথেটিক মান)", "Other possibilities (synthetic values)") + '</summary><div class="stack" style="margin-top:.5rem">';
+    sc.top3.forEach(function (p) {
+      h += '<div class="prob-row"><span>' + dname(p[0]) + '</span><span class="small muted">' + pct(p[1]) + '</span><div class="bar"><span style="width:' + pct(p[1]) + '"></span></div></div>';
+    });
+    h += '</div></details><p class="small muted">' + L("এটি সহায়ক পরামর্শ। প্রয়োজনে কৃষি কর্মকর্তার সাথে নিশ্চিত হোন।", "Decision support only. Confirm with your agriculture officer when in doubt.") + '</p></div>';
+
+    if (sc.advice) {
+      var a = sc.advice;
+      h += '<div class="card stack" style="margin-top:1rem"><div class="row"><h2 style="margin:0">' + L("এখন কী করবেন", "What to do now") + '</h2><span class="spacer" style="flex:1"></span>' +
+        '<button class="btn secondary" type="button" id="speak">🔊 ' + L("শুনুন", "Listen") + '</button></div>' +
+        '<div class="callout warn small">' + T(D.sampleAdviceNote) + '</div>' +
+        '<p>' + T(a.summary) + '</p><ol class="steps">' + (a.steps[window.CG_LANG()] || a.steps.en).map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+        '<div class="callout danger small"><strong>⚠️ ' + L("সাবধানতা", "Safety") + ':</strong> ' + T(a.safety) + '</div>' +
+        a.citations.map(function (c) { return '<p class="source">📚 ' + L("সূত্র", "Source") + ': ' + c.publisher + ' — ' + c.title + ' · ' + L("পৃষ্ঠা", "page") + ' ' + c.page + '</p>'; }).join("") + '</div>';
+    }
+    h += '<div class="row" style="margin-top:1rem"><a class="btn secondary" href="#scan">📷 ' + L("আরেকটি স্ক্যান", "Scan another") + '</a><a class="btn secondary" href="#history">🗂️ ' + L("ইতিহাস", "History") + '</a></div>';
+    body.innerHTML = h;
+
+    var sp = document.getElementById("speak");
+    if (sp) sp.addEventListener("click", function () {
+      if (!("speechSynthesis" in window)) { sp.disabled = true; return; }
+      var u = new SpeechSynthesisUtterance(T(sc.advice.summary));
+      u.lang = window.CG_LANG() === "bn" ? "bn-BD" : "en-US";
+      window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+    });
+  }
+
+  function renderHistory() {
+    var rows = '<thead><tr><th>' + L("আইডি", "ID") + '</th><th>' + L("তারিখ", "Date") + '</th><th>' + L("ফলাফল", "Result") + '</th><th>' + L("অবস্থা", "Status") + '</th></tr></thead><tbody>';
+    D.history.forEach(function (r) {
+      var chip = { diagnosed: ["ok", L("নির্ণীত", "Diagnosed")], needs_review: ["warn", L("পর্যালোচনায়", "In review")], reviewed: ["info", L("বিশেষজ্ঞ যাচাই", "Expert-checked")] }[r.status];
+      rows += '<tr><td><code>' + r.id + '</code></td><td>' + r.date + '</td><td>' + (r.disease ? dname(r.disease) : L("নিশ্চিত নই", "Not sure")) + '</td><td><span class="chip ' + chip[0] + '">' + chip[1] + '</span></td></tr>';
+    });
+    document.getElementById("history-table").innerHTML = rows + "</tbody>";
+  }
+
+  function renderAlerts() {
+    var visible = D.alerts.filter(function (a) { return a.status === "approved"; });
+    var map = '<rect width="100" height="80" fill="var(--surface-2)"/><path d="M0 52 C 20 48, 35 60, 55 55 S 85 40, 100 46" stroke="#7fb2d8" stroke-width="2.4" fill="none"/>' +
+      '<circle cx="50" cy="44" r="1.6" fill="var(--ink)"/><text x="52.5" y="43" font-size="3.4" fill="var(--ink)">' + (window.CG_LANG() === "bn" ? "আপনি" : "You") + '</text>';
+    visible.forEach(function (a) {
+      var col = a.risk === "high" ? "#d92d20" : a.risk === "medium" ? "#f79009" : "#12b76a";
+      map += '<circle cx="' + a.x + '" cy="' + a.y + '" r="12" fill="' + col + '" opacity=".22" stroke="' + col + '"/><text x="' + (a.x - 5) + '" y="' + (a.y + 1) + '" font-size="3.4" fill="var(--ink)">' + dname(a.disease) + '</text>';
+    });
+    document.getElementById("alert-map").innerHTML = map;
+    document.getElementById("alert-list").innerHTML = visible.map(function (a) {
+      var risk = { high: ["danger", L("ঝুঁকি: উচ্চ", "Risk: high")], medium: ["warn", L("ঝুঁকি: মাঝারি", "Risk: medium")], low: ["ok", L("ঝুঁকি: কম", "Risk: low")] }[a.risk];
+      return '<div class="card"><div class="row"><strong>' + dname(a.disease) + '</strong><span class="chip ' + risk[0] + '">' + risk[1] + '</span></div>' +
+        '<p class="small muted" style="margin:.3rem 0 0">' + T(a.area) + ' · ' + a.reports + ' ' + L("রিপোর্ট", "reports") + ' · ' + a.date + ' · ' + L("নিয়মভিত্তিক (rules-v1)", "rule-based (rules-v1)") + '</p></div>';
+    }).join("");
+  }
+
+  function analyse() {
+    if (document.getElementById("sim-offline").checked) {
+      state.queued += 1; location.hash = "#home"; return;
+    }
+    show("wait");
+    var t = document.getElementById("wait-title"), b = document.getElementById("wait-body");
+    t.innerHTML = L("সার্ভার চালু হচ্ছে…", "Waking the server…");
+    b.innerHTML = L("বিনামূল্যের সার্ভার কিছুক্ষণ ব্যবহার না হলে ঘুমিয়ে পড়ে; চালু হতে প্রায় এক মিনিট লাগতে পারে। আপনার ছবি সংরক্ষিত আছে। (প্রোটোটাইপে ২ সেকেন্ড দেখানো হচ্ছে।)",
+      "Free servers sleep when idle and can take about a minute to wake. Your photo is saved. (The prototype simulates 2 seconds.)");
+    setTimeout(function () {
+      t.innerHTML = L("বিশ্লেষণ চলছে…", "Analysing…"); b.innerHTML = "";
+      setTimeout(function () { location.hash = "#result-" + state.scenario; }, 900);
+    }, 2000);
+  }
+
+  function route() {
+    var h = (location.hash || "#home").slice(1);
+    if (h.indexOf("result-") === 0) { state.current = h.slice(7); if (!D.scenarios[state.current]) state.current = "blast"; renderResult(state.current); show("result"); return; }
+    if (["home", "scan", "history", "alerts"].indexOf(h) < 0) h = "home";
+    ({ home: renderHome, scan: renderScanPreview, history: renderHistory, alerts: renderAlerts })[h]();
+    show(h);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("file-input").addEventListener("change", function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () { state.userImage = r.result; renderScanPreview(); };
+      r.readAsDataURL(f);
+    });
+    document.querySelectorAll("[data-scenario]").forEach(function (b) {
+      b.addEventListener("click", function () { state.scenario = b.getAttribute("data-scenario"); renderScanPreview(); });
+    });
+    document.getElementById("send-btn").addEventListener("click", analyse);
+    window.addEventListener("hashchange", route);
+    document.addEventListener("cg:lang", route);
+    route();
+  });
+})();
+</script>
+</body>
+</html>

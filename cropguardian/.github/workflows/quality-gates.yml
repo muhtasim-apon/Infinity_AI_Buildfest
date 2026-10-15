@@ -1,0 +1,106 @@
+# Crop Guardian — quality gates
+#
+# NOTE: this workflow has never been executed. It declares the gates the team commits to,
+# so the rules in CLAUDE.md are enforced mechanically rather than remembered.
+# Test types and tools are described in docs/testing/test-strategy.md.
+
+name: Quality Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  # ── Frontend ────────────────────────────────────────────────────────────────
+  web:
+    name: Web lint, type-check, unit
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test -- --coverage
+      - run: npm audit --audit-level=high
+
+  bangla-completeness:
+    name: Bangla string completeness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every key in en.json must exist in bn.json
+        run: |
+          python - <<'EOF'
+          import json, sys
+          bn = json.load(open("apps/web/src/i18n/bn.json", encoding="utf-8"))
+          en = json.load(open("apps/web/src/i18n/en.json", encoding="utf-8"))
+          missing = sorted(set(en) - set(bn))
+          if missing:
+              sys.exit(f"Missing Bangla keys: {missing}")
+          EOF
+
+  # ── Backend ─────────────────────────────────────────────────────────────────
+  api:
+    name: API lint, type, unit, whitebox coverage
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: services/api } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: ruff check .
+      - run: mypy --strict app
+      # whitebox: branch coverage gate on the safety-critical modules
+      - run: pytest ../../tests/unit ../../tests/whitebox --cov=app --cov-branch --cov-fail-under=80
+      - run: bandit -r app -ll
+      - run: pip-audit -r requirements.txt
+
+  contract:
+    name: Blackbox API contract (Schemathesis)
+    runs-on: ubuntu-latest
+    needs: api
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "stub — start API with test DB, then schemathesis run http://localhost:8000/openapi.json --checks all"
+
+  # ── ML ──────────────────────────────────────────────────────────────────────
+  ml:
+    name: ML gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every referenced model has a model card
+        run: echo "stub — grep MODEL_NAME references vs docs/ai/model-cards/"
+      - name: Robustness & per-group gates
+        run: echo "stub — tests/ml (blur, brightness, rotation invariance; per-crop and per-source recall floors)"
+      - name: RAG regression
+        run: echo "stub — citation presence must be 1.00; banned-pesticide leakage must be 0"
+
+  # ── Security ────────────────────────────────────────────────────────────────
+  security:
+    name: Security scans
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Secret scan
+        run: echo "stub — gitleaks detect"
+      - name: Service-role key never in frontend
+        run: "! grep -rn 'SERVICE_ROLE' apps/web/src || (echo 'service role key referenced in frontend' && exit 1)"
+      - name: DAST baseline (staging only)
+        run: echo "stub — OWASP ZAP baseline against staging URL"
+
+  # ── Docs ────────────────────────────────────────────────────────────────────
+  docs:
+    name: Documentation integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Link check
+        run: echo "stub — lychee docs/ README.md"
+      - name: Build report PDF
+        run: echo "stub — python scripts/build_report.py (needs Chrome or WeasyPrint)"

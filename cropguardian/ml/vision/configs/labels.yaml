@@ -1,0 +1,20 @@
+# Unified label taxonomy — order == model output index == disease_catalog seed order − 1.
+# Source mapping and Bangla names: docs/data/datasets.md §4 (Bangla pending agronomist sign-off).
+version: 1
+crop: rice
+labels:
+  - code: healthy
+    sources: { D1: Healthy, D2: Normal Leaf }
+  - code: bacterial_leaf_blight
+    sources: { D1: Bacterial Leaf Blight }
+  - code: brown_spot
+    sources: { D1: Brown Spot }
+  - code: narrow_brown_spot
+    sources: { D2: Narrow Brown Spot }
+  - code: blast
+    sources: { D2: Blast }
+  - code: sheath_blight
+    sources: { D2: Sheath Blight }
+  - code: tungro
+    sources: { D1: Tungro, D2: Tungro }
+notifiable: [bacterial_leaf_blight, blast, tungro]
