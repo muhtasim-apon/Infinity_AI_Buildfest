@@ -42,4 +42,4 @@ All 19 items in the image are covered one-to-one by rows 1–19.
 
 ## Release gate
 Before 28 Oct (code freeze): every row ticked on **staging**; before 30 Oct: rows re-checked on the
-**production URLs** ([`00-zero-to-deploy.md`](../deployment/00-zero-to-deploy.md) Phase 10).
+**production URLs** ([`00-zero-to-deploy.md`](../deployment/00-zero-to-deploy.md) Step 9).

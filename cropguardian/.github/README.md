@@ -24,7 +24,7 @@ for the Claude API and Claude Code). Permissions: `pull-requests: write`, `conte
 for all external contributors"* in Settings → Actions. Locally, run `/security-review` in Claude Code
 before opening a PR.
 
-## 3. `workflows/heartbeat.yml` (free fallback for n8n workflows 03/04)
+## 3. `workflows/heartbeat.yml` — after 31 Oct only (until then the UptimeRobot monitor on `/readyz` does this)
 Daily cron (03:00 Asia/Dhaka) + manual run: `GET <API>/healthz` (120 s timeout, wakes the service),
 then signed `POST <API>/v1/hooks/n8n/heartbeat` (HMAC over `timestamp.body`). Secrets: `API_BASE_URL`,
 `N8N_WEBHOOK_SECRET`. Purpose: keep the free Supabase project from pausing. GitHub's scheduler is

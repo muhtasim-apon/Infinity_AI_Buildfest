@@ -1,13 +1,27 @@
-# Deployment guides
+# Deployment — the minimum path
 
-Read in this order:
+**One way to deploy, no alternatives.** Follow [`00-zero-to-deploy.md`](00-zero-to-deploy.md) step by step;
+open the other files only when a step tells you to.
 
-| # | Guide | What it covers |
+| File | Use it for |
+|---|---|
+| [00 Zero to deployment](00-zero-to-deploy.md) | the 9 steps, the day each is done, the 3 public URLs |
+| [01 Render](01-render-guide.md) | creating the 3 Render services (exact settings) |
+| [02 Supabase](02-supabase-guide.md) | database, storage, login |
+| [03 Other platforms](03-other-platforms-guide.md) | GitHub, Anthropic key, CAPTCHA, keep-alive monitor, free GPU |
+| [04 Free-tier problems](04-free-tier-challenges.md) | what breaks on free tiers and the fix |
+
+## The stack (final — do not add more)
+| Piece | Where | Cost |
 |---|---|---|
-| 00 | [Zero to deployment](00-zero-to-deploy.md) | accounts → tools → repo → Supabase → local run → model → knowledge base → Render → automation → testing → go-live; the **URL plan** (every public URL, where it is created and where it is pasted) |
-| 01 | [Render](01-render-guide.md) | prototype + web static sites, Docker API, env vars, rewrites, security headers, custom domain, Blueprint template, rollback |
-| 02 | [Supabase](02-supabase-guide.md) | project, keys (publishable/secret), pooler, schema, RLS, private buckets, auth + CAPTCHA, backups, pause/restore |
-| 03 | [Other platforms](03-other-platforms-guide.md) | GitHub, Anthropic, Cloudflare Turnstile, Colab/Kaggle, n8n, UptimeRobot, Sentry, Telegram, custom domain, security tools |
-| 04 | [Free-tier challenges & recovery](04-free-tier-challenges.md) | every free-tier limit that can slow or **turn off** the app, with prevention, detection, recovery — and the "Render turned us off" runbook |
+| Prototype (static HTML) | Render static site | free |
+| Web app (React build) | Render static site | free |
+| API (FastAPI, Docker) | Render free web service | free |
+| Database + photo storage + login | Supabase free project | free |
+| Keep-alive + uptime alert | UptimeRobot | free |
+| CAPTCHA | Cloudflare Turnstile | free |
+| Advice LLM | Anthropic API | pay-per-use, spend cap set |
+| Model training | Google Colab / Kaggle | free |
 
-Security: [checklist (19 controls)](../security/security-checklist.md) · [security testing guide](../testing/security-testing-guide.md).
+**Not before 31 Oct:** n8n workflows, custom domain, Render Blueprint, Sentry, Telegram bot, staging
+environment, load tests, backup hosting. They are listed in [00 §"After 31 Oct"](00-zero-to-deploy.md#after-31-oct-only-if-time-allows).

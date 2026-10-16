@@ -27,11 +27,11 @@ backend support) · Salwa (AI — RAG & KB) · Raisa (AI — agent & Bangla · p
 | **Tue 20** | ONNX inference module + thread pool; Dockerfile; first Render deploy | EfficientNetV2-B0 training; export first ONNX for integration | Retrieval tuning (top-k, RRF, min score); golden set to 40 pairs | User interviews (2–3), notes anonymised | Result screen: top-3, confidence band, abstain state |
 | **Wed 21** | Wire web ↔ API ↔ Supabase; CORS; **vertical slice live (M2)** | Integrate ONNX with Apon; parity check; preprocessing identical | `rag/validator.py` rules; banned-ingredient list | Prompt v1 tested on golden set; Bangla quality review | Waking-server state, error states, history list **(M2)** |
 | **Thu 22** | Audit chain (`audit_append`) + logging of every admin action; scan history API | ConvNeXt-T and DeiT-S runs (5-fold); temperature scaling | Integrate retrieval into API advisory service | Integrate agent loop in API with Salwa; fallback cards for 7 diseases | Advice screen with citations; voice playback (TTS bn-BD) |
-| **Fri 23** | Outbreak rules v1 (auto-publish, cooldown) + Open-Meteo; alerts + dismiss API; n8n alert-notice workflow | Risk–coverage → τ; OOD set from PlantDoc; Grad-CAM gallery | RAG eval: Recall@8, MRR, faithfulness | Agent red-team cases with Salwa | Alerts screen + map (Leaflet + OSM tiles) with "unverified" label; not-sure screen polish |
+| **Fri 23** | Outbreak rules v1 (auto-publish, cooldown) + Open-Meteo; alerts + dismiss API | Risk–coverage → τ; OOD set from PlantDoc; Grad-CAM gallery | RAG eval: Recall@8, MRR, faithfulness | Agent red-team cases with Salwa | Alerts screen + map (Leaflet + OSM tiles) with "unverified" label; not-sure screen polish |
 | **Sat 24** | Admin APIs (users, thresholds, model versions, KB docs); rate limiting; Turnstile CAPTCHA on demo | Statistics report: CIs, McNemar, confusion matrix, slices, confound probe | Prompt-injection & poisoned-chunk tests; fix findings | Usability session 1 on prototype (farmers/officers) | Admin, Data, Security, Architecture pages |
-| **Sun 25** | Security checklist pass (all 19 items): headers, CSP, CORS, webhook signatures, debug off, secret scan; RLS + IDOR tests **(M3)** | Select model by rule; int8 export; model card filled with measured values | Citation coverage & banned-leakage gates green | Pitch storyline; slide deck v1 | Audit page (one-click report), Presentation & Pitchdeck pages **(M3)** |
+| **Sun 25** | UptimeRobot keep-alive on `/readyz` (deploy guide Step 8); security checklist pass (all 19 items): headers, CSP, CORS, webhook signatures, debug off, secret scan; RLS + IDOR tests **(M3)** | Select model by rule; int8 export; model card filled with measured values | Citation coverage & banned-leakage gates green | Pitch storyline; slide deck v1 | Audit page (one-click report), Presentation & Pitchdeck pages **(M3)** |
 | **Mon 26** | Timeout + concurrency tests; k6 load test on Render; cold-start fixes | Robustness tests (blur/brightness/rotation); per-group results | Caching + fallback paths; LLM provider switch test | Video script (180 s, §9.2 segments); usability session 2 | Playwright E2E (bn + en, phone viewport); a11y fixes |
-| **Tue 27** | n8n: keep-warm, heartbeat, digest, synthetic monitor; Sentry; UptimeRobot; Claude security review on open PRs | Retrain with extra public field data / stronger augmentation if a gate failed; update eval | Docs: rag-design results, eval tables | Deck v2; demo script; rehearse | Polish: performance (Lighthouse), offline PWA, copy review |
+| **Tue 27** | Fix findings from the security checks; Claude security review on open PRs; rollback rehearsal | Retrain with extra public field data / stronger augmentation if a gate failed; update eval | Docs: rag-design results, eval tables | Deck v2; demo script; rehearse | Polish: performance (Lighthouse), offline PWA, copy review |
 | **Wed 28** | **Code freeze (M4)**; final deploy; runbook dry-run (rollback, Supabase restore) | Final metrics into docs + `/data` page; reproducibility check | Final red-team run; sign-off on advice safety | Record video takes; screen captures from live app | Record UI walkthrough clips; bug-fix only |
 | **Thu 29** | Submission checklist; verify all public URLs from a phone on mobile data **(M5)** | Model card + datasheet final; licences/attributions | Final docs review (AI sections) | **Edit and export 3-min video (M5)** | Final visual QA in both locales; screenshots for deck |
 | Fri 30 | **Submit** with Raisa; confirm receipt | standby | standby | **Submit** with Apon | standby |
@@ -49,11 +49,11 @@ gantt
   FastAPI skeleton, auth, uploads     :a2, 2026-10-18, 2d
   ONNX integration + first deploy     :a3, 2026-10-20, 2d
   Audit chain + admin action log     :a4, 2026-10-22, 1d
-  Outbreak rules + alerts + n8n       :a5, 2026-10-23, 1d
+  Outbreak rules + alerts            :a5, 2026-10-23, 1d
   Admin APIs + rate limits            :a6, 2026-10-24, 1d
   Security hardening                  :a7, 2026-10-25, 1d
   Timeout/concurrency/load tests      :a8, 2026-10-26, 1d
-  n8n monitors + Sentry               :a9, 2026-10-27, 1d
+  Security fixes + rollback drill    :a9, 2026-10-27, 1d
   Freeze, final deploy, runbook       :a10, 2026-10-28, 1d
   Submission checklist                :a11, 2026-10-29, 1d
 
@@ -111,3 +111,6 @@ cut stretch items in this order: voice playback → map tiles → Grad-CAM galle
 
 ## Status tracking
 Each evening, mark your cell: ✅ done · 🟡 partial · 🔴 blocked (with reason in stand-up notes).
+
+Deployment steps for each day: [`docs/deployment/00-zero-to-deploy.md`](../deployment/00-zero-to-deploy.md).
+n8n, Sentry and other extras are scheduled **after 31 Oct**.

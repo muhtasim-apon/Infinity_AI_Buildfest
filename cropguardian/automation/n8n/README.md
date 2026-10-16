@@ -1,7 +1,7 @@
 # automation/n8n — workflow specifications
 
 Owners: Apon (lead), Taeen. ADR: [0008](../../docs/architecture/adr/0008-n8n-automation-plane.md).
-Hosting options and setup: [`03-other-platforms-guide.md`](../../docs/deployment/03-other-platforms-guide.md) §5.
+**Scheduled for after 31 Oct** (see [`00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) "After 31 Oct"). Until then UptimeRobot covers keep-alive (03) and the database heartbeat (04).
 Status: **specified, not built.** When built, export each workflow as JSON (without credentials —
 credentials live only inside n8n).
 

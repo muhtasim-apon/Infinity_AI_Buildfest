@@ -18,4 +18,4 @@ Owners: **Apon** (lead), **Taeen**; `app/rag/` **Salwa**; `app/services/advisory
 | 25 Oct | `security/headers.py`, `security/webhook_sig.py`, `routers/hooks.py`, `routers/audit.py` |
 
 ## Run locally (once the code exists)
-See [`docs/deployment/00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) Phase 4.
+See [`docs/deployment/00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) Step 5.

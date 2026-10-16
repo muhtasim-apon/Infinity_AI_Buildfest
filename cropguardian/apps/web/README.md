@@ -18,4 +18,4 @@ Ready-made Bangla and English strings: [`i18n/bn.json`](i18n/bn.json), [`i18n/en
 | 26–27 Oct | Playwright E2E (bn + en, phone size), accessibility, PWA polish |
 
 ## Run locally (once the code exists)
-See [`docs/deployment/00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) Phase 5.
+See [`docs/deployment/00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) Step 6.
