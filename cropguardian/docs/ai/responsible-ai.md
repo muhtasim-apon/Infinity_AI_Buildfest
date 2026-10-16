@@ -14,16 +14,17 @@ Mapped to Congress §15 commitments.
 ## Harms we specifically design against
 | Harm | Mitigation |
 |---|---|
-| Wrong diagnosis → wrong chemical, crop loss, money loss | abstain below τ; agronomist review; IPM-first advice |
+| Wrong diagnosis → wrong chemical, crop loss, money loss | "not sure" below τ (no disease named), retake tips, local office card; IPM-first advice |
 | Pesticide misuse / poisoning | dose verbatim from source; safety line mandatory; banned list block; PPE reminder |
-| Over-trust of the app | "This is decision support; confirm with your agronomist" on every result |
-| False outbreak alarm → panic spraying | alerts require agronomist approval; risk level wording reviewed |
+| Over-trust of the app | "This is decision support; confirm with your local agriculture office" on every result |
+| False outbreak alarm → panic spraying | conservative rules (minimum reports, cooldown, not-sure scans excluded); every alert labelled "possible outbreak — unverified, rule-based"; in-app only, no broadcast; admin kill-switch |
 | Exclusion of low-literacy / low-end phone users | icons, voice, Bangla, light pages, offline capture |
 | Unequal accuracy across regions | slice reporting + targeted data collection in under-represented districts |
 | Surveillance concerns | coarse location only; aggregate alerts; no data sale |
 
-## Human oversight
-Agronomist in the loop for uncertain diagnoses and every alert. Admin can lower coverage
+## Operator oversight (no expert review in this version)
+The system is safe on its own: it abstains when unsure and labels alerts as unverified. The team
+(admin role) watches the weekly drift report and can lower coverage
 (raise τ) instantly from `/admin` if a problem appears; every change is audit-logged.
 
 ## Incident response

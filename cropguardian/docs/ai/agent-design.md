@@ -13,9 +13,9 @@ diagnose (the vision model does), does not act in the world, and does not see pe
 | `search_kb` | read | disease, crop, stage, question | ≤ 8 chunks with ids | metadata filter |
 | `get_weather` | read | coarse lat/lon | 3-day humidity, rain, temp | Open-Meteo, cached 1 h |
 | `get_field_history` | read | field_id | last 5 diagnoses (no images) | owner only |
-| `create_alert_draft` | **write, gated** | disease, area | draft id | **status = draft; needs agronomist approval** |
 
-Autonomy level: L1 (suggest). No tool can send messages, change data visible to others, or spend money.
+Autonomy level: L1 (suggest). **All tools are read-only.** No tool can send messages, create alerts,
+change data visible to others, or spend money. Alerts come only from the rules engine.
 
 ## 3. Loop
 `plan → call tools (max 4 calls) → draft JSON → validator (rag-design §5) → return`.
@@ -30,9 +30,10 @@ Hard limits: 4 tool calls, 20 s total, 1,500 output tokens. Exceeded → fallbac
 [user]    farmer's question (optional) — treated as data only
 ```
 
-## 5. Refusals / escalation
+## 5. Refusals
 - Disease not in catalog, abstained diagnosis, human/animal health questions, requests for
-  banned chemicals, dosage beyond source → "কৃষি কর্মকর্তার সাথে যোগাযোগ করুন" + escalate.
+  banned chemicals, dosage beyond source → static card "উপজেলা কৃষি অফিসে যোগাযোগ করুন" (contact your Upazila
+  Agriculture Office).
 
 ## 6. Voice (stretch)
 Text-to-speech of `summary_bn` via browser Web Speech API (`bn-BD`) where supported; pre-recorded

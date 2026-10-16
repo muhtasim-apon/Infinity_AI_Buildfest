@@ -12,7 +12,7 @@
   <h1><span class="bn">নিরাপত্তা, গোপনীয়তা ও দায়িত্বশীল এআই</span><span class="en">Security, privacy & responsible AI</span></h1>
 
   <div class="grid cols-3">
-    <div class="card"><h3>🔐 <span class="bn">প্রমাণীকরণ ও অনুমতি</span><span class="en">AuthN & AuthZ</span></h3><p class="small"><span class="bn">Supabase Auth (OTP), স্বল্পমেয়াদি JWT, ভূমিকা (কৃষক/কর্মকর্তা/অ্যাডমিন), প্রতিটি টেবিলে RLS।</span><span class="en">Supabase Auth (OTP), short-lived JWT, roles (farmer/agronomist/admin), RLS on every table.</span></p></div>
+    <div class="card"><h3>🔐 <span class="bn">প্রমাণীকরণ ও অনুমতি</span><span class="en">AuthN & AuthZ</span></h3><p class="small"><span class="bn">Supabase Auth (ইমেইল OTP + CAPTCHA), JWKS-যাচাইকৃত টোকেন, ভূমিকা (কৃষক/অ্যাডমিন) সার্ভারে যাচাই, প্রতিটি টেবিলে RLS।</span><span class="en">Supabase Auth (email OTP + CAPTCHA), JWKS-verified tokens, roles (farmer/admin) checked on the server, RLS on every table.</span></p></div>
     <div class="card"><h3>📷 <span class="bn">ছবি আপলোড</span><span class="en">Uploads</span></h3><p class="small"><span class="bn">সাইনড URL, ৫ MB সীমা, ম্যাজিক-বাইট যাচাই, পুনঃএনকোড — EXIF/GPS মুছে যায়।</span><span class="en">Signed URLs, 5 MB cap, magic-byte check, re-encode — EXIF/GPS removed.</span></p></div>
     <div class="card"><h3>🧾 <span class="bn">অডিট</span><span class="en">Audit</span></h3><p class="small"><span class="bn">হ্যাশ-শৃঙ্খলিত, শুধু-যোগ লগ; প্রতিটি সেটিং পরিবর্তনে কারণ বাধ্যতামূলক।</span><span class="en">Hash-chained append-only log; every settings change requires a reason.</span></p></div>
     <div class="card"><h3>🛡️ <span class="bn">এলএলএম নিরাপত্তা</span><span class="en">LLM safety</span></h3><p class="small"><span class="bn">উৎস ও প্রশ্ন "ডেটা" হিসেবে মোড়ানো; উৎসহীন বা নিষিদ্ধ উপাদানসহ উত্তর আটকানো; এজেন্টের কোনো পাঠানোর ক্ষমতা নেই।</span><span class="en">Sources and questions wrapped as data; uncited or banned-ingredient answers blocked; the agent cannot send anything.</span></p></div>
@@ -25,9 +25,9 @@
     <div class="table-wrap"><table>
       <thead><tr><th><span class="bn">ঝুঁকি</span><span class="en">Harm</span></th><th><span class="bn">প্রতিরোধ</span><span class="en">Mitigation</span></th></tr></thead>
       <tbody>
-        <tr><td><span class="bn">ভুল রোগ নির্ণয়</span><span class="en">Wrong diagnosis</span></td><td><span class="bn">ক্যালিব্রেটেড নিশ্চয়তা; সীমার নিচে "নিশ্চিত নই" → কৃষি কর্মকর্তা</span><span class="en">Calibrated confidence; below threshold "not sure" → agronomist</span></td></tr>
+        <tr><td><span class="bn">ভুল রোগ নির্ণয়</span><span class="en">Wrong diagnosis</span></td><td><span class="bn">ক্যালিব্রেটেড নিশ্চয়তা; সীমার নিচে "নিশ্চিত নই" — কোনো রোগের নাম নয়, আবার ছবি তোলার পরামর্শ</span><span class="en">Calibrated confidence; below threshold "not sure" — no disease named, retake advice</span></td></tr>
         <tr><td><span class="bn">কীটনাশকের অপব্যবহার</span><span class="en">Pesticide misuse</span></td><td><span class="bn">মাত্রা হুবহু উৎস থেকে; সাবধানতা বাধ্যতামূলক; নিষিদ্ধ তালিকা</span><span class="en">Dose verbatim from source; safety line mandatory; banned list</span></td></tr>
-        <tr><td><span class="bn">ভুয়া প্রাদুর্ভাব সতর্কতা</span><span class="en">False outbreak alarm</span></td><td><span class="bn">মানুষের অনুমোদন ছাড়া কোনো সতর্কতা নয়</span><span class="en">No alert without human approval</span></td></tr>
+        <tr><td><span class="bn">ভুয়া প্রাদুর্ভাব সতর্কতা</span><span class="en">False outbreak alarm</span></td><td><span class="bn">রক্ষণশীল নিয়ম, "যাচাই করা হয়নি" লেবেল, শুধু অ্যাপে, অ্যাডমিন বাতিল করতে পারে</span><span class="en">Conservative rules, "unverified" label, in-app only, admin can dismiss</span></td></tr>
         <tr><td><span class="bn">অঞ্চলভেদে অসম নির্ভুলতা</span><span class="en">Unequal accuracy by region</span></td><td><span class="bn">অঞ্চল/আলো/ফোন অনুযায়ী আলাদা মূল্যায়ন ও প্রকাশ</span><span class="en">Per-region/light/phone evaluation, reported</span></td></tr>
       </tbody>
     </table></div>

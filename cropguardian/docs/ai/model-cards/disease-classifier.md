@@ -43,7 +43,7 @@ To fill: by source dataset, region, brightness, blur, phone model.
 - Brown spot vs narrow brown spot visually similar → expected confusion.
 
 ## Ethical considerations
-Wrong output can cause economic loss or pesticide misuse → abstention, citations, agronomist loop,
+Wrong output can cause economic loss or pesticide misuse → "not sure" answers, citations, local office card,
 "decision support" disclaimer.
 
 ## Versioning

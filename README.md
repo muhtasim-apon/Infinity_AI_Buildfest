@@ -20,39 +20,28 @@ Working folder for the Congress submission.
 
 ```
 .
-├── AI Builders Congress 2026 - Participants Guide.pdf   the source brief (30 pages)
-└── cropguardian/                                        the project template
-    ├── prototype/index.html                             ← CLICKABLE PROTOTYPE (open in a browser)
-    ├── docs/system-design/SDD.md                        ← THE SYSTEM DESIGN DOCUMENT
-    ├── docs/report/CropGuardian-System-Design-Report.pdf ← the same design as a 67-page PDF
-    ├── docs/plan/gantt.md                               ← day-by-day plan, 16–29 Oct, per member
-    └── …                                                docs, schema, API/web stubs, ML, tests, n8n
+├── AI Builders Congress 2026 - Participants Guide.pdf     the source brief (30 pages)
+└── cropguardian/                                          the repository TEMPLATE (docs + specs, no code)
+    ├── prototype/index.html                               ← clickable prototype (open in a browser)
+    ├── docs/system-design/SDD.md                          ← System Design Document
+    ├── docs/deployment/                                   ← zero-to-deploy, Render, Supabase, platforms,
+    │                                                        free-tier challenges & "Render turned us off" runbook
+    ├── docs/security/security-checklist.md                ← the 19 security controls, each with its test
+    ├── docs/plan/gantt.md                                 ← day-by-day plan 16–29 Oct, per member
+    ├── services/api/SPEC.md · apps/web/SPEC.md · db/SCHEMA-SPEC.md   ← what to build
+    └── docs/report/CropGuardian-System-Design-Report.pdf  ← the whole design as one PDF
 ```
 
-### 1. The clickable prototype
-Open **`cropguardian/prototype/index.html`** — no install, no server. Bangla by default (English
-toggle), phone-first, dark mode. Every Congress §10.8 route has a page: `/app`, `/demo-user`,
-`/demo-admin`, `/admin`, `/data`, `/security`, `/architecture`, `/presentation`, `/pitchdeck`, `/audit`.
+`cropguardian/` is a **template**: specifications, guides and test-case tables — **no application
+code**. The team writes the code piece by piece from the specs, following the Gantt. The prototype is
+static HTML with **synthetic** data, labelled on every screen. Nothing has been trained or deployed and
+no accuracy or impact figure is claimed (Congress §15, §20.4).
 
-### 2. The design
-Architecture & ADRs · ER model & SQL schema with RLS · data flow & sequence diagrams · vision-model
-selection & statistics · RAG with citation enforcement · advisory agent · security (STRIDE, OWASP,
-OWASP LLM) · Render free-tier deployment with a full **challenges & recovery playbook** · test strategy
-(unit, whitebox, blackbox, integration, timeout, concurrency, security, ML, E2E, manual, n8n) ·
-rubric map · video-pitch script. Index: [`cropguardian/docs/README.md`](cropguardian/docs/README.md).
-
-### 3. The template
-`cropguardian/` is a GitHub-ready repository: React/Vite web stubs, FastAPI stubs, PostgreSQL schema,
-ML configs, n8n workflow specs, test stubs, CI quality gates, `render.yaml`.
-
-> **Nothing has been installed, trained, deployed or run.** Source files are typed, documented stubs;
-> the prototype uses synthetic data and says so on every screen. No accuracy or impact figure is
-> claimed anywhere (Congress §15, §20.4).
+Scope decision: **no human-review features** in this version — uncertain photos get an honest "not
+sure" with retake tips, and outbreak alerts are automatic, rule-based and labelled "unverified".
 
 ## Next steps
-1. Read the [Gantt](cropguardian/docs/plan/gantt.md) at today's stand-up; confirm Raisa as presentation lead.
-2. Replace the handles in `cropguardian/.github/CODEOWNERS`; create the GitHub repo from `cropguardian/`.
+1. Read [`cropguardian/docs/deployment/00-zero-to-deploy.md`](cropguardian/docs/deployment/00-zero-to-deploy.md) at today's stand-up — Phase 0–2 and 8.1 (prototype live) today.
+2. Push `cropguardian/` as the root of a new GitHub repository; replace CODEOWNERS handles.
 3. Day-1 critical path: datasets (Taeen) and Bangla knowledge-base documents (Salwa).
-4. Work [`submission-checklist.md`](cropguardian/docs/congress/submission-checklist.md) toward 30 Oct.
-
-Rebuild the PDF: `python cropguardian/scripts/build_report.py`.
+4. Work the [security checklist](cropguardian/docs/security/security-checklist.md) and the [submission checklist](cropguardian/docs/congress/submission-checklist.md) toward 30 Oct.

@@ -79,7 +79,7 @@
     <div class="stack" id="alert-list" style="margin-top:1rem"></div>
     <div class="card" style="margin-top:1rem">
       <label class="row" style="font-weight:600"><input type="checkbox" checked> <span class="bn">আমার এলাকায় রোগ ছড়ালে জানান</span><span class="en">Notify me when disease spreads in my area</span></label>
-      <p class="small muted"><span class="bn">সতর্কতায় শুধু রোগ, এলাকা ও ঝুঁকি থাকে — কারও নাম বা ফোন নম্বর নয়। কৃষি কর্মকর্তা অনুমোদন করলে তবেই পাঠানো হয়।</span><span class="en">Alerts carry only disease, area and risk — never names or phone numbers. Sent only after an agronomist approves.</span></p>
+      <p class="small muted"><span class="bn">সতর্কতা স্বয়ংক্রিয় ও নিয়মভিত্তিক — যাচাই করা হয়নি। এতে শুধু রোগ, এলাকা ও ঝুঁকি থাকে — কারও নাম বা ঠিকানা নয়। শুধু অ্যাপের ভেতরে দেখানো হয়।</span><span class="en">Alerts are automatic and rule-based — not verified. They carry only disease, area and risk — never names or addresses. Shown in the app only.</span></p>
     </div>
   </section>
 
@@ -133,7 +133,7 @@
     document.getElementById("outbox-note").innerHTML = state.queued
       ? L("📦 " + state.queued + "টি ছবি অপেক্ষমাণ — ইন্টারনেট এলে নিজে থেকেই যাবে।", "📦 " + state.queued + " photo(s) waiting — will send automatically when online.")
       : "";
-    var a = D.alerts.filter(function (x) { return x.status === "approved"; })[0];
+    var a = D.alerts.filter(function (x) { return x.status === "published"; })[0];
     document.getElementById("home-alert").innerHTML =
       '<div class="row"><span class="chip danger">' + L("সতর্কতা", "Alert") + '</span><strong>' + dname(a.disease) + '</strong><span class="muted small">' + T(a.area) + '</span></div>' +
       '<p class="small" style="margin:.4rem 0 0">' + L("আশেপাশে " + a.reports + "টি রিপোর্ট। ", a.reports + " reports nearby. ") + '<a href="#alerts">' + L("বিস্তারিত", "Details") + '</a></p>';
@@ -153,11 +153,13 @@
     h += '<div class="card stack"><div class="leaf-preview">' + (state.userImage ? '<img alt="" src="' + state.userImage + '">' : leafSvg(code)) + heatSvg(sc.heat) + '</div>';
     if (sc.heat) h += '<p class="small muted">🔥 ' + L("লাল অংশ: এআই পাতার যে অংশ দেখে সিদ্ধান্ত নিয়েছে (নমুনা)", "Red area: where the AI looked on the leaf (sample)") + '</p>';
 
-    if (sc.status === "needs_review") {
+    if (sc.status === "not_sure") {
       h += '<div class="callout warn"><h2>🤔 ' + L("নিশ্চিত নই", "Not sure") + '</h2><p>' +
-        L("ছবিটি কৃষি কর্মকর্তার কাছে পাঠানো হয়েছে। সাধারণত ২৪ ঘণ্টার মধ্যে উত্তর আসবে (লক্ষ্য)। উত্তর এলে আপনাকে জানানো হবে।",
-          "The photo was sent to an agronomist. Target response within 24 hours. You will be notified.") + '</p>' +
-        '<p class="small">' + L("ততক্ষণ: অনুমানে কোনো ওষুধ ছিটাবেন না। আক্রান্ত গাছ আলাদা করে লক্ষ করুন।", "Meanwhile: do not spray on a guess. Keep watching the affected plants.") + '</p></div>' +
+        L("এই ছবি থেকে রোগ নিশ্চিত করা যাচ্ছে না। আবার ছবি তুলুন — একটি পাতা, কাছ থেকে, দিনের আলোতে।",
+          "We can't tell the disease from this photo. Please retake it — one leaf, close up, in daylight.") + '</p>' +
+        '<p class="small">' + L("অনুমানে কোনো ওষুধ ছিটাবেন না।", "Do not spray on a guess.") + '</p>' +
+        '<a class="btn" href="#scan">📷 ' + L("আবার ছবি তুলুন", "Retake photo") + '</a></div>' +
+        '<div class="card flat small">🏢 ' + L("প্রয়োজনে আপনার উপজেলা কৃষি অফিসে যোগাযোগ করুন।", "If needed, contact your Upazila Agriculture Office.") + '</div>' +
         '<details><summary class="small muted">' + L("কেন নিশ্চিত নয়?", "Why not sure?") + '</summary><p class="small">' +
         L("সবচেয়ে সম্ভাব্য উত্তরের নিশ্চয়তা নির্ধারিত সীমার (τ) নিচে। ভুল উত্তর দেওয়ার চেয়ে \"জানি না\" বলা নিরাপদ।",
           "The top answer's calibrated confidence is below the threshold (τ). Saying \"I don't know\" is safer than guessing.") + '</p></details>';
@@ -196,14 +198,14 @@
   function renderHistory() {
     var rows = '<thead><tr><th>' + L("আইডি", "ID") + '</th><th>' + L("তারিখ", "Date") + '</th><th>' + L("ফলাফল", "Result") + '</th><th>' + L("অবস্থা", "Status") + '</th></tr></thead><tbody>';
     D.history.forEach(function (r) {
-      var chip = { diagnosed: ["ok", L("নির্ণীত", "Diagnosed")], needs_review: ["warn", L("পর্যালোচনায়", "In review")], reviewed: ["info", L("বিশেষজ্ঞ যাচাই", "Expert-checked")] }[r.status];
+      var chip = { diagnosed: ["ok", L("নির্ণীত", "Diagnosed")], not_sure: ["warn", L("নিশ্চিত নই", "Not sure")] }[r.status];
       rows += '<tr><td><code>' + r.id + '</code></td><td>' + r.date + '</td><td>' + (r.disease ? dname(r.disease) : L("নিশ্চিত নই", "Not sure")) + '</td><td><span class="chip ' + chip[0] + '">' + chip[1] + '</span></td></tr>';
     });
     document.getElementById("history-table").innerHTML = rows + "</tbody>";
   }
 
   function renderAlerts() {
-    var visible = D.alerts.filter(function (a) { return a.status === "approved"; });
+    var visible = D.alerts.filter(function (a) { return a.status === "published"; });
     var map = '<rect width="100" height="80" fill="var(--surface-2)"/><path d="M0 52 C 20 48, 35 60, 55 55 S 85 40, 100 46" stroke="#7fb2d8" stroke-width="2.4" fill="none"/>' +
       '<circle cx="50" cy="44" r="1.6" fill="var(--ink)"/><text x="52.5" y="43" font-size="3.4" fill="var(--ink)">' + (window.CG_LANG() === "bn" ? "আপনি" : "You") + '</text>';
     visible.forEach(function (a) {
@@ -214,7 +216,7 @@
     document.getElementById("alert-list").innerHTML = visible.map(function (a) {
       var risk = { high: ["danger", L("ঝুঁকি: উচ্চ", "Risk: high")], medium: ["warn", L("ঝুঁকি: মাঝারি", "Risk: medium")], low: ["ok", L("ঝুঁকি: কম", "Risk: low")] }[a.risk];
       return '<div class="card"><div class="row"><strong>' + dname(a.disease) + '</strong><span class="chip ' + risk[0] + '">' + risk[1] + '</span></div>' +
-        '<p class="small muted" style="margin:.3rem 0 0">' + T(a.area) + ' · ' + a.reports + ' ' + L("রিপোর্ট", "reports") + ' · ' + a.date + ' · ' + L("নিয়মভিত্তিক (rules-v1)", "rule-based (rules-v1)") + '</p></div>';
+        '<p class="small muted" style="margin:.3rem 0 0">' + T(a.area) + ' · ' + a.reports + ' ' + L("রিপোর্ট", "reports") + ' · ' + a.date + ' · ' + L("সম্ভাব্য প্রাদুর্ভাব — যাচাই করা হয়নি, নিয়মভিত্তিক", "possible outbreak — unverified, rule-based") + '</p></div>';
     }).join("");
   }
 

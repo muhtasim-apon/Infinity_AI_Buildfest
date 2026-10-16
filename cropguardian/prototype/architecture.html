@@ -62,14 +62,14 @@
       <text class="sub" x="294" y="328">synthetic monitor · retention · drift</text>
 
       <rect class="box" x="20" y="270" width="200" height="80"/>
-      <text class="lbl" x="34" y="294">SMS / Telegram / email</text>
-      <text class="sub" x="34" y="312">Bangla alert messages</text>
-      <text class="sub" x="34" y="328">disease + area + risk only</text>
+      <text class="lbl" x="34" y="294">Team Telegram channel</text>
+      <text class="sub" x="34" y="312">alert notices · monitors · digest</text>
+      <text class="sub" x="34" y="328">no personal data</text>
 
       <rect class="box" x="20" y="150" width="200" height="70"/>
-      <text class="lbl" x="34" y="174">Agronomist / Admin</text>
-      <text class="sub" x="34" y="192">review queue · approve alerts</text>
-      <text class="sub" x="34" y="208">thresholds · models · audit</text>
+      <text class="lbl" x="34" y="174">Admin (team)</text>
+      <text class="sub" x="34" y="192">thresholds · dismiss alerts</text>
+      <text class="sub" x="34" y="208">models · KB · audit</text>
 
       <path class="ln" d="M220 60 H280"/>
       <path class="ln" d="M220 185 H280"/>
@@ -82,7 +82,7 @@
       <text class="sub" x="330" y="12">login · signed upload (anon key + RLS)</text>
 
       <text class="lbl" x="20" y="390">Flow:</text>
-      <text x="62" y="390">photo → compress → upload → infer → calibrate → (abstain → agronomist) → cited advice → store → cluster → approved alert</text>
+      <text x="62" y="390">photo → compress → upload → infer → calibrate → ("not sure" → retake) → cited advice → store → cluster → labelled alert</text>
       <text class="sub" x="20" y="412">Diagram of the designed system — not yet deployed. Sources: docs/architecture/, docs/diagrams/*.mmd</text>
     </svg>
   </div>
@@ -94,7 +94,7 @@
         <li><strong><span class="bn">দৃষ্টি মডেল:</span><span class="en">Vision:</span></strong> MobileNetV3-L, EfficientNetV2-B0, ConvNeXt-T, DeiT-S <span class="bn">ও ক্লাসিক্যাল বেসলাইনের তুলনা; আগে থেকে ঠিক করা নিয়মে নির্বাচন; ONNX int8।</span><span class="en">and a classical baseline compared; selected by a pre-declared rule; ONNX int8.</span></li>
         <li><strong><span class="bn">ক্যালিব্রেশন:</span><span class="en">Calibration:</span></strong> temperature scaling, risk–coverage → τ, energy OOD guard.</li>
         <li><strong>RAG:</strong> multilingual-e5 + pgvector, hybrid + RRF, <span class="bn">উৎস বাধ্যতামূলক</span><span class="en">citations mandatory</span>.</li>
-        <li><strong><span class="bn">এজেন্ট:</span><span class="en">Agent:</span></strong> <span class="bn">৪টি শুধু-পড়া টুল + ১টি মানব-অনুমোদিত খসড়া টুল।</span><span class="en">4 read-only tools + 1 human-gated draft tool.</span></li>
+        <li><strong><span class="bn">এজেন্ট:</span><span class="en">Agent:</span></strong> <span class="bn">৪টি শুধু-পড়া টুল; কোনো লেখার বা পাঠানোর টুল নেই।</span><span class="en">4 read-only tools; no write or send tools.</span></li>
         <li><strong><span class="bn">প্রাদুর্ভাব:</span><span class="en">Outbreak:</span></strong> rules v1 → LightGBM v2.</li>
       </ul>
     </div>

@@ -14,11 +14,11 @@ Tester · build/commit · device · browser · network · locale recorded per ru
 | M08 | result | tap 🔊 | Bangla speech or pre-recorded audio plays | |
 | M09 | result | upload a photo of a cup | "নিশ্চিত নই" — no disease named as an answer | |
 | M10 | `/app/history` | open | newest first; statuses correct | |
-| M11 | `/app/alerts` | open | approved alerts only; risk wording; map loads or list fallback | |
+| M11 | `/app/alerts` | open | published alerts only, each labelled "possible outbreak — unverified"; map loads or list fallback | |
 | M12 | `/demo-admin` | open | admin dashboard | |
 | M13 | `/admin` | change τ without reason | save blocked | |
 | M14 | `/admin` | change τ with reason | saved; appears in `/audit` change history | |
-| M15 | `/app/review` | confirm / correct / unclear | card removed; farmer notified | |
+| M15 | `/admin` | dismiss an alert with a reason | alert gone from farmer view; row in `/audit` | |
 | M16 | `/audit` | click "generate" | report with all sections; unmeasured = "not yet measured" | |
 | M17 | language | toggle bn ↔ en on each page | no missing strings, no overflow | |
 | M18 | `/architecture`, `/data`, `/security`, `/presentation`, `/pitchdeck` | open each from a fresh browser | loads without login | |

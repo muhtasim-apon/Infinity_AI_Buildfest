@@ -2,8 +2,7 @@ erDiagram
   PROFILES ||--o{ FARMS : owns
   PROFILES ||--o{ SCANS : submits
   PROFILES ||--o{ CONSENTS : gives
-  PROFILES ||--o{ ALERT_SUBSCRIPTIONS : has
-  PROFILES ||--o{ EXPERT_REVIEWS : performs
+  PROFILES ||--o| ALERT_PREFERENCES : sets
   FARMS ||--o{ FIELDS : contains
   CROPS ||--o{ FIELDS : planted_in
   CROPS ||--o{ DISEASE_CATALOG : affected_by
@@ -15,64 +14,68 @@ erDiagram
   ADVISORIES ||--o{ CITATIONS : cites
   KB_CHUNKS ||--o{ CITATIONS : referenced_by
   KB_DOCUMENTS ||--o{ KB_CHUNKS : split_into
-  SCANS ||--o{ EXPERT_REVIEWS : reviewed_in
-  EXPERT_REVIEWS ||--o| FEEDBACK_LABELS : yields
   DISEASE_CATALOG ||--o{ ALERTS : about
-  PROFILES ||--o{ ALERTS : approves
 
   PROFILES {
     uuid id PK "= auth.users.id"
-    text role "farmer|agronomist|admin|demo"
+    text role "farmer|admin|demo"
     text display_name
-    text phone_e164 "restricted"
     text locale "bn|en"
     text district
     text upazila
     timestamptz created_at
   }
+  CONSENTS {
+    uuid id PK
+    uuid user_id FK
+    text purpose "service|in_app_alerts"
+    boolean granted
+    text text_version
+    timestamptz created_at
+  }
+  ALERT_PREFERENCES {
+    uuid id PK
+    uuid user_id FK "unique"
+    boolean enabled
+    real radius_km
+  }
   FARMS {
     uuid id PK
     uuid owner_id FK
     text name
-    timestamptz created_at
   }
   FIELDS {
     uuid id PK
     uuid farm_id FK
     int crop_id FK
-    numeric area_decimal
-    numeric lat_coarse "rounded 0.01 deg"
-    numeric lon_coarse
     text variety
     date sowing_date
-    timestamptz created_at
+    numeric lat_coarse "2 decimals"
+    numeric lon_coarse
   }
   CROPS {
     int id PK
-    text code "rice"
+    text code
     text name_bn
     text name_en
   }
   DISEASE_CATALOG {
     int id PK
     int crop_id FK
-    text code "rice_blast"
+    text code
     text name_bn
-    text name_en
-    text pathogen_type "fungal|bacterial|viral|pest|healthy"
+    text pathogen_type
     boolean is_notifiable
   }
   SCANS {
     uuid id PK
     uuid user_id FK
     uuid field_id FK
-    text storage_path
-    char sha256
-    text status "pending_upload|uploaded|diagnosed|needs_review|failed"
+    text storage_path "private bucket"
+    char sha256 "unique per user"
+    text status "pending_upload|uploaded|diagnosed|not_sure|failed"
     numeric lat_coarse
     numeric lon_coarse
-    text client_quality_flag
-    timestamptz captured_at
     timestamptz created_at
   }
   DIAGNOSES {
@@ -83,8 +86,8 @@ erDiagram
     real top1_prob
     jsonb top3
     boolean abstained
+    text abstain_reason
     int latency_ms
-    timestamptz created_at
   }
   MODEL_VERSIONS {
     uuid id PK
@@ -96,16 +99,13 @@ erDiagram
     real temperature
     jsonb eval_summary
     boolean is_active
-    timestamptz created_at
   }
   ADVISORIES {
     uuid id PK
-    uuid diagnosis_id FK
-    text language
-    jsonb content "steps, dosage, safety"
+    uuid diagnosis_id FK "unique"
+    jsonb content
     text llm_model
     text status "ok|fallback|blocked"
-    timestamptz created_at
   }
   CITATIONS {
     uuid id PK
@@ -116,12 +116,11 @@ erDiagram
   KB_DOCUMENTS {
     uuid id PK
     text title
-    text publisher "DAE|BRRI|BARI|other"
+    text publisher
     text source_url
     text licence_note
     date edition_date
-    text language
-    timestamptz created_at
+    timestamptz retired_at
   }
   KB_CHUNKS {
     uuid id PK
@@ -129,24 +128,7 @@ erDiagram
     int page
     text content
     vector embedding "384"
-    jsonb meta "crop, disease, stage"
-  }
-  EXPERT_REVIEWS {
-    uuid id PK
-    uuid scan_id FK
-    uuid reviewer_id FK
-    text verdict "confirm|correct|unclear"
-    int corrected_disease_id
-    text note
-    timestamptz created_at
-  }
-  FEEDBACK_LABELS {
-    uuid id PK
-    uuid review_id FK
-    int disease_id
-    boolean consent_training
-    boolean exported
-    timestamptz created_at
+    jsonb meta
   }
   ALERTS {
     uuid id PK
@@ -155,32 +137,24 @@ erDiagram
     numeric center_lon
     real radius_km
     int report_count
-    text risk_level "low|medium|high"
-    text status "draft|approved|sent|dismissed"
-    uuid approved_by FK
+    text risk "low|medium|high"
+    text rule_version
+    text status "published|dismissed"
+    text dismiss_reason
     timestamptz created_at
   }
-  ALERT_SUBSCRIPTIONS {
-    uuid id PK
-    uuid user_id FK
-    text channel "inapp|sms|email|telegram"
-    real radius_km
-    timestamptz created_at
-  }
-  CONSENTS {
-    uuid id PK
-    uuid user_id FK
-    text purpose "service|training_use|sms_alerts"
-    boolean granted
-    timestamptz created_at
+  APP_SETTINGS {
+    text key PK
+    jsonb value
+    uuid updated_by
+    timestamptz updated_at
   }
   AUDIT_LOG {
     bigint id PK
     uuid actor_id
     text action
     text entity
-    text entity_id
-    jsonb detail
+    jsonb detail "scrubbed"
     char prev_hash
     char row_hash
     timestamptz created_at

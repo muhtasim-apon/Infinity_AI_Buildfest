@@ -5,7 +5,6 @@ A model may not be referenced in code until it has a card here (CLAUDE.md).
 | Card | Status | Risk tier | Owner |
 |---|---|---|---|
 | [disease-classifier](disease-classifier.md) | Specification — not trained | High (drives farmer action) | Taeen / Apon |
-| [lesion-detector](lesion-detector.md) | Roadmap — needs box labels | Medium | Taeen |
 | [outbreak-risk](outbreak-risk.md) | Rules v1 specified; ML later | High (public alerts) | Taeen / Apon |
 | [advisory-llm](advisory-llm.md) | Specification | High (safety advice) | Raisa / Salwa |
 

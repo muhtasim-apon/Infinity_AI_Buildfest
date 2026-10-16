@@ -1,20 +1,23 @@
 # automation/n8n — workflow specifications
 
 Owners: Apon (lead), Taeen. ADR: [0008](../../docs/architecture/adr/0008-n8n-automation-plane.md).
-Status: **specified, not built.** Export each built workflow as JSON into `workflows/json/` (no credentials —
-credentials live in n8n only; `automation/n8n/credentials/` is git-ignored).
+Hosting options and setup: [`03-other-platforms-guide.md`](../../docs/deployment/03-other-platforms-guide.md) §5.
+Status: **specified, not built.** When built, export each workflow as JSON (without credentials —
+credentials live only inside n8n).
 
-Rules: n8n schedules, routes and notifies; **business rules stay in the API**. Every call to the API is
-HMAC-signed (`X-CG-Timestamp`, `X-CG-Signature`). No personal data in workflow logs.
+Rules: n8n schedules, routes and notifies; **business rules stay in the API**. Every call to the API
+is signed (`X-CG-Timestamp`, `X-CG-Signature`). No personal data in workflow logs.
 
 | # | Workflow | Trigger | Purpose | Challenge it answers |
 |---|---|---|---|---|
-| 01 | [outbreak-alert-fanout](workflows/01-outbreak-alert-fanout.md) | webhook from API on alert approve | notify subscribers | core feature |
-| 02 | [daily-digest](workflows/02-daily-digest.md) | cron 08:00 BST | team & agronomist summary | ops |
-| 03 | [keep-warm](workflows/03-keep-warm.md) | cron every 10 min in demo windows | avoid cold start | Render A1 |
-| 04 | [supabase-heartbeat](workflows/04-supabase-heartbeat.md) | cron daily | prevent free-project pause | Supabase B1 |
-| 05 | [synthetic-monitor](workflows/05-synthetic-monitor.md) | cron every 10 min (windows) / hourly | end-to-end smoke test | testing §9 |
-| 06 | [model-drift-monitor](workflows/06-model-drift-monitor.md) | cron weekly | abstain rate / class mix drift | ML ops |
-| 07 | [retention-and-deletion](workflows/07-retention-and-deletion.md) | cron nightly | thumbnails after 90 d, deletion requests | privacy, B2/B4 |
-| 08 | [demo-reset](workflows/08-demo-reset.md) | cron nightly + manual | reset synthetic demo accounts | threat T3 |
-| 09 | [label-export](workflows/09-label-export.md) | cron weekly | consented labels → training set | data flywheel |
+| 01 | [outbreak-alert-notice](workflows/01-outbreak-alert-fanout.md) | signed webhook from API when an alert is published | team notice + monitoring | core feature |
+| 02 | [daily-digest](workflows/02-daily-digest.md) | cron 08:00 BST | team summary | operations |
+| 03 | [keep-warm](workflows/03-keep-warm.md) | every 10 min in demo windows | avoid cold start | Render spin-down |
+| 04 | [supabase-heartbeat](workflows/04-supabase-heartbeat.md) | daily | prevent free-project pause | Supabase pause |
+| 05 | [synthetic-monitor](workflows/05-synthetic-monitor.md) | every 10 min (windows) / hourly | end-to-end smoke test | testing |
+| 06 | [model-drift-monitor](workflows/06-model-drift-monitor.md) | weekly | not-sure rate / class mix drift | ML operations |
+| 07 | [retention-and-deletion](workflows/07-retention-and-deletion.md) | nightly | thumbnails after 90 days, deletion requests | privacy, storage limits |
+| 08 | [demo-reset](workflows/08-demo-reset.md) | nightly + manual | reset synthetic demo accounts | demo abuse |
+
+Free fallback if n8n is unavailable: UptimeRobot / cron-job.org for 03 and a GitHub Actions cron for
+04 (see [`.github/README.md`](../../.github/README.md) §3).

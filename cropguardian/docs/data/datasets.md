@@ -14,12 +14,17 @@ Datasets are **downloaded, never committed** (`.gitignore` → `data/raw/`).
 |---|---|---|---|---|
 | D3 | [PlantDoc](https://github.com/pratikkayal/PlantDoc-Dataset) | 2,598 in-the-wild | CC BY 4.0 | out-of-distribution tests ("not rice" / unseen classes); robustness |
 | D4 | [PlantVillage](https://github.com/spMohanty/PlantVillage-Dataset) | 54,306 lab images | **unconfirmed — check before use** | optional pre-training; lab→field domain-shift experiment |
+| D5 | [Dhan-Shomadhan](https://data.mendeley.com/datasets/znsxdctwtt) | 1,106 (Bangladesh; field + white background) | CC BY 4.0 | extra Bangladeshi training data; adds Leaf Scald |
+| D7 | [Rice Leaf Disease Image Samples (Sethy)](https://data.mendeley.com/datasets/fwcj7stb8r) | 5,932 (India) | CC BY 4.0 | extra data for 4 shared classes; region-shift test |
+| D6 | [Paddy Doctor](https://ieee-dataport.org/node/10108) | 16,225 (India, 13 classes) | **not stated** | benchmark only until the licence is confirmed |
 
-## 3. Our own data (from Phase 3 onwards)
-- Pilot photos from partner farmers/extension officers, with consent recorded in `consents`.
-- Agronomist-labelled `needs_review` cases → `feedback_labels`.
-- A **local held-out test set** (target: photos from districts not in D1/D2) — the most honest
-  measure of real-world performance.
+Full catalogue of free datasets and other external resources (with licence status and merge plan):
+[`../research/external-resources.md`](../research/external-resources.md).
+
+## 3. Our own test photos
+- A small **local held-out test set** photographed by the team in nearby rice fields (no people in
+  frame, location coarsened), labelled by the team against public BRRI disease descriptions and used
+  **only for testing**, never for training. User uploads are never used for training in this version.
 
 ## 4. Unified label taxonomy
 D1 and D2 overlap (Tungro; Healthy = Normal). Mapping, stored in `ml/vision/configs/labels.yaml`:
@@ -34,7 +39,7 @@ D1 and D2 overlap (Tungro; Healthy = Normal). Mapping, stored in `ml/vision/conf
 | `sheath_blight` | — | Sheath Blight | খোল পোড়া |
 | `tungro` | Tungro | Tungro | টুংরো |
 
-Bangla names to be confirmed by an agronomist against BRRI terminology before UI release.
+Bangla names to be checked against BRRI's published Bangla terminology before UI release.
 Note: classes present in only one dataset carry a **source confound** (the model could learn
 "photo style of D1" instead of the disease). Mitigation in [`../ai/statistics.md`](../ai/statistics.md) §3.
 

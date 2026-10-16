@@ -12,5 +12,5 @@ Card: [`../../docs/ai/model-cards/outbreak-risk.md`](../../docs/ai/model-cards/o
 
 ## v2 plan (LightGBM)
 Features: cluster size, growth rate over 3/7 days, weather lags (humidity, rain, temperature), variety
-susceptibility (from KB), crop stage from sowing date. Target: agronomist-confirmed outbreak within 14 days.
+susceptibility (from KB), crop stage from sowing date. Target: officially reported outbreak within 14 days.
 Validation: time-based split (train on earlier weeks, test on later). Needs ≥ one season of labels.

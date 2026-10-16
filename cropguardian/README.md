@@ -9,15 +9,14 @@
 | **Challenge area** | **Crop Guardian** — early pest and disease detection from imagery |
 | **Capabilities to demonstrate** | Vision models · Alerts · Local-language UX (Participants Guide §6.4) |
 | **Winning signal** | Loss reduction at the field level |
-| **Product surface** | **Web app only** (mobile-first responsive PWA). No native app. |
+| **Product surface** | **Web app only** (mobile-first PWA) |
 | **Preliminary deadline** | **31 October 2026, 12:00 BST** (3-minute video + package, §9.2) |
 | **Congress Day** | 26 December 2026 · Daffodil International University, Ashulia |
 
-> **Status — read this first.** This repository is an architectural **template and clickable
-> prototype**. Nothing has been installed, trained, deployed or run. Source files are typed,
-> documented stubs. The prototype in [`prototype/`](prototype/) renders **synthetic** data
-> and says so on every screen. No accuracy, loss-reduction or performance figure is claimed
-> anywhere, because none has been measured (Congress §15, §20.4).
+> **Status — read this first.** This repository is a **template: specifications and documentation
+> only, no application code yet**, plus a static clickable [`prototype/`](prototype/README.md) that shows
+> **synthetic** data and says so on every screen. The team implements the code piece by piece from the
+> specs. Nothing has been trained or deployed; no accuracy or impact figure is claimed (Congress §15, §20.4).
 
 ---
 
@@ -27,68 +26,67 @@
  farmer photographs a sick leaf (Bangla UI, works on a cheap phone, queues offline)
         │
         ▼
- vision model → disease + confidence + heat-map of the lesion
-        │            └── low confidence? → "not sure" → routed to a human agronomist
+ vision model → disease + calibrated confidence + heat-map
+        │            └── low confidence → "not sure": retake tips + local agriculture office card
         ▼
- RAG advisory agent → what to do, in Bangla, citing the DAE / BRRI / BARI source
+ advisory agent → what to do, in Bangla, citing the DAE / BRRI / BARI source
         │
         ▼
- diagnosis stored with coarse location → outbreak clustering → alert to nearby farmers
-        │
-        ▼
- agronomist confirms or corrects → labelled image → next training round (data flywheel)
+ diagnosis stored with coarse location → outbreak rules → automatic in-app alert
+                                          (labelled "possible outbreak — unverified")
 ```
 
 ## Where to start
 
 | You are… | Read |
 |---|---|
-| New to the project | [`docs/system-design/SDD.md`](docs/system-design/SDD.md) — the master System Design Document |
-| Judge / mentor | [`docs/congress/rubric-map.md`](docs/congress/rubric-map.md) then open [`prototype/index.html`](prototype/index.html) |
-| On the team | [`docs/plan/gantt.md`](docs/plan/gantt.md) (16–29 Oct, per person, per day) and [`CLAUDE.md`](CLAUDE.md) |
-| Deploying | [`docs/deployment/render-guide.md`](docs/deployment/render-guide.md) and [`docs/deployment/challenges-and-recovery.md`](docs/deployment/challenges-and-recovery.md) |
-| Testing | [`docs/testing/test-strategy.md`](docs/testing/test-strategy.md) and [`tests/`](tests/) |
+| New to the project | [`docs/system-design/SDD.md`](docs/system-design/SDD.md) — the System Design Document |
+| Deploying | [`docs/deployment/README.md`](docs/deployment/README.md) → [zero to deployment](docs/deployment/00-zero-to-deploy.md) (all URLs) |
+| Securing & testing | [`docs/security/security-checklist.md`](docs/security/security-checklist.md) · [`docs/testing/security-testing-guide.md`](docs/testing/security-testing-guide.md) |
+| Building the API / web / DB | [`services/api/SPEC.md`](services/api/SPEC.md) · [`apps/web/SPEC.md`](apps/web/SPEC.md) · [`db/SCHEMA-SPEC.md`](db/SCHEMA-SPEC.md) |
+| On the team | [`docs/plan/gantt.md`](docs/plan/gantt.md) (16–29 Oct, per person, per day) · [`CLAUDE.md`](CLAUDE.md) |
+| Judge / mentor | [`docs/congress/rubric-map.md`](docs/congress/rubric-map.md) and the [prototype](prototype/index.html) |
+| Datasets & external resources | [`docs/research/external-resources.md`](docs/research/external-resources.md) |
+| Expected impact (loss reduction) | [`docs/evaluation/field-loss-reduction.md`](docs/evaluation/field-loss-reduction.md) |
 
-The full design is also rendered as a PDF report:
-`docs/report/CropGuardian-System-Design-Report.pdf` (rebuild with `python scripts/build_report.py`).
+PDF of the whole design: [`docs/report/CropGuardian-System-Design-Report.pdf`](docs/report/CropGuardian-System-Design-Report.pdf).
 
 ## Repository map
 
 ```
 cropguardian/
-├── prototype/            clickable static UI — open index.html, no build, no server
-├── apps/web/             React + Vite + TypeScript SPA (typed stubs)
-├── services/api/         FastAPI backend (typed stubs) — deploys to Render
-├── db/                   PostgreSQL schema, RLS policies, migrations, synthetic seed
-├── ml/                   vision training/export, outbreak risk, RAG, evaluation, registry
-├── automation/n8n/       workflow specifications (alerts, digest, drift, keep-warm, monitors)
-├── tests/                unit · whitebox · blackbox · integration · timeout · concurrency
-│                         · security · ml · e2e · manual · n8n
-├── docs/                 SDD, architecture + ADRs, data, AI, security, deployment,
-│                         testing, plan (Gantt), congress, product, research, report
-├── scripts/              build_report.py — the only executable script
-└── render.yaml           Render blueprint (static site + API web service)
+├── prototype/            clickable static UI (HTML/CSS/JS) — open index.html; first public URL
+├── apps/web/             SPEC.md + i18n strings (bn/en) — React PWA to build
+├── services/api/         SPEC.md — FastAPI service to build (17 endpoints)
+├── db/                   SCHEMA-SPEC.md — tables, RLS, buckets, seed
+├── ml/                   training spec, export, RAG ingestion, evaluation template, registry
+├── automation/n8n/       workflow specs 01–08
+├── tests/                test-case tables per type (unit … security, ml, e2e, manual, n8n)
+├── docs/                 SDD, architecture + ADRs, data, AI, security, deployment guides,
+│                         testing, plan (Gantt), congress, product, research, report (PDF)
+├── .github/              CODEOWNERS, PR/issue templates, CI/CD spec (README)
+└── .env.example          every environment variable, secret vs public
 ```
 
 ## Stack at a glance
 
 | Layer | Choice | Decision record |
 |---|---|---|
-| Frontend | React + Vite + TS, PWA, Bangla default | [ADR 0001](docs/architecture/adr/0001-react-spa-pwa.md) |
-| Backend | FastAPI (Python 3.12), modular monolith, Docker on Render free | [ADR 0002](docs/architecture/adr/0002-fastapi-modular-monolith.md) |
-| Data | Supabase Postgres + pgvector + Storage + Auth | [ADR 0003](docs/architecture/adr/0003-supabase-not-render-postgres.md) |
+| Frontend | React + Vite + TS, PWA, Bangla default — Render static site | [ADR 0001](docs/architecture/adr/0001-react-spa-pwa.md) |
+| Backend | FastAPI (Python 3.12), modular monolith, Docker — Render free web service | [ADR 0002](docs/architecture/adr/0002-fastapi-modular-monolith.md) |
+| Data | Supabase Postgres + pgvector + private Storage + Auth (+ Turnstile CAPTCHA) | [ADR 0003](docs/architecture/adr/0003-supabase-not-render-postgres.md) |
 | Vision | Transfer-learned CNN/ViT → ONNX int8 on CPU | [ADR 0004](docs/architecture/adr/0004-onnx-cpu-inference.md) |
-| Safety | Calibrated confidence + abstain + human review | [ADR 0005](docs/architecture/adr/0005-abstain-and-human-review.md) |
+| Safety | Calibrated confidence + honest "not sure" | [ADR 0005](docs/architecture/adr/0005-calibrated-abstain.md) |
 | Advice | RAG with mandatory citations | [ADR 0006](docs/architecture/adr/0006-rag-citation-enforcement.md) |
-| Automation | n8n | [ADR 0008](docs/architecture/adr/0008-n8n-automation-plane.md) |
+| Automation | n8n (+ UptimeRobot / GitHub Actions fallbacks) | [ADR 0008](docs/architecture/adr/0008-n8n-automation-plane.md) |
 
-## Team (Congress §13.2 — every role owned by a named member)
+## Team (Congress §13.2)
 
 | Member | Role |
 |---|---|
-| **Apon** | Team Leader · Backend · Database · ML integration · Deployment |
+| **Apon** | Team Leader · Backend · Database · ML integration · Deployment · Security |
 | **Taeen** | Data Scientist · model training & statistics · backend support |
-| **Salwa** | AI integration — RAG, knowledge base, LLM evaluation |
+| **Salwa** | AI integration — RAG, knowledge base, LLM evaluation & red-team |
 | **Raisa** | AI integration — advisory agent, Bangla prompts & voice · Presentation lead *(to confirm)* |
 | **Sara** | UI/UX & Frontend lead |
 | *Open* | Virtual NRB / global advisor (§8) |

@@ -8,7 +8,7 @@ commit hash and split id, then into the model card.
 - Image size, aspect ratio, brightness, blur (variance of Laplacian) distributions per class
   **and per source** — if a class's photos are systematically brighter, the model can cheat.
 - Near-duplicate clusters (pHash) — size and cross-class duplicates (label noise).
-- Sample grid per class for agronomist sanity check.
+- Sample grid per class, checked by the team against public BRRI disease descriptions.
 
 ## 2. Splitting
 - 70/15/15 stratified by (class, source). Groups of near-duplicates stay in one split.
@@ -61,7 +61,8 @@ Prediction stability under: Gaussian blur σ ≤ 2, brightness ±30 %, rotation 
 centre crop 80 %. Metric: top-1 agreement with the clean prediction.
 
 ## 9. Outbreak model statistics (later stage)
-Spatio-temporal clustering evaluated against agronomist-confirmed outbreaks: precision of
+Spatio-temporal clustering evaluated against officially reported outbreaks (news / DAE notices, when
+available) and the admin dismiss rate: precision of
 alerts, lead time distribution (median, IQR), false-alert rate per 1,000 km² per month.
 
 ## 10. Reporting template

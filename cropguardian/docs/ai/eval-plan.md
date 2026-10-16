@@ -36,6 +36,8 @@ Task success (scan → read advice unaided) ≥ 80 % of participants; SUS score 
 Participants: farmers and extension officers, consented; no personal data in notes.
 
 ## 5. Field outcome (winning signal — later)
+Evidence review, impact model, scenarios and sample size: [`docs/evaluation/field-loss-reduction.md`](../evaluation/field-loss-reduction.md).
+
 Pilot design with a partner extension office: pilot vs comparison plots, same variety/season;
 outcomes: time-to-correct-treatment, disease-affected area, yield. Pre-registered in
 `docs/product/pilot-protocol.md` before data collection. **No loss-reduction claim before this.**

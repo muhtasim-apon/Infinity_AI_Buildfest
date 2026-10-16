@@ -1,7 +1,7 @@
 # Deployment architecture
 
 Diagram: [`../diagrams/deployment.mmd`](../diagrams/deployment.mmd). Step-by-step:
-[`../deployment/render-guide.md`](../deployment/render-guide.md).
+[`../deployment/01-render-guide.md`](../deployment/01-render-guide.md).
 
 | Component | Host | Plan | Sleeps? | State |
 |---|---|---|---|---|

@@ -8,8 +8,8 @@ flowchart TB
   end
 
   subgraph API["Crop Guardian API — FastAPI on Render free (1 instance)"]
-    R[Routers<br/>auth · scans · advisory · review · alerts · admin · audit · hooks · health]
-    SEC[Security<br/>JWT · roles · rate limit · upload sanitiser · HMAC]
+    R[Routers<br/>health · demo · scans · alerts · admin · audit · hooks]
+    SEC[Security<br/>JWKS auth · roles · rate limit · CAPTCHA · upload sanitiser · webhook signatures · headers]
     INF[Inference<br/>ONNX Runtime int8]
     ADV[Advisory agent]
     RAG[RAG retriever + citation validator]
@@ -26,16 +26,16 @@ flowchart TB
   subgraph SB["Supabase (free)"]
     AUTH[Auth]
     PG[(Postgres + pgvector<br/>RLS)]
-    ST[(Storage<br/>scans/ · models/)]
+    ST[(Storage<br/>scans/ · models/ — private)]
   end
 
   LLM[LLM provider<br/>Claude — swappable]
   OM[Open-Meteo]
   N8N[n8n workflows]
-  CH[SMS / email / Telegram]
+  CH[Team Telegram channel]
 
   UI -->|REST + JWT| R
-  UI -->|login / signed PUT| AUTH
+  UI -->|login + CAPTCHA| AUTH
   UI -->|signed PUT| ST
   INF --> ST
   RAG --> PG
@@ -43,5 +43,5 @@ flowchart TB
   ADV -->|chunks + disease only, no PII| LLM
   OUT --> OM
   N8N -->|HMAC webhooks| R
-  R -->|approved alert| N8N
+  R -->|alert published| N8N
   N8N --> CH

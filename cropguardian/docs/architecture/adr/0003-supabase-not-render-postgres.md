@@ -10,7 +10,7 @@ need vector search, object storage and auth.
 
 ## Decision
 Use one Supabase free project for Postgres (with `pgvector`), Storage (private buckets
-`scans`, `models`) and Auth (phone OTP / email, JWT). The API connects with the service-role
+`scans`, `models`) and Auth (email OTP now; phone OTP needs a paid SMS provider such as Twilio; JWT). The API connects with the service-role
 key through the pooled connection string; the browser uses only the anon key under RLS.
 
 ## Alternatives rejected

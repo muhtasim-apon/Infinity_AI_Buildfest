@@ -3,7 +3,7 @@
 Status: **draft** — finalise with the partner extension office before any data collection.
 
 ## Question
-Does access to Crop Guardian (with agronomist loop) shorten time-to-correct-treatment and reduce
+Does access to Crop Guardian shorten time-to-correct-treatment and reduce
 disease-affected area / yield loss compared with usual practice?
 
 ## Design
@@ -12,9 +12,11 @@ disease-affected area / yield loss compared with usual practice?
 - Duration: one season.
 
 ## Outcomes (pre-declared)
-Primary: days from first symptom report to correct treatment (agronomist-verified).
-Secondary: affected area at a fixed growth stage (agronomist estimate); yield per decimal at
-harvest; number of pesticide applications.
+Primary: yield per decimal at harvest.
+Secondary: days from first symptom to correct treatment (farmer's field diary, checked against the
+cited guide); affected area at a fixed growth stage (photo-based estimate by the team); number of
+pesticide applications; alert lead time vs official reports.
+Sample size and expected effect: see [`docs/evaluation/field-loss-reduction.md`](../evaluation/field-loss-reduction.md) §4 and §6.
 
 ## Analysis
 Difference in medians with bootstrap CI; regression adjusting for variety, sowing date, area.

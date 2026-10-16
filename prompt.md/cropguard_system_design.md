@@ -228,3 +228,89 @@
  - Report PDF builds and opens; every statistic in docs traces to docs/research/.
  - git status shows only local changes; nothing pushed or deployed.
 ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+ I've turned the repo into a Crop Guardian (AgriSphere AI) web-app template: a
+  clickable prototype, the full system-design docs, a 67-page PDF report and a
+  day-by-day Gantt chart. Nothing is committed, pushed or deployed. No code has
+  been installed or run, and no model is trained, so the prototype shows sample
+  data and labels it as fake on every screen.
+
+  Where to look first
+  - Prototype: open cropguardian/prototype/index.html in any browser, no setup
+    needed. It has the farmer app (scan → result → "not sure" case → Bangla advice
+    → history → alerts), one-click demo farmer and demo admin, the admin console,
+    and the data, security, architecture, presentation, pitch-deck and audit
+    pages. Bangla is the default, with an English toggle and dark mode.
+  - Design document: cropguardian/docs/system-design/SDD.md. It covers
+    requirements, architecture, data flow, database design, API, AI/ML, security,
+    deployment and testing.
+  - PDF report: cropguardian/docs/report/CropGuardian-System-Design-Report.pdf. It
+    is built from the Markdown docs, so the two can't drift apart.
+  - Gantt chart: cropguardian/docs/plan/gantt.md. It gives each of Apon, Taeen,
+    Salwa, Raisa and Sara a task every day from 16 to 29 Oct, plus milestones,
+    RACI and a risk register. In the PDF it is drawn as a bar chart.
+
+  Key design choices
+  - Database on Supabase, not Render Postgres. Render's free Postgres expires 30
+    days after creation, so one made today would die around 15 Nov (selection day)
+    and be gone before 26 Dec. Supabase holds the database, vector search, image
+    storage and login. Render runs only the frontend and one backend service.
+  - Render limits are planned for. docs/deployment/challenges-and-recovery.md
+    covers the free tier's limits (sleeping after 15 minutes idle, 750
+    hours/month, temporary disk, single instance), plus Supabase, ML, AI, team and
+    demo-day risks. Each one has prevention and recovery steps.
+  - The model can say "I don't know". Below a confidence threshold it routes the
+    photo to an agronomist instead of guessing. Advice is only shown if it cites a
+    DAE/BRRI/BARI source.
+  - Five model types are compared. A classical baseline, MobileNetV3,
+    EfficientNetV2, ConvNeXt and a Vision Transformer, chosen by a rule fixed
+    before testing. The statistics plan includes 95% confidence intervals,
+    McNemar's test, calibration and a check that the model isn't just recognising
+    which dataset a photo came from.
+  - Testing. Unit, whitebox, blackbox, integration, timeout, concurrency, security
+    (including an AI red-team list), ML, browser end-to-end, manual sheets and
+    n8n monitors are all designed. The test files are placeholders the team fills
+    in.
+
+  Checks I ran
+  - Python syntax: all 66 files compile.
+  - Bangla and English text files have matching keys.
+  - All links between the docs resolve, and no old RemitOS or FinSphere references
+    remain.
+  - The Chrome extension wasn't connected, so I tested the prototype in headless
+    Chrome instead. All 11 pages showed the "fake data" banner, no JavaScript
+    errors and no sideways scrolling at phone width. The scan flow, language
+    toggle, "not sure" screen, admin save (refused without a reason) and audit
+    page all work.
+
+  For the team to settle
+  - Raisa as presentation lead is my suggestion; please confirm it at stand-up.
+  - The PlantVillage dataset licence isn't stated on its page. The two Bangladesh
+    rice datasets are CC BY 4.0.
+  - Bangla treatment guides and the banned-pesticide list still have to be
+    collected. Until the banned list exists, the app blocks all chemical advice by
+    design. Salwa's work here is on the critical path.
+  - I fixed two database access rules that would have broken: one would have
+    caused a Postgres recursion error, and one would have hidden all review cases
+    from agronomists.
+
+  Repo state
+  remitos/ is staged for deletion and can be recovered from git history. The old
+  remitos report PDF was already deleted before I started. Your prompt.md/ folder
+  is untouched.
+
+  Sources:
+  - Render — Deploy for Free (https://render.com/docs/free)
+  - Supabase pricing (https://supabase.com/pricing)
+  - RiceLeafBD (Mendeley) (https://data.mendeley.com/datasets/kx9rx8p2mz)
+  - RiceLeafDisease-BD5 (Mendeley) (https://data.mendeley.com/datasets/sjkptpgv79)
+  - PlantDoc (https://github.com/pratikkayal/PlantDoc-Dataset)
+  - PlantVillage (https://github.com/spMohanty/PlantVillage-Dataset)
+  - arXiv 2501.08912 (https://arxiv.org/abs/2501.08912)
+  - Mongabay, Jan 2024 (https://news.mongabay.com/2024/01/prevention-is-best-defen
+    se-against-bangladesh-crop-diseases-researchers-say/)
+  - TBS — blast yield loss (https://www.tbsnews.net/node/624442)
+  - BRRI-linked review
+    (https://banglajol.info/index.php/BRJ/article/view/55176/38810)
+  - CEIC — Bangladesh Labour Force Survey (https://www.ceicdata.com/en/bangladesh/
+    labour-force-survey-employment-and-employment-rate)

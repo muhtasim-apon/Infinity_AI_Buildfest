@@ -1,31 +1,32 @@
 # User journeys
 
 ## J1 — Farmer scans a sick leaf (happy path)
-1. Opens app (home-screen icon) → Bangla home: big "📷 পাতার ছবি তুলুন".
-2. Takes photo → quality hint if dark/blurry → "পাঠান" (send).
-3. If server waking: "সার্ভার চালু হচ্ছে… ছবিটি সংরক্ষিত আছে" (server waking… photo saved).
+1. Opens the app (home-screen icon) → Bangla home: big "📷 পাতার ছবি তুলুন".
+2. Takes a photo → quality hint if dark/blurry → "পাঠান" (send).
+3. If the server is waking: "সার্ভার চালু হচ্ছে… ছবিটি সংরক্ষিত আছে" (server waking… photo saved).
 4. Result: disease name (bn), confidence band (উচ্চ/মাঝারি), heat-map, top-3 expandable.
 5. Advice card: what to do today, steps, dose + safety, source; 🔊 listen.
-6. Saved to history; optional "notify me of outbreaks nearby".
+6. Saved to history; optional "show alerts near me" (in-app).
 
 ## J2 — Farmer, uncertain result
-4'. "নিশ্চিত নই — কৃষি কর্মকর্তার কাছে পাঠানো হয়েছে" + expected response time + general safe steps
-   (isolate, don't spray blindly). Notification when an agronomist answers.
+4'. "নিশ্চিত নই" (not sure): no disease is named as the answer; retake tips (one leaf, close, daylight);
+   "do not spray on a guess"; static card: "contact your Upazila Agriculture Office". The farmer can
+   retake immediately.
 
-## J3 — Farmer, offline in field
-2'. No network → photo queued (badge "1 অপেক্ষমাণ") → auto-sends later.
+## J3 — Farmer, offline in the field
+2'. No network → photo queued (badge "১ অপেক্ষমাণ") → sent automatically when online.
 
-## J4 — Agronomist reviews
-`/app/review` → card with photo, model top-3, field info (crop, variety, stage) → Confirm / Correct
-(choose disease) / Unclear + note → next card.
+## J4 — Automatic outbreak alert
+Three or more confident diagnoses of the same notifiable disease within 5 km / 7 days → the system
+publishes an in-app alert labelled "possible outbreak — unverified, rule-based" (risk, area, report
+count) → farmers nearby see it under 🔔 → the team gets a notice in its Telegram channel → if the alert
+looks wrong, the admin dismisses it with a reason (audited).
 
-## J5 — Outbreak alert
-System drafts alert (3+ reports within 5 km / 7 days) → agronomist sees map + reports → edits Bangla
-message → Approve → farmers in radius get in-app (+ SMS/Telegram if subscribed).
+## J5 — Admin
+`/admin` → thresholds (τ, outbreak radius / minimum reports / window / cooldown) with a required
+reason → model versions (activate / roll back) → KB documents (add / retire) → users and roles →
+dismiss an alert. Every action appears in `/audit`.
 
-## J6 — Admin
-`/admin` → thresholds (τ, outbreak radius/min reports) with audit note required → model versions
-(activate/rollback) → KB documents (add/retire) → users/roles.
-
-## J7 — Judge
-`/demo-user` → J1 with fixtures → `/demo-admin` → J4, J5, J6 → `/architecture`, `/data`, `/security`, `/audit`.
+## J6 — Judge
+`/demo-user` (CAPTCHA) → J1 with sample photos → J2 with a non-leaf photo → `/demo-admin` → J5 →
+`/architecture`, `/data`, `/security`, `/audit`.

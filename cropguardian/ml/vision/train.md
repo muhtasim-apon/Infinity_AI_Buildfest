@@ -14,7 +14,7 @@ Owner: Taeen. One notebook per candidate, same skeleton. Log everything to CSV; 
 7. **Calibrate** — fit temperature T on validation NLL (LBFGS); ECE before/after; reliability diagram.
 8. **Threshold** — risk–coverage curve; choose τ per `docs/ai/eval-plan.md`.
 9. **OOD** — energy score on D3 non-rice + random non-leaf images; AUROC; OOD threshold.
-10. **Explain** — Grad-CAM on 50 validation images per class → gallery PNGs for agronomist review.
+10. **Explain** — Grad-CAM on 50 validation images per class → gallery PNGs, checked by the team against public disease descriptions.
 11. **Confound probe** — logistic regression predicting source dataset from penultimate embeddings.
 12. **Export** — see `export_onnx.md`.
 13. **Report** — fill `ml/evaluation/report_template.md`; numbers go to the model card only from here.

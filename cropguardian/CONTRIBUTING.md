@@ -10,7 +10,8 @@ Conventional Commits, e.g. `feat(scan): add client-side image compression`.
 ## Definition of done
 - [ ] Stub or code carries a docstring: contract, inputs, outputs, failure modes, timeout
 - [ ] Tests added in the matching `tests/<type>/` folder (see `docs/testing/test-strategy.md`)
-- [ ] Bangla string added to `apps/web/src/i18n/bn.json` before `en.json`
+- [ ] Bangla string added to `bn.json` before `en.json` (`apps/web/i18n/` until the app is scaffolded)
+- [ ] Rows of `docs/security/security-checklist.md` touched by the change still hold; `/security-review` run
 - [ ] Any new statistic is in `docs/research/sources.md` with URL + access date
 - [ ] Any new model has a card in `docs/ai/model-cards/`
 - [ ] Any architectural choice has an ADR

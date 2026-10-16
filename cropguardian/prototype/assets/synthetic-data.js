@@ -58,9 +58,9 @@ window.CG_SYNTHETIC = {
         citations: [{ title: "[SAMPLE CITATION — KB not yet ingested]", publisher: "DAE", page: "—" }]
       }
     },
-    // The model declines (UI state: abstained → agronomist)
+    // The model declines (UI state: "not sure" — retake tips + local office card)
     unsure: {
-      status: "needs_review", band: "low",
+      status: "not_sure", band: "low",
       top3: [["brown_spot", 0.41], ["narrow_brown_spot", 0.33], ["blast", 0.14]],
       heat: null, advice: null
     }
@@ -68,27 +68,21 @@ window.CG_SYNTHETIC = {
 
   history: [
     { id: "S-1042", date: "2026-10-14", disease: "blast", status: "diagnosed" },
-    { id: "S-1037", date: "2026-10-11", disease: null, status: "needs_review" },
+    { id: "S-1037", date: "2026-10-11", disease: null, status: "not_sure" },
     { id: "S-1029", date: "2026-10-06", disease: "healthy", status: "diagnosed" },
-    { id: "S-1011", date: "2026-09-28", disease: "tungro", status: "reviewed" }
+    { id: "S-1011", date: "2026-09-28", disease: "tungro", status: "diagnosed" }
   ],
 
   alerts: [
-    { id: "A-7", disease: "blast", area: { bn: "সাভার (৫ কিমি)", en: "Savar (5 km)" }, reports: 6, risk: "high", status: "approved", date: "2026-10-15", x: 58, y: 42 },
-    { id: "A-6", disease: "tungro", area: { bn: "আশুলিয়া (৫ কিমি)", en: "Ashulia (5 km)" }, reports: 3, risk: "medium", status: "approved", date: "2026-10-12", x: 30, y: 30 },
-    { id: "A-8", disease: "bacterial_leaf_blight", area: { bn: "ধামরাই (৫ কিমি)", en: "Dhamrai (5 km)" }, reports: 3, risk: "low", status: "draft", date: "2026-10-16", x: 22, y: 66 }
-  ],
-
-  reviewQueue: [
-    { id: "S-1037", upazila: "Savar", variety: "BRRI dhan28", top3: [["brown_spot", 0.41], ["narrow_brown_spot", 0.33], ["blast", 0.14]], age_h: 5 },
-    { id: "S-1044", upazila: "Savar", variety: "BRRI dhan29", top3: [["sheath_blight", 0.52], ["healthy", 0.30], ["brown_spot", 0.09]], age_h: 2 }
+    { id: "A-7", disease: "blast", area: { bn: "সাভার (৫ কিমি)", en: "Savar (5 km)" }, reports: 6, risk: "high", status: "published", date: "2026-10-15", x: 58, y: 42 },
+    { id: "A-6", disease: "tungro", area: { bn: "আশুলিয়া (৫ কিমি)", en: "Ashulia (5 km)" }, reports: 3, risk: "medium", status: "published", date: "2026-10-12", x: 30, y: 30 },
+    { id: "A-8", disease: "bacterial_leaf_blight", area: { bn: "ধামরাই (৫ কিমি)", en: "Dhamrai (5 km)" }, reports: 3, risk: "low", status: "dismissed", dismissReason: { bn: "একই খামারের পুনরাবৃত্ত ছবি", en: "repeated photos from one farm" }, date: "2026-10-16", x: 22, y: 66 }
   ],
 
   users: [
     { name: "ডেমো কৃষক (Synthetic)", role: "farmer", upazila: "Savar" },
-    { name: "ডেমো কৃষি কর্মকর্তা (Synthetic)", role: "agronomist", upazila: "Savar" },
     { name: "Demo Admin (Synthetic)", role: "admin", upazila: "—" }
   ],
 
-  counts: { scans_7d: 128, abstained_7d: 19, reviews_open: 2, alerts_drafts: 1 }
+  counts: { scans_7d: 128, abstained_7d: 19, alerts_published_7d: 2, alerts_dismissed_7d: 1 }
 };

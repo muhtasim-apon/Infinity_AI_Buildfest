@@ -8,44 +8,44 @@ Diagram: [`../diagrams/data-flow.mmd`](../diagrams/data-flow.mmd). Sequences:
 | # | Step | Where | Data | Failure handling |
 |---|---|---|---|---|
 | 1 | Photo taken / chosen | browser | raw image | camera denied → file picker |
-| 2 | Resize ≤ 1024 px, JPEG q≈0.8, strip EXIF, SHA-256 | browser | ~150–300 KB JPEG | too dark/blurry heuristic → "retake" hint |
-| 3 | Offline? → store in IndexedDB outbox | browser | blob + metadata | retried by background sync |
-| 4 | `POST /v1/scans` {crop, field_id, sha256, coarse lat/lon} | API | scan row `pending_upload` | duplicate sha256 for same user → return existing scan (idempotent) |
-| 5 | PUT image to signed URL | Supabase Storage `scans/{user}/{scan}.jpg` | image | URL expires 5 min → request new |
+| 2 | Resize ≤ 1024 px, JPEG q≈0.8, strip EXIF, SHA-256, round location to 2 decimals | browser | ~150–300 KB JPEG | too dark/blurry → "retake" hint |
+| 3 | Offline? → store in IndexedDB outbox | browser | blob + metadata | retried when online and `/healthz` = 200 |
+| 4 | `POST /v1/scans` {crop, field_id, sha256, coarse lat/lon} | API | scan row `pending_upload` | same sha256 for same user → existing scan returned (idempotent) |
+| 5 | PUT image to signed URL | private Storage `scans/{user}/{scan}.jpg` | image | URL expires after 5 min → request a new one |
 | 6 | `POST /v1/scans/{id}/analyze` | API | — | 409 if not uploaded |
 | 7 | Download, magic-byte check, decode, re-encode | API memory | tensor 224×224 | invalid → 422 problem+json |
-| 8 | ONNX inference → temperature softmax → top-3 | API | probs | timeout 4 s → 503 + retry-after |
-| 9 | Threshold decision | API | `diagnosed` / `needs_review` | — |
-| 10 | Retrieve KB chunks (disease, crop, stage, lang=bn) | pgvector | top-k chunks | score < min → no advice, escalate |
-| 11 | LLM generates structured advice from chunks | LLM | JSON advice | timeout 20 s / invalid / uncited → fallback text + escalate |
-| 12 | Persist diagnosis, advisory, citations, audit event | Postgres | rows | transaction; on failure nothing partial is shown |
-| 13 | Outbreak check | API | cluster count | threshold crossed → `alerts` draft |
-| 14 | Agronomist approves alert | API → n8n | alert payload (no PII) | n8n retry ×3, dead-letter |
-| 15 | Notify subscribers | n8n → SMS/email/Telegram | Bangla message | per-channel fallback |
+| 8 | ONNX inference → temperature softmax → top-3 | API | probabilities | timeout 4 s → 503 + Retry-After |
+| 9 | Threshold decision | API | `diagnosed` / `not_sure` | not sure → retake tips + local office card, no advice |
+| 10 | Retrieve KB chunks (disease, crop, stage, Bangla) | pgvector | top-k chunks | score < minimum → static fallback card |
+| 11 | LLM writes structured advice from chunks | LLM | JSON advice | timeout 20 s / invalid / uncited → fallback |
+| 12 | Persist diagnosis, advisory, citations, audit event | Postgres | rows | one transaction; nothing partial is shown |
+| 13 | Outbreak check | API | cluster count | threshold met, no alert in cooldown → **publish** labelled alert |
+| 14 | Alert notice | API → n8n → team Telegram | alert summary (no personal data) | n8n retry ×3; in-app alert is the source of truth |
+| 15 | Admin dismisses a wrong alert (optional) | API | status dismissed + reason | audited |
 
-## 2. Learning flow — data flywheel
+## 2. Model update flow
 ```
-needs_review scan ─▶ agronomist label ─▶ feedback_labels ─▶ weekly export (n8n)
-     ─▶ dedup + consent check ─▶ ml/vision training set vN+1 ─▶ train ─▶ evaluate
-     ─▶ model card update ─▶ admin promotes in model_versions ─▶ API loads at next boot
+public datasets (D1, D2; D3 for out-of-distribution) ─▶ train on free GPU (Colab/Kaggle)
+ ─▶ evaluation report ─▶ model card update ─▶ int8 ONNX to private `models` bucket
+ ─▶ model_versions row ─▶ admin activates (audited) ─▶ API downloads at next boot (sha256 checked)
 ```
-Only images whose owner consented to `training_use` are exported (`consents` table).
+User photos are **not** used for training in this version.
 
 ## 3. Knowledge flow — RAG ingestion
 ```
 DAE/BRRI/BARI PDF or web page ─▶ licence/permission recorded in kb_documents
  ─▶ text extraction (Bangla-aware) ─▶ chunk 300–500 tokens, overlap 50
  ─▶ metadata {crop, disease, stage, doc_id, page, edition_date}
- ─▶ embed (multilingual-e5) ─▶ kb_chunks (vector) ─▶ retrieval eval set re-run
+ ─▶ embed (multilingual-e5) ─▶ kb_chunks (vector) ─▶ retrieval evaluation re-run
 ```
 
 ## 4. Data classification
-| Class | Examples | Storage | Leaves Bangladesh-controlled systems? |
+| Class | Examples | Storage | Leaves our controlled systems? |
 |---|---|---|---|
-| Personal | phone, name, exact GPS | Postgres (restricted columns) | **No** |
-| Quasi-personal | coarse location (~1 km), field size | Postgres | Only aggregated |
+| Personal | email, display name | Supabase Auth / Postgres | **No** |
+| Quasi-personal | coarse location (~1 km), field size | Postgres | only aggregated (alerts) |
 | Imagery | leaf photos | Storage (private) | No (model runs in our API) |
-| Derived | diagnosis, confidence | Postgres | Disease name only, to LLM |
-| Public | KB guides | Postgres | Yes (sent to LLM as context) |
+| Derived | diagnosis, confidence | Postgres | disease name only, to the LLM |
+| Public | KB guides | Postgres | yes (sent to the LLM as context) |
 
-See [`../data/data-sovereignty.md`](../data/data-sovereignty.md) for hosting-region decisions.
+Hosting regions: [`../data/data-sovereignty.md`](../data/data-sovereignty.md).

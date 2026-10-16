@@ -7,8 +7,8 @@ For each component: what judges evaluate → our evidence → where to show it.
 *Originality, creativity, non-obvious, transformative application of AI.*
 | Evidence | Where |
 |---|---|
-| AI core is the product: vision → calibrated abstention → cited Bangla advice → outbreak alerts → data flywheel | `/architecture`, SDD §6–7 |
-| "Knows when it doesn't know" — abstain + agronomist loop (most disease apps always answer) | result screen, ADR 0005 |
+| AI core is the product: vision → calibrated abstention → cited Bangla advice → rule-based outbreak alerts | `/architecture`, SDD §6–7 |
+| "Knows when it doesn't know" — honest "not sure" instead of a guess (most disease apps always answer) | result screen, ADR 0005 |
 | Crowd-sourced early warning from individual diagnoses | `/app/alerts`, outbreak model card |
 | Not a chatbot gimmick (S1 §13.4 #1) — the LLM only explains; the vision model diagnoses | agent-design |
 
@@ -19,7 +19,7 @@ For each component: what judges evaluate → our evidence → where to show it.
 | Documented architecture, 10 ADRs, sequence diagrams, ERD | `docs/architecture/`, `/architecture` |
 | Model comparison across 5 families with a pre-registered selection rule; statistics with CIs, McNemar, calibration | `docs/ai/vision-model.md`, `statistics.md` |
 | RAG with citation enforcement + validator; bounded agent | `rag-design.md`, `agent-design.md` |
-| Free-tier-aware engineering: stateless API, outbox, idempotency, cold-start handling | `challenges-and-recovery.md` |
+| Free-tier-aware engineering: stateless API, outbox, idempotency, cold-start handling | `04-free-tier-challenges.md` |
 | Test strategy: whitebox/blackbox/timeout/concurrency/security/ML/E2E/n8n | `docs/testing/`, `tests/` |
 
 ## 3. Business Value & Commercial Viability (20)
@@ -29,6 +29,7 @@ For each component: what judges evaluate → our evidence → where to show it.
 | Value: earlier correct action on disease; fewer wasted sprays (to be measured in pilot) | PRD §6 |
 | Revenue model: free for farmers; B2B/B2G — extension services dashboard, agri-input companies (non-promotional, IPM-first), insurers (aggregate risk), NGOs | PRD §7 |
 | KPIs defined; pilot protocol pre-registered | `eval-plan.md` §5 |
+| Honest impact case: evidence review (digital advice +4 % to +6 % yield on average [S8][S9]), transparent loss-reduction model, pilot sample size | `docs/evaluation/field-loss-reduction.md` |
 
 ## 4. Global Scalability & Real-World Impact (20)
 *Scale to millions and international markets; jobs, productivity, societal benefit.*
@@ -37,7 +38,7 @@ For each component: what judges evaluate → our evidence → where to show it.
 | Domain packs: more crops, Precision Farm, YieldMax | ADR 0010 |
 | Portable: Docker API + Postgres → any cloud or in-country DC | data-sovereignty |
 | Language packs (Bangla first; Hindi/Nepali/Swahili feasible) | ADR 0007 |
-| Agriculture ≈ 45 % of employment in Bangladesh [S5] | SDD §1 |
+| Agriculture ≈ 45 % of employment in Bangladesh [S5]; rice loses an estimated 30 % (24.6–40.9 %) of yield to pests & pathogens globally [S6] | SDD §1, field-loss-reduction §2 |
 
 ## 5. Responsible AI, Data Sovereignty & Presentation (20)
 *Fairness, explainability, bias mitigation, privacy, governance, data ownership; clarity.*

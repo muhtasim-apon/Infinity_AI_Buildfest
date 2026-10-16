@@ -1,7 +1,8 @@
 # Test strategy
 
 Owners: Apon (API, DB, security, load) · Taeen (ML) · Salwa (RAG, red-team) · Raisa (agent,
-usability) · Sara (frontend, E2E, accessibility). Tests live in [`../../tests/`](../../tests/).
+usability) · Sara (frontend, E2E, accessibility). Test-case tables live in [`tests/`](../../tests/README.md) (test files are written while implementing).
+Security testing per platform: [`security-testing-guide.md`](security-testing-guide.md).
 **Status: designed, not yet executed.**
 
 ## 1. Test pyramid & where each type lives
@@ -19,7 +20,7 @@ usability) · Sara (frontend, E2E, accessibility). Tests live in [`../../tests/`
 | Security | OWASP Top 10, LLM Top 10, RLS, IDOR, uploads | `tests/security/` | pytest, OWASP ZAP baseline, Bandit, pip-audit, npm audit, gitleaks | every PR + pre-release |
 | ML | accuracy gates, robustness, slices, int8 parity | `tests/ml/` | pytest, NumPy | per model release |
 | E2E | user journeys in a real browser, both locales, phone viewport | `tests/e2e/` | Playwright | nightly + pre-release |
-| Accessibility | contrast, labels, keyboard | `tests/e2e/a11y.spec.ts` | @axe-core/playwright, Lighthouse | pre-release |
+| Accessibility | contrast, labels, keyboard | `tests/e2e/` (a11y cases) | @axe-core/playwright, Lighthouse | pre-release |
 | **Manual** | exploratory, usability with farmers, device matrix | `tests/manual/` | test-case sheets | each milestone |
 | **n8n** | synthetic monitors in deployed env; workflow tests | `tests/n8n/` + `automation/n8n/` | n8n schedules + webhook assertions | continuous after deploy |
 
@@ -32,7 +33,7 @@ Targets and the branches that must each have a test:
 | `rag/validator.py` | valid · no citations · unknown citation id · dose not in chunk · banned ingredient · chemical without safety · invalid JSON |
 | `security/upload.py` | JPEG · PNG · WebP · wrong magic bytes · > 5 MB · > pixel cap · truncated file · EXIF present |
 | `services/outbreak.py` | below min reports · at min · weather favourable/unfavourable · abstained excluded · radius edge |
-| `security/hmac.py` | valid · bad signature · stale timestamp · replayed nonce |
+| `security/webhook_sig.py` | valid · bad signature · stale timestamp · replayed nonce |
 | `audit` chain | first row (no prev) · normal · tampered row detected |
 
 Hypothesis property tests: softmax output sums to 1; temperature > 0 never increases max-prob
@@ -70,10 +71,9 @@ Schemathesis runs `--checks all` against `/openapi.json` (status codes, schema c
 | Same `Idempotency-Key` replayed 10× in parallel | one side effect |
 | 50 concurrent `analyze` calls | semaphore caps parallel inferences at 2; others queue; no OOM; 429 beyond queue limit |
 | 20 parallel `audit_append` | chain linear (advisory lock); verification passes |
-| Two agronomists review the same scan | both reviews stored; label conflict → `unclear` |
-| Alert approve race | one approval wins; n8n receives exactly one event |
+| Simultaneous diagnoses in one area | exactly one published alert; n8n receives one event |
 
-k6 load profile (`tests/concurrency/k6/scan_flow.js`): ramp 0→20 VUs over 2 min, hold 5 min;
+k6 load profile (staging only, see `tests/concurrency/README.md`): ramp 0→20 VUs over 2 min, hold 5 min;
 thresholds `http_req_failed < 1%`, `p(95) < 5000` ms for cached advice path.
 
 ## 6. Security tests

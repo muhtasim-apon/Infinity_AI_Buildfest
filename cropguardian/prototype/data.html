@@ -34,10 +34,10 @@
 
   <div class="card">
     <h2><span class="bn">লিনিয়েজ</span><span class="en">Lineage</span></h2>
-    <pre style="white-space:pre-wrap;font-size:.82rem;margin:0">dataset (licence) ─┐
-pilot photo (consent) ─┼─▶ split vN ─▶ training run (commit, config) ─▶ model_versions (sha256, τ, T, report)
-agronomist label ──────┘                                              ─▶ every diagnosis.model_version_id
-KB document (url, licence, edition) ─▶ kb_chunks ─▶ citations ─▶ every advisory</pre>
+    <pre style="white-space:pre-wrap;font-size:.82rem;margin:0">public dataset (licence) ─▶ split vN ─▶ training run (commit, config) ─▶ model_versions (sha256, τ, T, report)
+                                                                 ─▶ every diagnosis.model_version_id
+KB document (url, licence, edition) ─▶ kb_chunks ─▶ citations ─▶ every advisory
+User photos are never used for training.</pre>
   </div>
 
   <div class="grid cols-2">
@@ -45,15 +45,15 @@ KB document (url, licence, edition) ─▶ kb_chunks ─▶ citations ─▶ eve
       <h2><span class="bn">এপিআই</span><span class="en">APIs</span></h2>
       <ul class="small">
         <li><code>POST /v1/scans</code> · <code>POST /v1/scans/{id}/analyze</code></li>
-        <li><code>GET /v1/review/queue</code> · <code>POST /v1/review/{id}</code></li>
-        <li><code>GET /v1/alerts</code> · <code>POST /v1/alerts/{id}/approve</code></li>
+        <li><code>GET /v1/alerts</code> · <code>POST /v1/alerts/{id}/dismiss</code> (admin)</li>
+        <li><code>/v1/admin/*</code> — settings, models, KB, users (every action audited)</li>
         <li><code>/v1/admin/*</code> · <code>GET /v1/audit/report</code></li>
         <li><span class="bn">বাহ্যিক:</span><span class="en">External:</span> Open-Meteo, <span class="bn">এলএলএম (ব্যক্তিগত তথ্য ছাড়া)</span><span class="en">LLM (no personal data)</span></li>
       </ul>
     </div>
     <div class="card">
       <h2><span class="bn">ডেটা মডেল</span><span class="en">Data model</span></h2>
-      <p class="small">profiles · consents · farms · fields · crops · disease_catalog · scans · diagnoses · model_versions · advisories · citations · kb_documents · kb_chunks (vector) · expert_reviews · feedback_labels · alerts · alert_subscriptions · audit_log</p>
+      <p class="small">profiles · consents · farms · fields · crops · disease_catalog · scans · diagnoses · model_versions · advisories · citations · kb_documents · kb_chunks (vector) · alerts · alert_preferences · app_settings · audit_log</p>
       <p class="small muted"><span class="bn">প্রতিটি টেবিলে Row-Level Security; অবস্থান শুধু ~১ কিমি নির্ভুলতায়।</span><span class="en">Row-Level Security on every table; location stored only to ~1 km.</span></p>
     </div>
   </div>

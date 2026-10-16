@@ -1,35 +1,21 @@
 # services/api — Crop Guardian API (FastAPI)
 
-Owners: **Apon** (lead), **Taeen**. AI modules: Salwa (`app/rag/`), Raisa (`app/services/advisory.py`).
-Status: **typed stubs — not runnable yet.** Functions raise `NotImplementedError` with their
-contract in the docstring.
+**Template folder — no code yet.** Everything to build is specified in **[`SPEC.md`](SPEC.md)**:
+file tree, 17 endpoints, schemas, security modules, ML inference and abstain rules, RAG validator,
+outbreak rules, audit chain, container and dependencies.
 
-```
-app/
-├── main.py              app factory, middleware, router registration, startup (model load)
-├── config.py            typed settings from environment (.env.example)
-├── db.py                async connection pool (asyncpg / SQLAlchemy async)
-├── routers/             thin HTTP layer — validation, auth, status codes
-│   ├── health.py        /healthz /readyz
-│   ├── demo.py          /v1/demo/session
-│   ├── scans.py         /v1/scans …
-│   ├── review.py        /v1/review …
-│   ├── alerts.py        /v1/alerts …
-│   ├── admin.py         /v1/admin …
-│   ├── audit.py         /v1/audit/report
-│   └── hooks.py         /v1/hooks/n8n/{event}
-├── schemas/             Pydantic v2 request/response models
-├── services/            business logic: scan_service, advisory, outbreak, audit_chain
-├── ml/                  inference (ONNX), decision (abstain), preprocessing
-├── rag/                 retriever, validator, prompt builder
-└── security/            auth (JWT), roles, upload sanitiser, HMAC, rate limit
-```
+Owners: **Apon** (lead), **Taeen**; `app/rag/` **Salwa**; `app/services/advisory.py` **Raisa**.
 
-API contract: [`openapi-outline.md`](openapi-outline.md). Design: [`../../docs/system-design/SDD.md`](../../docs/system-design/SDD.md) §9.
+## Build order (Gantt)
+| Day | What |
+|---|---|
+| 18 Oct | `config.py`, `main.py`, `routers/health.py`, `security/auth.py` (JWKS), role guard |
+| 19 Oct | `routers/scans.py` create + signed upload URL, `security/upload.py`, idempotency |
+| 20 Oct | `ml/preprocess.py`, `ml/inference.py`, `ml/decision.py`, `Dockerfile` → first Render deploy |
+| 22 Oct | `rag/*`, `services/advisory.py` integration; `services/audit_chain.py` |
+| 23 Oct | `services/outbreak.py`, `routers/alerts.py`, n8n webhook |
+| 24 Oct | `routers/admin.py`, `security/ratelimit.py`, `security/captcha.py`, `routers/demo.py` |
+| 25 Oct | `security/headers.py`, `security/webhook_sig.py`, `routers/hooks.py`, `routers/audit.py` |
 
-## Run (once implemented)
-```bash
-cp ../../.env.example .env
-pip install -r requirements.txt -r requirements-dev.txt
-uvicorn app.main:app --reload --port 8000
-```
+## Run locally (once the code exists)
+See [`docs/deployment/00-zero-to-deploy.md`](../../docs/deployment/00-zero-to-deploy.md) Phase 4.

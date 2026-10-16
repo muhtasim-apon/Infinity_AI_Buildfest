@@ -20,15 +20,15 @@ exploiting vulnerabilities and interfering with event infrastructure.
 | Privacy (EXIF strip, coarse geo, consent, retention) | `docs/security/privacy.md` |
 | Data sovereignty | `docs/data/data-sovereignty.md` |
 | Audit readiness | `docs/security/audit-readiness.md` |
-| AuthN | Supabase Auth (phone OTP / email), short-lived JWT, refresh rotation |
-| AuthZ | Role claims (farmer, agronomist, admin) + Postgres Row-Level Security |
+| AuthN | Supabase Auth — email OTP / magic link now; phone OTP later (needs a paid SMS provider); short-lived JWT, refresh rotation |
+| AuthZ | Roles (farmer, admin, demo) read from the database on every request + Postgres Row-Level Security |
 | Transport | HTTPS only (Render and Supabase terminate TLS); HSTS; strict CORS allow-list |
 | Uploads | signed URLs, 5 MB cap, MIME + magic-byte check, re-encode, EXIF strip |
-| Secrets | Render environment groups; never committed; `.env.example` only |
+| Secrets | typed into each Render service's Environment tab (never in env groups or files); never committed; `.env.example` lists names only |
 | Rate limiting | per-user and per-IP token bucket on scan and advisory endpoints |
 | Audit log | append-only `audit_log` table, hash-chained rows |
 
 ## Responsible-AI security
 Prompt injection is an untrusted-input problem. Retrieved documents and user text are
-wrapped as data, never instructions; the agent has no write tools except `create_alert_draft`,
-which requires agronomist approval. See `docs/ai/agent-design.md` and `tests/security/`.
+wrapped as data, never instructions; the agent has read-only tools only. Full 19-point checklist:
+`docs/security/security-checklist.md`. Tests: `tests/security/`.

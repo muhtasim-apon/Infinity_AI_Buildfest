@@ -7,7 +7,7 @@ The `/audit` page produces a one-click report (`GET /v1/audit/report`) covering:
 | Security | auth config, RLS status per table, last dependency scan, last ZAP scan, open findings | DB catalog, CI artefacts |
 | Privacy | consent counts by purpose, deletion requests & completion time, retention job status | `consents`, n8n logs |
 | Governance | active model version + card link, τ and T, threshold change history | `model_versions`, `audit_log` |
-| Responsible AI | abstain rate, agronomist agreement rate, citation coverage, blocked advisories | `diagnoses`, `expert_reviews`, `advisories` |
+| Responsible AI | not-sure rate, alert dismiss rate, citation coverage, blocked advisories | `diagnoses`, `alerts`, `advisories` |
 | Data sovereignty | hosting regions, data classes leaving the system (none personal) | config |
 | Operational readiness | uptime (n8n monitor), cold-start count, p95 latency, error rate | monitors |
 | Risk | top open risks with owner and status | `docs/plan/risk-register.md` |

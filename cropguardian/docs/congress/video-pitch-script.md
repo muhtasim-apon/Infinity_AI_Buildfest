@@ -16,8 +16,8 @@ Visual: field footage / photo of diseased leaf; on-screen source tag for the 80 
 ## 0:30 – 1:00 · Solution — simplicity, uniqueness
 > Crop Guardian — ফসল রক্ষী. Take a photo. Get the likely disease, how sure the AI is, and what
 > to do — in Bangla, with the source of every recommendation. When the AI isn't sure, it says so
-> and sends the case to an agronomist. And when several farmers nearby report the same disease,
-> an early-warning alert goes out to the area.
+> and asks for a better photo instead of guessing. And when several farmers nearby report the same
+> disease, the area gets an early warning, clearly marked as unverified.
 
 Visual: three-step animation photo → answer → alert.
 
@@ -25,9 +25,9 @@ Visual: three-step animation photo → answer → alert.
 1. Open `/demo-user` (one click) — Bangla UI, synthetic banner visible.
 2. Take/upload a leaf photo → waking-server message if cold → result with top-3 + confidence + heat-map.
 3. Advice card: steps, dose, safety line, citation "BRRI … p. N". Tap 🔊 voice.
-4. Upload a non-leaf photo → "not sure — sent to agronomist".
-5. Switch to `/demo-admin` → review queue → confirm label → alert draft → approve.
-6. Flash `/architecture` and `/audit`.
+4. Upload a non-leaf photo → "not sure" with retake tips — no disease guessed.
+5. Open 🔔 Alerts → a rule-based early warning labelled "unverified".
+6. `/demo-admin` → change τ with a reason → flash `/audit` (logged) and `/architecture`.
 
 ## 2:00 – 2:30 · AI approach — depth, structure
 > We compared five model families — from classical features to CNNs and vision transformers —
@@ -39,6 +39,7 @@ Visual: three-step animation photo → answer → alert.
 ## 2:30 – 3:00 · Impact & next step — vision, potential
 > Agriculture is nearly half of Bangladesh's jobs [S5]. Our goal is earlier, correct action at
 > field level — we will measure loss reduction in a pilot with an extension office, not assume it.
+> (Allowed and forbidden impact wording: `docs/evaluation/field-loss-reduction.md` §7.)
 > Next: pilot this season, more crops, and the same core for irrigation and yield advice.
 > Crop Guardian — from one leaf to every field.
 

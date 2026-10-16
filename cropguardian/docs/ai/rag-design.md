@@ -23,7 +23,7 @@ Each document recorded in `kb_documents` with URL, publisher, edition date and l
 ## 3. Retrieval
 - Query built from structured context, not free text: `query: <disease_bn> <disease_en> ধান <stage> চিকিৎসা প্রতিরোধ`.
 - **Hybrid**: vector top-20 (cosine, HNSW) ∪ keyword top-20 (`tsvector`) → reciprocal rank fusion → metadata filter (`crop`, `disease`) → top-k = 8.
-- Minimum score gate `RAG_MIN_SCORE`; below → no advice, escalate.
+- Minimum score gate `RAG_MIN_SCORE`; below → no generated advice, static fallback card.
 
 ## 4. Generation contract
 System prompt (Raisa owns wording; Salwa owns grounding rules):
@@ -42,11 +42,12 @@ System prompt (Raisa owns wording; Salwa owns grounding rules):
 | safety line present when chemical ≠ null | blocked |
 
 ## 6. Evaluation (`docs/ai/eval-plan.md` §3)
-Golden set of ~60 (disease × question) pairs written with an agronomist:
+Golden set of ~60 (disease × question) pairs written by the team from the source guides:
 retrieval **Recall@8**, **MRR**; generation **faithfulness** (claims supported by cited chunks,
 LLM-as-judge + human spot check), **citation coverage = 100 %**, **banned leakage = 0**,
 Bangla fluency rating (native speakers, 1–5).
 
 ## 7. Caching & fallback
 Advice depends only on (disease, crop, stage, KB version) → cache in `advisories` by that key
-and reuse; LLM outage → serve cached advice; no cache → static agronomist-approved card per disease.
+and reuse; LLM outage → serve cached advice; no cache → static card per disease written from the
+cited guide (cultural steps + "contact your local agriculture office").

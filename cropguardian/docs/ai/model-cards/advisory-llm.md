@@ -19,7 +19,7 @@ See `docs/ai/eval-plan.md` §3 — citation coverage 1.00, banned leakage 0, red
 
 ## Limitations
 Quality bounded by KB coverage; Bangla OCR errors in sources propagate; may be overly cautious
-(escalates often) — acceptable trade-off.
+(falls back to the static card often) — acceptable trade-off.
 
 ## Ethical considerations
 Safety advice; IPM-first ordering; never recommends dose not in source; disclaimers.

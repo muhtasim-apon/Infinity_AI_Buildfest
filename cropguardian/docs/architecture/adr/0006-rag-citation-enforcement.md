@@ -10,7 +10,7 @@ LLMs can invent pesticide names, doses and practices. Bad dosage advice is a saf
   from them; output strict JSON with `citations` (chunk ids).
 - A server-side **validator** rejects the output if: no citation; a cited id was not in the
   retrieved set; dosage text not present in a cited chunk; any banned active ingredient appears.
-- Rejected → fallback message + escalation to agronomist; logged as `advisories.status='blocked'`.
+- Rejected → static fallback card ("contact your local agriculture office"); logged as `advisories.status='blocked'`.
 - UI shows the source title, publisher and page for each citation.
 
 ## Consequences

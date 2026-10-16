@@ -1,25 +1,21 @@
 flowchart LR
-  A[Photo] --> B[Compress + EXIF strip + sha256]
+  A[Photo] --> B[Compress + EXIF strip + sha256 + coarse location]
   B -->|offline| Q[(Outbox)]
   Q -->|online| C
   B --> C[POST /v1/scans]
-  C --> D[Signed PUT to Storage]
+  C --> D[Signed PUT to private Storage]
   D --> E[POST analyze]
-  E --> F[Validate image]
+  E --> F[Validate + re-encode image]
   F --> G[ONNX inference]
   G --> H{calibrated<br/>confidence ≥ τ ?}
-  H -- no --> I[needs_review<br/>agronomist queue]
+  H -- no --> I[Not sure:<br/>retake tips +<br/>local office card]
   H -- yes --> J[Retrieve KB chunks]
   J --> K{score ≥ min?}
-  K -- no --> I
-  K -- yes --> L[LLM advice from chunks]
-  L --> M{cited + no banned<br/>ingredient?}
-  M -- no --> I
-  M -- yes --> N[Persist diagnosis + advice + audit]
-  N --> O[Outbreak clustering]
-  O --> P[Alert draft]
-  P --> R[Agronomist approves]
-  R --> S[n8n fan-out]
-  I --> T[Expert label]
-  T --> U[(feedback_labels)]
-  U --> V[Next training set]
+  K -- no --> L[Static fallback card]
+  K -- yes --> M[LLM advice from chunks]
+  M --> N{cited + safe?<br/>V1–V6}
+  N -- no --> L
+  N -- yes --> O[Persist diagnosis + advice + audit]
+  O --> P[Outbreak rules]
+  P --> R[Publish labelled alert<br/>unverified, rule-based]
+  R --> S[In-app alerts + team notice]

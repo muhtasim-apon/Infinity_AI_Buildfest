@@ -29,3 +29,8 @@
 | Secrets | gitleaks | https://github.com/gitleaks/gitleaks |
 | Automation | n8n | https://docs.n8n.io |
 | LLM risks reference | OWASP LLM Top 10 | https://genai.owasp.org |
+| Claude security review | `/security-review` in Claude Code · GitHub Action | https://github.com/anthropics/claude-code-security-review |
+| Header grading | securityheaders.com · Mozilla Observatory | https://securityheaders.com · https://developer.mozilla.org/en-US/observatory |
+| Supabase Security Advisor | Dashboard → Advisors | https://supabase.com/docs/guides/database/database-advisors |
+| CAPTCHA | Cloudflare Turnstile | https://developers.cloudflare.com/turnstile |
+| Uptime / keep-warm | UptimeRobot · cron-job.org | https://uptimerobot.com · https://cron-job.org |

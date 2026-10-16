@@ -8,7 +8,7 @@ Works from `file://`. Bangla by default; "English" button in the top bar; ◐ to
 | `index.html` | — | landing + links to every route |
 | `app.html` | `/app` | home → scan → "waking server" → result (diagnosed / **not sure**) → cited advice + voice → history → alerts map |
 | `demo-user.html` / `demo-admin.html` | `/demo-user` / `/demo-admin` | one-click entry (auto-redirect) |
-| `admin.html` | `/admin` | overview, review queue, alert drafts, settings (reason required → audit), models, KB, users |
+| `admin.html` | `/admin` | overview, alerts (dismiss with reason), settings (reason required → audit), models, KB, users |
 | `data.html` | `/data` | datasets with licences, lineage, "not yet measured" results |
 | `security.html` | `/security` | controls, responsible-AI harms & mitigations |
 | `architecture.html` | `/architecture` | system diagram (inline SVG), AI layer, free-tier engineering |
@@ -26,7 +26,7 @@ Works from `file://`. Bangla by default; "English" button in the top bar; ◐ to
 ## Files
 `assets/style.css` (tokens, light/dark, phone-first) · `assets/app.js` (banner, top bar, language/theme,
 tabs) · `assets/synthetic-data.js` (all demo data in one place). Bilingual text uses
-`<span class="bn">…</span><span class="en">…</span>` pairs; the production app uses `apps/web/src/i18n/*.json`.
+`<span class="bn">…</span><span class="en">…</span>` pairs; the production app uses `apps/web/i18n/*.json` (moved to `src/i18n/` when scaffolded).
 
 ## Turning it into the real app
 Each screen maps to a React feature in `apps/web/src/features/` (see `apps/web/README.md`).

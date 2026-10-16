@@ -8,8 +8,8 @@ Single-label image classification of a rice leaf photo into the 7-class unified 
 ([`../data/datasets.md`](../data/datasets.md) §4), plus **abstention** when uncertain.
 
 Why classification first (not detection/segmentation): our datasets have image-level labels
-only. Detection (YOLO) needs boxes; segmentation needs masks. Both are roadmap items once
-agronomists annotate our own photos.
+only. Detection (YOLO) needs bounding boxes and segmentation needs masks — neither exists in our
+datasets, so both are out of scope for this version.
 
 ## 2. Algorithm landscape — what each family offers
 | Family | Examples | Strength | Weakness for us |
@@ -20,7 +20,6 @@ agronomists annotate our own photos.
 | Modern CNN | ConvNeXt-Tiny | strong texture modelling | ~28 M params → latency risk on free CPU |
 | Vision Transformer | ViT-S/16, DeiT-S, Swin-T | global context; best with large pre-training | data-hungry; we have ~4 k images |
 | Self-supervised backbones | DINOv2 (ViT-S/14) frozen + linear head | excellent features with few labels | size; licence check |
-| Detectors | YOLOv8n / RT-DETR | lesion location, severity | needs box labels |
 
 ## 3. Shortlist and selection rule
 Train: **(a)** handcrafted+SVM baseline, **(b)** MobileNetV3-Large, **(c)** EfficientNetV2-B0,
@@ -57,7 +56,8 @@ See ADR 0005.
 
 ## 6. Explainability
 - **Grad-CAM** heat-maps (pytorch-grad-cam) for the validation/test report and the demo
-  gallery; agronomist checks a sample: does the heat-map sit on the lesion or on background?
+  gallery; the team checks a sample against the public disease descriptions: does the heat-map sit
+  on the lesion or on the background?
   (a "right for the wrong reason" check — catches the dataset-source confound).
 - Runtime: top-3 with calibrated probabilities always shown; a heat-map only where computed.
 
@@ -71,6 +71,6 @@ Serving (`services/api/app/ml/inference.py`): session created once at startup;
 `intra_op_num_threads=1`; called through a thread pool with a semaphore of 2; 4 s timeout.
 
 ## 8. Roadmap
-v0 classifier (Oct) → v1 with our labelled pilot photos (Nov) → lesion detector + severity (Dec)
+v0 classifier (Oct) → v1 retrained with more public field datasets (Nov)
 → more crops (jute, wheat, potato, vegetables) as data permits → on-device (onnxruntime-web) for
 offline diagnosis.
