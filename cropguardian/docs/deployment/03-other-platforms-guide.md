@@ -17,14 +17,14 @@ console.anthropic.com → Billing → set a **monthly spend limit** first → AP
 Advice is cached per disease, so normal usage stays small.
 
 ## 3. Cloudflare Turnstile — CAPTCHA (Apon · Day 2)
-dash.cloudflare.com → **Turnstile** → Add widget → hostnames: the web app URL, the prototype URL and
-`localhost` → mode **Managed** →
-- **site key** → Render web env `VITE_TURNSTILE_SITE_KEY`;
+dash.cloudflare.com → **Turnstile** → Add widget → hostnames: `cropguardian-web.vercel.app`,
+`cropguardian-prototype.vercel.app` (the exact Vercel hosts) and `localhost` → mode **Managed** →
+- **site key** → Vercel web env `VITE_TURNSTILE_SITE_KEY`;
 - **secret key** → Supabase (Bot and Abuse Protection) **and** Render API env `TURNSTILE_SECRET_KEY`.
 
 ## 4. UptimeRobot — keep-alive + alerts (Apon · Day 10)
-New monitor → HTTP(s) → `https://cropguardian-api.onrender.com/readyz` → the shortest free interval
-→ alert contact = team email. Add monitors for the prototype and web URLs. Pause the API monitor only if
+New monitor → HTTP(s) → `https://cropgurdian-backend.onrender.com/readyz` → the shortest free interval
+→ alert contact = team email. Add monitors for the two Vercel URLs (alerts only — Vercel doesn't sleep). Pause the API monitor only if
 Render's usage email warns about instance hours (one always-on free service uses almost all 750 hours).
 
 ## 5. Google Colab / Kaggle — training (Taeen · Days 1–10)

@@ -6,7 +6,8 @@ open the other files only when a step tells you to.
 | File | Use it for |
 |---|---|
 | [00 Zero to deployment](00-zero-to-deploy.md) | the 9 steps, the day each is done, the 3 public URLs |
-| [01 Render](01-render-guide.md) | creating the 3 Render services (exact settings) |
+| [01 Render](01-render-guide.md) | the API web service (exact settings) |
+| [05 Vercel](05-vercel-guide.md) | the prototype and the web app (exact settings) |
 | [02 Supabase](02-supabase-guide.md) | database, storage, login |
 | [03 Other platforms](03-other-platforms-guide.md) | GitHub, Anthropic key, CAPTCHA, keep-alive monitor, free GPU |
 | [04 Free-tier problems](04-free-tier-challenges.md) | what breaks on free tiers and the fix |
@@ -14,8 +15,8 @@ open the other files only when a step tells you to.
 ## The stack (final — do not add more)
 | Piece | Where | Cost |
 |---|---|---|
-| Prototype (static HTML) | Render static site | free |
-| Web app (React build) | Render static site | free |
+| Prototype (static HTML) | Vercel (Hobby) | free |
+| Web app (React build) | Vercel (Hobby) | free |
 | API (FastAPI, Docker) | Render free web service | free |
 | Database + photo storage + login | Supabase free project | free |
 | Keep-alive + uptime alert | UptimeRobot | free |
