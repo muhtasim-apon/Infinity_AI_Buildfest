@@ -39,12 +39,13 @@ app.add_middleware(
 )
 
 
-@app.get("/healthz")
+# GET and HEAD: uptime monitors (e.g. UptimeRobot) check with HEAD requests; GET-only returns 405.
+@app.api_route("/healthz", methods=["GET", "HEAD"])
 async def healthz() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.get("/readyz")
+@app.api_route("/readyz", methods=["GET", "HEAD"])
 async def readyz() -> JSONResponse:
     if not settings.database_url:
         return JSONResponse({"db": "not configured"}, status_code=503)
