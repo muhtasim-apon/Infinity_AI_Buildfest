@@ -53,7 +53,7 @@ and secret scanning. Make the repo **public on 30 Oct** for judges.
 **Done when** everyone can push a branch.
 
 ## Step 3 — Prototype live (Apon · Day 1 · 15 min)
-Render → **New → Static Site** → pick the repo → Root Directory `prototype` → Build Command
+Render → **New → Static Site** → pick the repo → Root Directory `cropguardian/prototype` → Build Command
 `echo static` → Publish Directory `.` → Create. Then add the 10 rewrites from
 [Render guide §1](01-render-guide.md#1-prototype-static-site). **Done when** every prototype route opens
 on a phone.
@@ -77,6 +77,8 @@ manager.
 2. Test the container: `docker build -t cg-api .` then
    `docker run --rm -p 10000:10000 -e PORT=10000 --env-file .env cg-api`.
 3. Create the API on Render — [Render guide §2](01-render-guide.md#2-api-web-service).
+
+The deployable starter already exists in `services/api/` (Dockerfile + `/healthz` + `/readyz`).
 
 **Done when** `https://cropguardian-api.onrender.com/healthz` returns 200 (deploy as soon as `/healthz`
 works — don't wait for the full API; later code deploys automatically on every push to `main`).

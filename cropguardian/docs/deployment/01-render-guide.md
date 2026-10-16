@@ -3,6 +3,10 @@
 Owner: **Apon**. Used by [00](00-zero-to-deploy.md) Steps 3, 5 and 6. All free. Facts: [R1], [R3] in
 [`sources.md`](../research/sources.md).
 
+**Repository layout:** our GitHub repo (`Infinity_AI_Buildfest`) has the project inside a
+`cropguardian/` folder, so every Root Directory starts with `cropguardian/`. Setting just `api` gives
+*"Root directory does not exist"*.
+
 **Remember:** the free API **sleeps after 15 min** without traffic and takes about a minute to wake [R1]
 — the UptimeRobot monitor (00 Step 8) prevents that. Only **one** free web service fits in the monthly
 750 hours, so never create a second free web service. Static sites don't sleep and don't use hours.
@@ -14,7 +18,7 @@ Render → **New → Static Site** → repository → settings:
 |---|---|
 | Name | `cropguardian-prototype` |
 | Branch | `main` |
-| Root Directory | `prototype` |
+| Root Directory | `cropguardian/prototype` |
 | Build Command | `echo static` |
 | Publish Directory | `.` |
 
@@ -31,7 +35,7 @@ Render → **New → Web Service** → repository → settings:
 |---|---|
 | Name | `cropguardian-api` |
 | Language | **Docker** |
-| Root Directory | `services/api` |
+| Root Directory | `cropguardian/services/api` |
 | Instance Type | **Free** |
 | Region | Singapore (closest to the Supabase region) |
 | Health Check Path | `/healthz` |
@@ -62,7 +66,7 @@ Render → **New → Static Site** → settings:
 | Field | Value |
 |---|---|
 | Name | `cropguardian-web` |
-| Root Directory | `apps/web` |
+| Root Directory | `cropguardian/apps/web` |
 | Build Command | `npm ci && npm run build` |
 | Publish Directory | `dist` |
 | Rewrite | `/*` → `/index.html` (so page refreshes work) |
