@@ -1,0 +1,6 @@
+# Data-pipeline dependencies (Phase 3, day 1). Training deps (torch, timm, onnx, ...) are added when
+# training starts (18-19 Oct) and live in requirements-train.txt so the data tests stay light.
+numpy==2.2.1
+pillow==13.0.0
+pyyaml==6.0.2
+matplotlib==3.10.0

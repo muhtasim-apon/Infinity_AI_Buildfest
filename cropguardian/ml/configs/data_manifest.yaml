@@ -1,0 +1,90 @@
+# Dataset manifest (spec 9.2, 9.4 step 1). Declarative: names, hosts, sizes, licences and the SHA-256
+# values PUBLISHED by the data host (Mendeley Data public API, fetched 2026-10-21).
+# Our own computed hashes are recorded in ml/configs/data_lock.json by `python -m cg_ml data verify`;
+# any later mismatch aborts the pipeline. Never commit the data itself (gitignored: ml/data/).
+#
+# status: training_source | evaluation_only | pending_download | blocked_licence_unconfirmed
+datasets:
+  D1:
+    name: "RiceLeafBD: A Real-Field Image Dataset for Rice Leaf Disease Detection and Classification in Bangladesh"
+    page: https://data.mendeley.com/datasets/kx9rx8p2mz/1
+    doi: 10.17632/kx9rx8p2mz.1
+    version: 1
+    published: "2025-11-07"
+    accessed: "2026-10-21"
+    licence: { name: "CC BY 4.0", url: "http://creativecommons.org/licenses/by/4.0", verified_via: "Mendeley public API data_licence, 2026-10-21" }
+    role: "train/val/test"
+    status: training_source
+    collection_note: "Page states 1,555 smartphone images, Sylhet and Dhaka, Amon season; labels checked by Jamalpur Krishi Gobeshona Institution experts (dataset page claim)."
+    archives:
+      - filename: RiceLeafBD-Original-Images.zip   # published name on Mendeley: "Original Images.zip"
+        url: https://data.mendeley.com/public-files/datasets/kx9rx8p2mz/files/fdab2bd9-ed8b-4156-8d96-0b5d8f18f4ed/file_downloaded
+        size_bytes: 497906237
+        sha256_published: 3280cc176c2ee9f6ee4386e5728623fc7e8f9204b31c50f4ebb303edc52d9c83
+    classes_claimed_by_page:
+      Healthy: 252
+      Bacterial Leaf Blight: 417
+      Brown Spot: 356
+      Tungro: 530
+
+  D2:
+    name: "RiceLeafDisease-BD5: A Field-Collected Five-Class Image Dataset from Bangladesh"
+    page: https://data.mendeley.com/datasets/sjkptpgv79/2
+    doi: 10.17632/sjkptpgv79.2
+    version: 2
+    published: "2026-07-28"
+    accessed: "2026-10-21"
+    licence: { name: "CC BY 4.0", url: "http://creativecommons.org/licenses/by/4.0", verified_via: "Mendeley public API data_licence, 2026-10-21" }
+    role: "train/val/test"
+    status: training_source
+    collection_note: "Page states 2,545 images, Savar Upazila (Dhaka), Oct-Nov 2024, verified by agricultural experts and extension officers (dataset page claim)."
+    archives:
+      - filename: RiceLeafDisease-BD5.rar
+        url: https://data.mendeley.com/public-files/datasets/sjkptpgv79/files/4f00535b-3d8e-47a0-b9ec-ad5ed263e6ab/file_downloaded
+        size_bytes: 21642468
+        sha256_published: ea5da4b300af32998d4d2c396f5033b3d82843f5e9629a15bfc1131f744c9d2b
+    classes_claimed_by_page:
+      Blast: 339
+      Narrow Brown Spot: 329
+      Sheath Blight: 454
+      Tungro: 500
+      Normal Leaf: 923
+
+  D3:
+    name: "PlantDoc: A Dataset for Visual Plant Disease Detection"
+    page: https://github.com/pratikkayal/PlantDoc-Dataset
+    accessed: "2026-10-21"
+    licence: { name: "CC BY 4.0", url: "https://creativecommons.org/licenses/by/4.0/", verified_via: "GitHub repository licence field (cc-by-4.0), 2026-10-21" }
+    role: "leaf-gate negatives (non-rice species), OOD evaluation"
+    status: pending_download   # ~1 GB; needed from 23 Oct (P9 leaf gate), not for the 17-20 Oct baselines
+    pinned_commit: 5467f6012d78d1c446145d5f582da6096f852ae8   # master, last pushed 2021-05-02
+    archives:
+      - filename: PlantDoc-Dataset-5467f60.zip
+        url: https://codeload.github.com/pratikkayal/PlantDoc-Dataset/zip/5467f6012d78d1c446145d5f582da6096f852ae8
+        size_bytes: null
+        sha256_published: null   # none published; first verified hash goes to data_lock.json
+    notes: "Rice images, if any, must be excluded from negatives (check class folders before use)."
+
+  D4:
+    name: "PlantVillage"
+    page: https://github.com/spMohanty/PlantVillage-Dataset
+    accessed: "2026-10-21"
+    licence: { name: "UNCONFIRMED", url: null, verified_via: "GitHub repository licence field is empty (2026-10-21); the original authors' terms still to be located" }
+    role: "optional domain-shift experiment only"
+    status: blocked_licence_unconfirmed   # spec 9.2: do not use until the licence is verified
+    archives: []
+
+  N1:
+    name: "Non-plant negatives (Open Images V7 subset <= 2,000 images + <= 300 team-taken everyday photos)"
+    accessed: "2026-10-21"
+    licence: { name: "per image (record each in the datasheet)", url: null, verified_via: "pending selection" }
+    role: "leaf-gate negatives, OOD set"
+    status: pending_download
+    archives: []
+
+  X1:
+    name: "Optional external test set (another public Bangladeshi rice-leaf dataset)"
+    licence: { name: "to be recorded", url: null, verified_via: "not yet searched" }
+    role: "external test only - never training or selection"
+    status: pending_download
+    archives: []

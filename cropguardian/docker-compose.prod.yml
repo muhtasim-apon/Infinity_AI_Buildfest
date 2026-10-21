@@ -1,0 +1,35 @@
+# Production reference overlay (spec 5.1): `make up-prod` = docker-compose.yml + this file.
+# api x3 behind nginx least_conn, worker x2 (separate arq containers), stricter limits.
+services:
+  api:
+    environment:
+      CG_ENV: production
+      JOBS_MODE: worker          # workers are separate containers in the reference stack
+      WEB_CONCURRENCY: "2"
+      APP_BASE_URL: https://localhost
+      TRUSTED_HOSTS: '["localhost","api"]'
+    deploy:
+      replicas: 3
+      resources: { limits: { memory: 768m } }
+
+  worker:
+    build: { context: ./backend }
+    command: ["arq", "app.jobs.worker.WorkerSettings"]
+    environment:
+      CG_ENV: production
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: postgresql://cg_api:dev-api-pw@postgres:5432/cropguardian
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      APP_BASE_URL: https://localhost
+      TRUSTED_HOSTS: '["localhost"]'
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    read_only: true
+    tmpfs: ["/tmp"]
+    networks: [app]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    deploy:
+      replicas: 2
+      resources: { limits: { memory: 768m } }

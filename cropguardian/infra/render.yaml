@@ -1,0 +1,53 @@
+# Render blueprint for the hosted public demo (spec 5.2, 22.2). The git root is the PARENT of cropguardian/, so
+# point the Render blueprint at cropguardian/infra/render.yaml (Blueprints -> New -> file path) and note that every
+# rootDir below is relative to the git root.
+# Secrets use `sync: false` on services (they are typed in the dashboard); envVarGroups cannot use it.
+services:
+  # --- API (free Docker web service, one instance) ---------------------------------------------
+  - type: web
+    name: cropguardian-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: cropguardian/backend   # the git root is the parent folder of cropguardian/
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: false            # deployed by .github/workflows/deploy.yml via the deploy hook
+    envVars:
+      - { key: CG_ENV, value: production }
+      - { key: LOG_LEVEL, value: info }
+      - { key: JOBS_MODE, value: inprocess }
+      - { key: WEB_CONCURRENCY, value: "1" }
+      - { key: APP_BASE_URL, sync: false }          # https://infinityaibuildfest-prototype-five.vercel.app (until the SPA moves)
+      - { key: TRUSTED_HOSTS, sync: false }         # JSON list, e.g. ["cropgurdian-backend.onrender.com"]
+      - { key: CORS_ORIGINS, sync: false }          # JSON list; only while SPA and API are on different origins
+      - { key: SECRET_KEY, sync: false }            # >= 32 random chars (make env generates one)
+      - { key: DATABASE_URL, sync: false }          # Supabase TRANSACTION POOLER string (port 6543), $ -> %24
+      - { key: METRICS_TOKEN, sync: false }
+      - { key: S3_ENDPOINT_URL, sync: false }       # Supabase Storage S3 endpoint
+      - { key: S3_ACCESS_KEY, sync: false }
+      - { key: S3_SECRET_KEY, sync: false }
+      - key: REDIS_URL
+        fromService: { type: keyvalue, name: cropguardian-redis, property: connectionString }
+
+  # --- Frontend (static site, never sleeps). Enabled once frontend/ has a real build (Phase 2). --
+  # The /api/* rewrite makes the browser see ONE origin (cookies, CSRF, CSP connect-src 'self').
+  # Phase 0 must VERIFY that Render's rewrite proxies to an external URL incl. SSE; if not, set
+  # SERVE_SPA=true on the API and serve the SPA from it (record the ADR in DECISIONS.md).
+  - type: web
+    name: cropguardian-web
+    runtime: static
+    rootDir: cropguardian/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - { type: rewrite, source: /api/*, destination: https://cropgurdian-backend.onrender.com/api/* }
+      - { type: rewrite, source: /*, destination: /index.html }
+
+  # --- Redis-compatible Key Value (free) --------------------------------------------------------
+  - type: keyvalue
+    name: cropguardian-redis
+    plan: free
+    region: singapore
+    maxmemoryPolicy: noeviction
+    ipAllowList: []              # internal connections only

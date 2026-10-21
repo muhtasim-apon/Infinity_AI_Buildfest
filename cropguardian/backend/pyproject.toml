@@ -1,0 +1,49 @@
+[project]
+name = "cropguardian-backend"
+version = "0.1.0"
+description = "Crop Guardian API (FastAPI modular monolith) - Phase 0 foundations"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "C4", "RUF", "ASYNC", "PL", "PT", "N"]
+ignore = ["PLR2004"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "PLR2004", "PT011", "PT012", "PT018", "E501", "SIM117", "UP031"]
+"scripts/**" = ["E501", "SIM102", "PLR0913", "S603", "S607", "S101", "PLR0912", "PLR0915", "PLR0911"]
+"alembic/**" = ["S608"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["app/core", "app/domain"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --strict-config -ra"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "security: security regression suite (never deleted)",
+  "perf: performance tests",
+  "chaos: chaos tests",
+  "rag_live: live RAG evaluation (budget-capped)",
+  "ml_serving: model serving tests",
+  "integration: needs Postgres/Redis/MinIO",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true

@@ -160,3 +160,76 @@
  - Prototype rewrite targets exist (each /x → /x.html file present).
  - Nothing deployed, committed or pushed; the guide is instructions for the team.
  - Chat reply: condensed 12-step version + link to the file.
+
+ Your note asks for three things: keep the API awake with UptimeRobot, stay
+  inside Render's 750 free hours, and know what to do if the hours run low.
+
+  Part 1 — Set up the UptimeRobot keep-alive (10 minutes)
+
+  The free API sleeps after 15 minutes without traffic. A ping every 5 minutes
+  means it never reaches 15 idle minutes, so it stays awake.
+
+  1. Make sure your API is deployed and https://<your-api>.onrender.com/healthz
+     returns {"status":"ok"}.
+  2. Go to uptimerobot.com, click Register for FREE, sign up with the team email
+     and confirm it.
+  3. On the dashboard, click + New monitor and fill it in:
+
+  | Field               | Value                                         |
+  |---------------------|-----------------------------------------------|
+  | Monitor type        | HTTP(s)                                       |
+  | Friendly name       | Crop Guardian API                             |
+  | URL                 | https://<your-api>.onrender.com/readyz        |
+  | Monitoring interval | 5 minutes (the shortest the free plan allows) |
+  | Alert contacts      | tick the team email                           |
+
+  4. Click Create monitor.
+  5. Wait 5–10 minutes. The monitor should turn green (Up).
+     - If it's red: open /readyz in your browser. If it says "db":"down", fix
+       DATABASE_URL in Render first. Use the Supabase pooler string, with $ in the
+       password written as %24.
+     - If you need a green monitor right now, use /healthz temporarily, then
+       switch back to /readyz once the database works. /readyz matters because it
+       also touches the database, which keeps Supabase from pausing.
+  6. Optional: add two more monitors for the prototype and web app URLs. They
+     don't keep anything awake (static sites never sleep); they only email you if
+     a site goes down.
+
+  Check it worked: the next day, open your API URL in a private browser window. It
+  should answer instantly, not after about a minute.
+
+  Part 2 — Stay inside the 750 free hours
+
+  One service running all month uses about 744 hours, which just fits.
+
+  1. Never create a second free web service (Web Service with the Free instance
+     type) in this Render workspace.
+     - Static Sites (prototype, web app) are fine. They use no hours, so create as
+       many as you like.
+     - For a second backend (for example, staging), run it on your laptop instead.
+  2. Check usage once a week, at Monday's stand-up: Render dashboard → your
+     workspace name → Usage → "Free instance hours".
+  3. Read Render's emails. Render warns you when you're close to the limit.
+
+  Part 3 — If hours run low near the end of the month
+
+  1. In UptimeRobot, open the API monitor and click Pause. The API then sleeps
+     when idle and uses fewer hours. It just takes about a minute to wake on the
+     first visit.
+  2. Resume the monitor about 30 minutes before any demo or judging session.
+  3. If the hours run out completely, Render suspends the API until the 1st of
+     next month. Your options:
+     - Show the prototype URL and the recorded demo video. Static sites usually
+       keep working.
+     - As a team decision, upgrade only the API service to a paid instance for the
+       rest of the month.
+
+  Reminders for 30–31 Oct: the monitor must be green, the Supabase dashboard must
+  show the project active, and both should be checked 30 minutes before demo day.
+
+✻ Baked for 22s · done 8:27 PM
+
+─────────────────────────────────────── external-resources-field-loss-evaluation ─
+❯ [⧉ In .env.example]
+──────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ auto mode on (shift+tab to cycle) · ← 1 agent

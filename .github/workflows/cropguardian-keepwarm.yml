@@ -1,0 +1,24 @@
+name: cropguardian-keepwarm
+# Keeps the free Render API warm and Supabase from pausing. Runs only inside declared demo windows
+# (docs/DEPLOYMENT.md); outside them a daily ping suffices. Set repo variable HOSTED_API_URL.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    if: ${{ vars.HOSTED_API_URL != '' }}
+    steps:
+      - name: Ping /health/ready
+        env: { URL: "${{ vars.HOSTED_API_URL }}" }
+        run: |
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -m 60 -w "%{http_code}" "$URL/health/ready" || true)
+            echo "attempt $i -> $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 20
+          done
+          exit 1

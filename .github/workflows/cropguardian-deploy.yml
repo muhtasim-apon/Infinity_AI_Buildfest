@@ -1,0 +1,28 @@
+name: cropguardian-deploy
+# main + green CI -> Render deploy hook -> smoke test -> (rollback is manual in Render on failure).
+on:
+  workflow_run:
+    workflows: [cropguardian-ci]
+    types: [completed]
+    branches: [main]
+permissions: {}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.HOSTED_API_URL != '' }}
+    timeout-minutes: 15
+    steps:
+      - name: Trigger Render deploy
+        env: { HOOK: "${{ secrets.RENDER_DEPLOY_HOOK }}" }
+        run: curl -fsS -X POST "$HOOK" >/dev/null
+      - name: Smoke /health
+        env: { URL: "${{ vars.HOSTED_API_URL }}" }
+        run: |
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -m 20 -w "%{http_code}" "$URL/health" || true)
+            echo "attempt $i -> $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 20
+          done
+          echo "smoke failed: roll back to the previous deploy in Render" >&2
+          exit 1

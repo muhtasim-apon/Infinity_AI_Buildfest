@@ -79,3 +79,11 @@ OWASP Top 10 for LLM Applications https://genai.owasp.org
 - DAE / BRRI / BARI disease & treatment guides for the knowledge base — URL, licence/permission, edition date.
 - Banned pesticide list (Bangladesh) — official source for the KB exclusion rule.
 - Smartphone / mobile-internet penetration among farmers — for the access argument.
+
+## Datasets — verified in the build (17 Oct task, accessed 2026-10-21)
+| ID | What we verified | Evidence |
+|---|---|---|
+| D1 | CC BY 4.0 (Mendeley `data_licence`); archive `Original Images.zip` 497,906,237 bytes, SHA-256 `3280cc17...2d9c83` published by host and recomputed by us (match); archive holds 1,560 images (page: 1,555) | https://data.mendeley.com/datasets/kx9rx8p2mz/1 ; `docs/datasheets/D1-RiceLeafBD.md` |
+| D2 | CC BY 4.0 (host + `License .pdf` in the archive); archive `RiceLeafDisease-BD5.rar` 21,642,468 bytes, SHA-256 `ea5da4b3...c9d2b` published and recomputed (match); archive holds 3,150 images, all 300x300 px (page/README: 2,545 images, 224x224) | https://data.mendeley.com/datasets/sjkptpgv79/2 ; `docs/datasheets/D2-RiceLeafDisease-BD5.md` |
+| D3 | GitHub licence field `cc-by-4.0`; pinned commit `5467f6012d78d1c446145d5f582da6096f852ae8`; not yet downloaded | https://github.com/pratikkayal/PlantDoc-Dataset ; `docs/datasheets/D3-D4-N1-X1.md` |
+| D4 | GitHub licence field **empty** on 2026-10-21; blocked until the authors' terms are located | https://github.com/spMohanty/PlantVillage-Dataset |

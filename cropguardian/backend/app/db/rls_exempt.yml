@@ -1,0 +1,4 @@
+# Tables exempt from row-level security, with the reason (spec 16.10).
+# scripts/check_rls.py fails the gate if a table is neither RLS-protected nor listed here.
+exempt:
+  alembic_version: "Alembic bookkeeping; no user data"

@@ -1,0 +1,70 @@
+{
+  "D1": {
+    "exact_duplicate_groups": 98,
+    "exact_duplicate_groups_spanning_classes": 22,
+    "extra_copies_beyond_first": 109,
+    "files": 1560,
+    "files_in_exact_duplicate_groups": 207,
+    "files_named_Copy": 0,
+    "height_min_median_max": [
+      245,
+      1600,
+      2048
+    ],
+    "most_common_sizes": [
+      [
+        [
+          "1200",
+          "1600"
+        ],
+        377
+      ],
+      [
+        [
+          "1170",
+          "1560"
+        ],
+        147
+      ],
+      [
+        [
+          "1600",
+          "1200"
+        ],
+        116
+      ]
+    ],
+    "width_min_median_max": [
+      167,
+      1080,
+      2000
+    ]
+  },
+  "D2": {
+    "exact_duplicate_groups": 2,
+    "exact_duplicate_groups_spanning_classes": 0,
+    "extra_copies_beyond_first": 3,
+    "files": 3150,
+    "files_in_exact_duplicate_groups": 5,
+    "files_named_Copy": 6,
+    "height_min_median_max": [
+      300,
+      300,
+      300
+    ],
+    "most_common_sizes": [
+      [
+        [
+          "300",
+          "300"
+        ],
+        3150
+      ]
+    ],
+    "width_min_median_max": [
+      300,
+      300,
+      300
+    ]
+  }
+}

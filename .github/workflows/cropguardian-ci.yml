@@ -1,0 +1,72 @@
+name: cropguardian-ci
+# The git root is the parent folder; the app lives in ./cropguardian. GitHub only reads workflows from the
+# repository-root .github/, so this file lives here and every step runs inside ./cropguardian.
+on:
+  push:
+    branches: [main]
+    paths: ["cropguardian/**", ".github/workflows/cropguardian-*.yml"]
+  pull_request:
+    paths: ["cropguardian/**", ".github/workflows/cropguardian-*.yml"]
+permissions:
+  contents: read
+defaults:
+  run:
+    working-directory: cropguardian
+env:
+  GITLEAKS_VERSION: "8.30.1"
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: cropguardian
+          POSTGRES_PASSWORD: test-only-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      MIGRATION_DATABASE_URL: postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:5432/cropguardian
+      TEST_API_DATABASE_URL: postgresql://cg_api:dev-api-pw@127.0.0.1:5432/cropguardian
+      TEST_SUPER_DATABASE_URL: postgresql://postgres:test-only-password@127.0.0.1:5432/cropguardian
+      PYTHONPATH: backend
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            cropguardian/backend/requirements-dev.txt
+            cropguardian/ml/requirements-dev.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: cropguardian/frontend/package-lock.json
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements-dev.txt
+          npm --prefix frontend ci
+      - name: Install gitleaks (pinned, checksum verified)
+        working-directory: ${{ runner.temp }}
+        run: |
+          base="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"
+          curl -fsSL -o gl.tgz "$base/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSL -o gl.sums "$base/gitleaks_${GITLEAKS_VERSION}_checksums.txt"
+          grep "linux_x64.tar.gz" gl.sums | sed "s#  .*#  gl.tgz#" | sha256sum -c -
+          tar -xzf gl.tgz gitleaks && echo "GITLEAKS_BIN=$PWD/gitleaks" >> "$GITHUB_ENV"
+      - name: Bootstrap database roles (same script as the compose stack)
+        run: |
+          PGPASSWORD=test-only-password psql -h 127.0.0.1 -U postgres -d cropguardian -v ON_ERROR_STOP=1 \
+            -f infra/postgres/init/01-roles.sql
+      - name: "Phase gate (full - scanners, tests, real compose stack, edge checks)"
+        run: python backend/scripts/phase_gate.py --phase "$(cat .phase)" --keep-going
+        env:
+          HOSTED_HEALTH_URL: ${{ vars.HOSTED_API_URL != '' && format('{0}/health', vars.HOSTED_API_URL) || '' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: gate-report, path: cropguardian/runs/gates/ }

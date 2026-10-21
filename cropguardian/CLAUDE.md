@@ -1,44 +1,41 @@
-# CLAUDE.md — conventions for AI-assisted work in this repository
+# CLAUDE.md — Crop Guardian working rules (spec: ../CROP_GUARDIAN_BUILD_SPEC.md)
 
-## What this repository is
-The Crop Guardian **template** for the International AI Builders Congress 2026 (AgriSphere AI → Crop
-Guardian). It contains **specifications and documentation only** — no application code yet — plus a
-static clickable `prototype/`. The team implements the code piece by piece from the specs:
-`services/api/SPEC.md`, `apps/web/SPEC.md`, `db/SCHEMA-SPEC.md`, test-case tables in `tests/`.
-Nothing has been trained, deployed or run. Do not claim otherwise in any document, commit, slide or demo.
+The Build Spec is the baseline and supersedes older `docs/` text where they differ
+(DECISIONS.md D-001). Read §0 and §1 first; then only the phase section + sections it references.
 
-## Hard rules
-1. **No fabricated results.** Congress §20.4 prohibits fabricated demos and simulated results presented
-   as real. Synthetic data appears only in the prototype, demo seed and test fixtures, always labelled.
-2. **No uncited statistics.** A number may appear in `docs/` only if it is in
-   `docs/research/sources.md` with a URL and access date. Model metrics only from an evaluation report.
-3. **Bangla is the default, not a translation.** Every user-facing string exists in
-   `apps/web/i18n/bn.json` first.
-4. **The model may say "I don't know".** Below the calibrated threshold the app shows "not sure" with
-   retake tips and the local agriculture office card — never a guessed disease (ADR 0005).
-5. **Advice must cite.** No advice without a retrieved source chunk (ADR 0006); dose verbatim, safety line.
-6. **No human-review features** in this version (no expert queue, no alert approval). Alerts are
-   automatic, rule-based, labelled "unverified", in-app only; the admin can dismiss them.
-7. **Web only.** No native mobile code.
-8. **Free-tier aware.** Nothing may rely on a persistent local disk, more than one API instance or an
-   always-warm server (see `docs/deployment/04-free-tier-challenges.md`).
-9. **Security checklist.** Every change keeps the 19 controls in `docs/security/security-checklist.md`
-   true; run `/security-review` before opening a PR.
+## Workflow (every phase)
+1. `/clear`, Shift+Tab to Plan Mode. Write a plan to `docs/plans/phase-NN.md`, show ≤15 lines, WAIT.
+2. Implement exactly the approved plan. Deviations → `DECISIONS.md`.
+3. Run `/security-review` on the diff → `docs/security-reviews/phase-NN.md`.
+4. `make gate PHASE=N` must print `PHASE N GATE: PASS`. Then update `PROGRESS.md`, commit, stop.
 
-## Code conventions (for when the code is written)
-- **Frontend** — React + TypeScript strict, feature folders under `apps/web/src/features/`, API calls only
-  through `src/lib/api.ts`, LLM/KB text rendered as plain text.
-- **Backend** — Python 3.12, FastAPI, Pydantic v2. Thin routers; logic in `app/services/`. Every endpoint
-  has a timeout budget and an error contract; every admin action is audited.
-- **Database** — RLS on every table; additive migrations; coarse location only.
-- **ML** — every model has a card in `docs/ai/model-cards/` before it is referenced.
-- **Naming** — snake_case Python/SQL, camelCase TS, PascalCase React components, kebab-case directories.
+## Hard rules (spec §0.2)
+- Fail closed. Deny by default. Security is part of every phase; never weaken a default for a test/demo.
+- Honesty: no metric without a committed script + split; synthetic data labelled SIMULATED / DEMO DATA
+  (`"synthetic": true`); advice says "not yet reviewed by an agronomist"; never claim field loss reduction.
+- Every third-party statistic is in `docs/research/sources.md` with URL + access date.
+- Alerts need human approval (reviewer + step-up 2FA). Nothing automated reaches farmers.
+- Bangla is the source locale: strings go in `frontend/src/i18n/bn.json` first.
+- Never log secrets/PII (passwords, tokens, OTPs, sessions, phones, exact coordinates, image bytes).
+- LLM never receives personal data or images. Images never leave our systems.
+- Pure logic stays pure: `backend/app/domain/` has no DB, network, framework or wall clock.
+- Times stored UTC (`timestamptz`), shown in Asia/Dhaka.
+- No tests that only cover the happy path; every unit tests invalid input + failure modes.
+- Out of scope: native apps, payments, IoT/satellite, crops other than rice, real SMS in demo.
 
-## Documentation conventions
-- ADRs in `docs/architecture/adr/`, numbered, superseded rather than edited.
-- Diagrams as Mermaid `.mmd` in `docs/diagrams/`.
-- The PDF in `docs/report/` is generated from the Markdown docs (builder kept outside the repo).
+## Layout (spec §4, rooted at this directory)
+`backend/` FastAPI · `frontend/` React+Vite · `infra/` nginx, postgres init, render.yaml · `ml/` · `kb/` ·
+`e2e/` Playwright · `docs/` · `runs/` gate reports. Legacy `services/api` + `apps/web` keep the hosted
+skeleton alive until cut-over (DECISIONS.md D-002).
 
-## Extending to another AgriSphere challenge
-Precision Farm, YieldMax and Climate Smart Farming are future **domain packs** (ADR 0010): config,
-schemas, prompts and models only.
+## Commands
+`make env certs up` · `make test` · `make security` · `make gate PHASE=N` · `make migrate` · `make down`
+Python 3.12 in Docker; local venv may be newer. Dependencies pinned; add only if the spec names them.
+
+## Branches / ownership
+`track/platform` Apon · `track/ml` Taeen · `track/rag` Salwa · `track/agent` Raisa · `track/web` Sara.
+Small PRs to `main` at least daily. CODEOWNERS in `.github/CODEOWNERS`.
+
+## Skills
+`.claude/skills/`: cropguardian-safety (every phase), cropguardian-ui + frontend-design (every frontend
+task; cropguardian-ui wins). List the skills loaded at the top of each plan.

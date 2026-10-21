@@ -1,0 +1,19 @@
+# Runtime dependencies (pinned). Hash-locked requirements.lock is produced by `make lock`
+# (pip-compile --generate-hashes) in CI/Docker; this file is the human-edited source.
+fastapi==0.156.4
+starlette==1.9.0  # pinned explicitly: security-critical transitive (7 advisories fixed vs 0.41.x)
+uvicorn[standard]==0.34.0
+gunicorn==23.0.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+structlog==24.4.0
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+psycopg[binary]==3.2.3
+redis==5.2.1
+arq==0.26.1
+boto3==1.35.90
+httpx==0.28.1
+prometheus-client==0.21.1
+pyyaml==6.0.2

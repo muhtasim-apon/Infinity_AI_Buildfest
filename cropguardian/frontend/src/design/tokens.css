@@ -1,0 +1,119 @@
+/* Design tokens (spec 15.1). Mirror of tokens.ts - tokens.test.ts fails if they drift.
+   Light is the default (sunlight readability, 15.5). Dark follows the OS unless the user chose a
+   theme via [data-theme]. */
+:root,
+:root[data-theme='light'] {
+  --bg: #f6f8f3;
+  --surface: #ffffff;
+  --surface-2: #eef3e8;
+  --border: #d9e2d2;
+  --text: #12201a;
+  --text-muted: #4a5a50;
+  --text-subtle: #657569;
+  --primary: #166534;
+  --primary-hover: #14532d;
+  --primary-soft: #e6f2e8;
+  --on-primary: #ffffff;
+  --accent: #a16207;
+  --accent-bg: #fef7e0;
+  --sky: #0e7490;
+  --sky-bg: #ecfeff;
+  --success: #15803d;
+  --success-bg: #f0fdf4;
+  --warning: #b45309;
+  --warning-bg: #fffbeb;
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --simulated: #6d28d9;
+  --simulated-bg: #f5f3ff;
+
+  --disease-1: #e69f00;
+  --disease-2: #56b4e9;
+  --disease-3: #009e73;
+  --disease-4: #d55e00;
+  --disease-5: #0072b2;
+  --disease-6: #cc79a7;
+  --disease-7: #8c7b00;
+  --risk-low: #15803d;
+  --risk-medium: #b45309;
+  --risk-high: #b91c1c;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-xs: 0 1px 2px rgb(18 32 26 / 0.05);
+  --shadow-sm: 0 1px 3px rgb(18 32 26 / 0.08);
+  --shadow-md: 0 4px 12px rgb(18 32 26 / 0.1);
+  --shadow-lg: 0 12px 32px rgb(18 32 26 / 0.14);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 5px var(--primary);
+
+  --font-bn: 'Noto Sans Bengali', 'Inter', system-ui, sans-serif;
+  --font-latin: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0a110d;
+    --surface: #101a14;
+    --surface-2: #17241c;
+    --border: #26382c;
+    --text: #e7efe9;
+    --text-muted: #a3b5a9;
+    --text-subtle: #8fa397;
+    --primary: #4ade80;
+    --primary-hover: #86efac;
+    --primary-soft: #12301d;
+    --on-primary: #052e16;
+    --accent: #fcd34d;
+    --accent-bg: #2a2206;
+    --sky: #67e8f9;
+    --sky-bg: #082a33;
+    --success: #86efac;
+    --success-bg: #0f2a1a;
+    --warning: #fbbf24;
+    --warning-bg: #2a1e05;
+    --danger: #fca5a5;
+    --danger-bg: #2d0f0f;
+    --simulated: #c4b5fd;
+    --simulated-bg: #1e1537;
+    --shadow-xs: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0a110d;
+  --surface: #101a14;
+  --surface-2: #17241c;
+  --border: #26382c;
+  --text: #e7efe9;
+  --text-muted: #a3b5a9;
+  --text-subtle: #8fa397;
+  --primary: #4ade80;
+  --primary-hover: #86efac;
+  --primary-soft: #12301d;
+  --on-primary: #052e16;
+  --accent: #fcd34d;
+  --accent-bg: #2a2206;
+  --sky: #67e8f9;
+  --sky-bg: #082a33;
+  --success: #86efac;
+  --success-bg: #0f2a1a;
+  --warning: #fbbf24;
+  --warning-bg: #2a1e05;
+  --danger: #fca5a5;
+  --danger-bg: #2d0f0f;
+  --simulated: #c4b5fd;
+  --simulated-bg: #1e1537;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  color-scheme: dark;
+}

@@ -36,3 +36,20 @@ tests/e2e/                      @sara
 # Presentation
 docs/congress/                  @raisa @apon
 docs/report/                    @raisa @apon
+
+# --- Build-spec layout (spec 0.5); handles must be replaced with real GitHub usernames ---------
+/backend/app/core/              @apon
+/backend/alembic/               @apon
+/backend/scripts/               @apon
+/backend/app/inference/         @taeen
+/backend/app/rag/               @salwa
+/kb/                            @salwa
+/backend/app/advisory/          @raisa
+/frontend/src/i18n/             @raisa @sara
+/frontend/                      @sara
+/infra/                         @apon
+/docker-compose*.yml            @apon
+/ml/                            @taeen
+/e2e/                           @sara
+/docs/security-reviews/         @apon @salwa
+# Security-critical paths need a second reviewer (spec 0.5): core/, alembic/, infra/, kb/sources.yaml

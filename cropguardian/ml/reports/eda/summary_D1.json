@@ -1,0 +1,39 @@
+{
+  "by_status": {
+    "ok": 1560
+  },
+  "page_vs_found": {
+    "Bacterial Leaf Blight": {
+      "difference": 5,
+      "files_found": 422,
+      "page_claim": 417,
+      "unified_class": "bacterial_leaf_blight"
+    },
+    "Brown Spot": {
+      "difference": 0,
+      "files_found": 356,
+      "page_claim": 356,
+      "unified_class": "brown_spot"
+    },
+    "Healthy": {
+      "difference": 0,
+      "files_found": 252,
+      "page_claim": 252,
+      "unified_class": "healthy"
+    },
+    "Tungro": {
+      "difference": 0,
+      "files_found": 530,
+      "page_claim": 530,
+      "unified_class": "tungro"
+    }
+  },
+  "total_files": 1560,
+  "unknown_class_folders": [],
+  "usable_by_class": {
+    "bacterial_leaf_blight": 422,
+    "brown_spot": 356,
+    "healthy": 252,
+    "tungro": 530
+  }
+}

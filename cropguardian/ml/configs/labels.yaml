@@ -1,0 +1,29 @@
+# Unified taxonomy (spec 9.3). Mirrored by disease_catalog in the database.
+# Bangla names are team-authored drafts to be checked against BRRI terminology (docs/BANGLA_STYLE.md).
+classes:
+  - { code: healthy, bn: "সুস্থ পাতা", en: "Healthy leaf", notifiable: false }
+  - { code: bacterial_leaf_blight, bn: "ব্যাকটেরিয়াজনিত পাতা পোড়া", en: "Bacterial leaf blight", notifiable: true }
+  - { code: brown_spot, bn: "বাদামী দাগ", en: "Brown spot", notifiable: false }
+  - { code: narrow_brown_spot, bn: "সরু বাদামী দাগ", en: "Narrow brown spot", notifiable: false }
+  - { code: blast, bn: "ব্লাস্ট", en: "Blast", notifiable: true }
+  - { code: sheath_blight, bn: "খোল পোড়া", en: "Sheath blight", notifiable: true }
+  - { code: tungro, bn: "টুংরো", en: "Tungro", notifiable: true }
+
+# Raw class-folder name -> unified code, per dataset. Matching ignores case and non-alphanumerics.
+# An unmapped folder is REPORTED (status unknown_class), never guessed. Confirm real folder names
+# after extraction (report: ml/reports/eda/summary_<ID>.json -> unknown_class_folders).
+mapping:
+  D1:
+    Healthy: healthy
+    Healthy Leaf: healthy   # actual folder name in the archive (seen 2026-10-21)
+    Bacterial Leaf Blight: bacterial_leaf_blight
+    Brown Spot: brown_spot
+    Tungro: tungro
+    Tungro Virus: tungro
+  D2:
+    Normal: healthy
+    Normal Leaf: healthy
+    Blast: blast
+    Narrow Brown Spot: narrow_brown_spot
+    Sheath Blight: sheath_blight
+    Tungro: tungro

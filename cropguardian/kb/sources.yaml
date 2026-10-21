@@ -1,0 +1,332 @@
+# Knowledge-base sources (spec 10.1). EVERY ingested document must appear here with publisher,
+# edition, licence note and (once downloaded) a SHA-256. Values below were fetched or computed on
+# 2026-10-21 by the 17 Oct sourcing task; nothing is guessed. Fields flagged UNVERIFIED are exactly that.
+#
+# Licence stance (shown in the Trust Centre): publicly available material, cited with attribution;
+# redistribution permission NOT yet obtained; the app never republishes full documents - the source
+# viewer shows at most a 50-word passage plus a link to the original. No document -> no advice.
+#
+# status: downloaded | candidate_not_downloaded | gap
+# extraction: text | needs_ocr (no text layer or legacy Bangla font, spec 10.2) | needs_manual
+# The raw files live in kb/raw/ (gitignored); re-download with the url and compare sha256.
+documents:
+  - id: brri_fs04_blast
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet4 - Blast rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet4%20-%20Blast%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-05 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "00356efa8fdc79d0b3dd9852c5ccea38dbec9ad0ec026d534a3b266f5ba05738"
+    bytes: 1752925
+    pages: 2
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint: "blast"
+    disease_hint_verified: true
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required"
+
+  - id: brri_fs09_tungro
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet9 - Tungro rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet9%20-%20Tungro%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-04 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "55b037bbb7b8494e5b8b9dc6ad8b45bc9bd389104a16542c68d9bbad524cd27c"
+    bytes: 920070
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint: "tungro"
+    disease_hint_verified: true
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required"
+
+  - id: brri_fs02_patapora
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet2 - Patapora rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet2%20-%20Patapora%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-04 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "2cb72c8ab64634882bdf43f7a15cd6a0c98e1d8f1521fc263daf4d80caa5e3de"
+    bytes: 1838444
+    pages: 2
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint: "bacterial_leaf_blight"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required"
+
+  - id: brri_fs03_kholpora
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet3 - Kholpora rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet3%20-%20Kholpora%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2013-04 (PDF creation date; no edition statement read yet)"
+    language: "bn"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "001b4be98d2e266cefe18ac9480e3bd041e7e9241bd41c0888e2b8e3f968d016"
+    bytes: 210354
+    pages: 1
+    text_layer: true
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint: "sheath_blight"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "text layer is a legacy non-Unicode Bangla font (Bengali share 0.0): OCR required (spec 10.2)"
+
+  - id: brri_fs07_badami_dag
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet7 - Badami dag rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet7%20-%20Badami%20dag%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-05 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "b3dfda0bceb4acbe980d6593eeeaab3819ff8c9abf6062c2b622a0290a18549b"
+    bytes: 923755
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint: "brown_spot"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required"
+
+  - id: brri_fs05_kholpocha
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet5 - Kholpocha rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet5%20-%20Kholpocha%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-05 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "72dc66bcf2ae5f3209f950d90e3bff681b720b0fd39e897f716f25264caec5a5"
+    bytes: 751407
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required. Disease not identifiable from the file name; leave untagged until read."
+
+  - id: brri_fs06_bakani
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet6 - Bakani rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet6%20-%20Bakani%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-05 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "9b503cd0cfcce07f8129e8007dac3fc8913f5eb0945da716cda2588eaa902157"
+    bytes: 886231
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required. Disease not identifiable from the file name; leave untagged until read."
+
+  - id: brri_fs08_foska_dag
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet8 - Foska dag rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet8%20-%20Foska%20dag%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-04 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "58f6c062589ec07fd864fb7460a4decb16a86d5d0b465998a596ef308f78fea9"
+    bytes: 857136
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required. Disease not identifiable from the file name; leave untagged until read."
+
+  - id: brri_fs10_ufra
+    title: "BRRI Rice Production Training Manual, Day 3 Module 10 - Factsheet10 Ufra rog (title UNVERIFIED: derived from file name; document not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/Rice_Production_Training_Manual/Day_3/Module_10/Factsheet10%20Ufra%20rog.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2012-04 (PDF creation date; no edition statement read yet)"
+    language: "bn (ASSUMED from the romanised-Bangla file name; unverified until OCR)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "91c3c2704215d0f2b66c516c8fb236506516bd5d22ebd4ce425962adab242c77"
+    bytes: 1544749
+    pages: 1
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease guidance factsheet"
+    disease_hint_verified: false
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export with outlined text): OCR required. Disease not identifiable from the file name; leave untagged until read."
+
+  - id: brri_five_diseases_ipm
+    title: "Integrated management of five main rice diseases (PDF metadata title: 'Five diseases'; content not yet read)"
+    publisher: "Bangladesh Rice Research Institute (BRRI) - Bangladesh Rice Knowledge Bank"
+    url: "http://knowledgebank-brri.org/disease_management/Integrated%20five%20main%20disease%20management.pdf"
+    page_url: "https://knowledgebank-brri.org/rice-disease-and-its-managment/"
+    edition_date: "2008-04 (PDF creation date)"
+    language: "UNVERIFIED (bn or en)"
+    licence_note: "No licence or reuse terms found on knowledgebank-brri.org (site footer: © 2026 Bangladesh Rice Knowledge Bank). Treated as publicly available, cite with attribution; redistribution permission NOT obtained. Show at most a 50-word passage plus a link (spec 10.1)."
+    retrieved_at: "2026-10-21"
+    sha256: "bf3176eaab6485293bf5f305dd2026b84db78c481164b28a756b12c9f4a33d68"
+    bytes: 1620669
+    pages: 30
+    text_layer: false
+    extraction: "needs_ocr"
+    role: "disease + IPM management guide"
+    status: "downloaded"
+    notes: "no text layer (CorelDRAW export): OCR required. Highest-value BRRI document (30 pages); read first."
+
+  - id: dae_extension_manual_2016_en
+    title: "Agricultural Extension Manual, Fourth Edition"
+    publisher: "Department of Agricultural Extension (DAE), Ministry of Agriculture, Bangladesh"
+    url: "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-dae/2024/12/1685439b65e84885a6f4a73f3792fc91.pdf"
+    page_url: "https://dae.gov.bd/pages/publications/6922daa081fc96cef9eb6be2"
+    edition_date: "2016 (title page: 'Fourth Edition'; page lists it as the 2016 English version)"
+    language: "en"
+    licence_note: "Government of Bangladesh publication on dae.gov.bd; no reuse licence stated on the page. Treated as publicly available, cite with attribution; redistribution permission NOT obtained."
+    retrieved_at: "2026-10-21"
+    sha256: "5007ba41c710cef80f9486a4487264ce78324afc8406654e7a8a7e39cf51203e"
+    bytes: 27225844
+    pages: 438
+    text_layer: true
+    extraction: "text"
+    role: "extension practice; rice IPM chapters to be located"
+    status: "downloaded"
+    notes: "text layer present, 438 pages. Chapters on rice diseases/IPM not yet located."
+
+  - id: dae_pest_list_report_2019
+    title: "Final Report on Developing Pest List of Plants and Plant Products in Bangladesh (Strengthening Phytosanitary Capacity in Bangladesh Project)"
+    publisher: "Department of Agricultural Extension (DAE), Ministry of Agriculture, Bangladesh"
+    url: "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-dae/2024/12/dce9df0806534ce9ab179d0c8306b923.pdf"
+    page_url: "https://dae.gov.bd/pages/publications/6922d9f681fc96cef9eb48b9"
+    edition_date: "2019-06 (cover: June 2019)"
+    language: "en"
+    licence_note: "Government of Bangladesh publication on dae.gov.bd; no reuse licence stated on the page. Treated as publicly available, cite with attribution; redistribution permission NOT obtained."
+    retrieved_at: "2026-10-21"
+    sha256: "b4fdfe7377fef9622d3c09481040a4a2f545381aaadae54b45af3552cb549aa2"
+    bytes: 5370906
+    pages: 493
+    text_layer: true
+    extraction: "text"
+    role: "pest/disease names for taxonomy_synonyms.yaml; not management advice"
+    status: "downloaded"
+    notes: "text layer present, 493 pages. Use for synonyms and scientific names only."
+
+  - id: dae_pest_list_bn_2022
+    title: "UNIDENTIFIED Bangla Ministry of Agriculture document, May 2022 (22 pages) linked from DAE's pest-list publication page; title not decodable (legacy font)"
+    publisher: "Ministry of Agriculture / Department of Agricultural Extension, Bangladesh (per page 1 header; UNVERIFIED)"
+    url: "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-dae/2024/12/933242bef44b4c1fab23f84e2df35cd1.pdf"
+    page_url: "https://dae.gov.bd/pages/publications/6922d9f681fc96cef9eb48b9"
+    edition_date: "2022-05 (page 1 header, legacy-font text)"
+    language: "bn"
+    licence_note: "Government of Bangladesh publication on dae.gov.bd; no reuse licence stated on the page. Treated as publicly available, cite with attribution; redistribution permission NOT obtained."
+    retrieved_at: "2026-10-21"
+    sha256: "3b6f4116b72e734331d658a47f65103923d4f705435113c18ac56510628f3cf0"
+    bytes: 16487476
+    pages: 22
+    text_layer: true
+    extraction: "needs_ocr"
+    role: "unknown until OCR"
+    status: "downloaded"
+    notes: "Text layer is a legacy Bangla font (extracts as Latin garbage). Do NOT ingest until OCR confirms what it is."
+
+  - id: bd_pesticide_rules_1985_ippc
+    title: "The Pesticide Rules, 1985 (Bangladesh Gazette Extraordinary, 16 Nov 1985, S.R.O. 479-L/85)"
+    publisher: "Ministry of Agriculture, Government of Bangladesh (via IPPC / FAO FAOLEX)"
+    url: "https://assets.ippc.int/static/media/files/cnpublications/2013/06/05/1336289405_pesticide-rules-19851_201304232116en.pdf"
+    edition_date: "1985-11-16 (gazette date, text of the PDF)"
+    language: "en"
+    licence_note: "Official legal text republished by IPPC / FAO; reuse terms of the host not read. Cite with attribution."
+    retrieved_at: "2026-10-21"
+    sha256: "6741e02de3cdecb0c485c8f3d39129ef4dab56bb64e96799fbcb93a2675f1ab2"
+    bytes: 126819
+    pages: 48
+    text_layer: true
+    extraction: "text"
+    role: "regulation (registration, labelling); NOT a banned-ingredient list"
+    status: "downloaded"
+    notes: "Text searched for 'banned', 'prohibit', DDT, aldrin, heptachlor: no banned-ingredient list found in the text. Do not use as the source for kb/banned_pesticides.yaml."
+
+  - id: bd_pesticide_rules_1985_faolex
+    title: "Pesticide Rules, 1985 (FAOLEX copy, 98 pages; PDF title 'Microsoft Word - 183-346.doc')"
+    publisher: "Ministry of Agriculture, Government of Bangladesh (via IPPC / FAO FAOLEX)"
+    url: "https://faolex.fao.org/docs/pdf/bgd164988.pdf"
+    edition_date: "1985-11-16 (gazette date in text); FAOLEX copy created 2012-07"
+    language: "en"
+    licence_note: "Official legal text republished by IPPC / FAO; reuse terms of the host not read. Cite with attribution."
+    retrieved_at: "2026-10-21"
+    sha256: "872e036daa3d205c21356cd394f9ea26d05d028241f3b1a3a3183fe9c22e2638"
+    bytes: 383714
+    pages: 98
+    text_layer: true
+    extraction: "text"
+    role: "regulation (registration, labelling); NOT a banned-ingredient list"
+    status: "downloaded"
+    notes: "Text searched for 'banned', 'prohibit', DDT, aldrin, heptachlor: no banned-ingredient list found in the text. Do not use as the source for kb/banned_pesticides.yaml."
+
+  - id: irri_rice_diseases_online
+    title: "Rice Diseases Online Resource (contents page)"
+    publisher: "International Rice Research Institute (IRRI)"
+    url: "https://rice-diseases.irri.org/contents"
+    edition_date: "n/a (live web page)"
+    language: "en"
+    licence_note: "Page footer reads '© 2018 IRRI' with a 'Legal notice' link and a CC icon; the licence was NOT verified. Read the legal notice before ingesting."
+    retrieved_at: "2026-10-21"
+    role: "disease guidance (English)"
+    status: "candidate_not_downloaded"
+    notes: "Reachable (HTTP 200) on 2026-10-21. Individual disease pages not yet enumerated. Not downloaded."
+
+  - id: bd_ppw_cancelled_pesticides
+    title: "Cancelled pesticides list (বাতিলকৃত বালাইনাশক তালিকা), DAE Plant Protection Wing"
+    publisher: "Department of Agricultural Extension, Plant Protection Wing"
+    url: "https://ppw.krishi.gov.bd/pesticide-list-expired?filter=expired"
+    edition_date: "n/a (live web page)"
+    language: "bn"
+    licence_note: "Official government site; reuse terms not read."
+    retrieved_at: "2026-10-21"
+    role: "official cancelled/expired pesticide registrations (primary lead for kb/banned_pesticides.yaml)"
+    status: "candidate_not_downloaded"
+    notes: "JavaScript page with CSV/PDF export. Needs a manual export; the site also has an 'Acts and rules' (আইন ও বিধিমালা) section to check for the banned list. Not downloaded."
+
+# --- known GAPS (not yet sourced; do not pretend otherwise) -----------------------------------
+gaps:
+  - id: gap_irri_rice_knowledge_bank
+    what: "IRRI Rice Knowledge Bank (knowledgebank.irri.org) disease fact sheets"
+    status: "knowledgebank.irri.org and www.knowledgebank.irri.org did not respond (HTTP 000) from this machine on 2026-10-21; retry later or use rice-diseases.irri.org pages"
+  - id: gap_bd_banned_pesticide_list
+    what: "Official Bangladesh banned/restricted pesticide ingredients, with a primary source for each"
+    status: "NOT FOUND. The 1985 Rules texts contain no banned list. Secondary sources found in search disagree on dates (e.g. DDT, heptachlor) and must not be used. Next step: export the cancelled list from ppw.krishi.gov.bd and read its 'Acts and rules' section; cite the gazette/notification for every ingredient."
+  - id: gap_dae_ipm_leaflets
+    what: "DAE/FAO IPM leaflets specific to rice diseases"
+    status: "No leaflet found on dae.gov.bd by web search or by reading the publication pages that are linked from the home page. The DAE Extension Manual 2016 (above) may contain rice IPM chapters; read it before declaring a gap."
+  - id: gap_expert_review
+    what: "Agronomist review of any KB document (expert_reviewed=true)"
+    status: "None obtained. Advice must keep the 'not yet reviewed by an agronomist' label (spec 0.2.6)."

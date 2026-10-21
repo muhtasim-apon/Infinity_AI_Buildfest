@@ -1,0 +1,46 @@
+{
+  "by_status": {
+    "ok": 3150
+  },
+  "page_vs_found": {
+    "Blast": {
+      "difference": 381,
+      "files_found": 720,
+      "page_claim": 339,
+      "unified_class": "blast"
+    },
+    "Narrow Brown Spot": {
+      "difference": 147,
+      "files_found": 476,
+      "page_claim": 329,
+      "unified_class": "narrow_brown_spot"
+    },
+    "Normal Leaf": {
+      "difference": -89,
+      "files_found": 834,
+      "page_claim": 923,
+      "unified_class": "healthy"
+    },
+    "Sheath Blight": {
+      "difference": 172,
+      "files_found": 626,
+      "page_claim": 454,
+      "unified_class": "sheath_blight"
+    },
+    "Tungro": {
+      "difference": -6,
+      "files_found": 494,
+      "page_claim": 500,
+      "unified_class": "tungro"
+    }
+  },
+  "total_files": 3150,
+  "unknown_class_folders": [],
+  "usable_by_class": {
+    "blast": 720,
+    "healthy": 834,
+    "narrow_brown_spot": 476,
+    "sheath_blight": 626,
+    "tungro": 494
+  }
+}

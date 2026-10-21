@@ -21,27 +21,47 @@ npm-debug.log*
 .env.production
 *.pem
 *.key
+infra/nginx/certs/
+runs/demos/accounts.txt
 automation/n8n/credentials/*.json
 
-# Datasets and ML artefacts — datasets are downloaded, never committed (licences, size)
+# Datasets and ML artefacts - downloaded, never committed (licences, size)
 data/raw/
 data/processed/
 ml/**/artifacts/
 ml/**/checkpoints/
-ml/**/runs/
-*.ckpt
+ml/data/
+*.onnx
 *.pt
 *.pth
-*.onnx
-*.joblib
+*.ckpt
+*.safetensors
 
-# Test output
-tests/**/reports/
-playwright-report/
-k6-results/
+# Knowledge-base raw/processed documents (licences: attribution only, no redistribution)
+kb/raw/
+kb/processed/
+
+# Run outputs: keep summaries, ignore bulky/derived files
+runs/gates/*.json
+!runs/gates/.gitkeep
+runs/demos/*
+!runs/demos/readiness.md
 
 # OS / editor
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+.vercel
+
+# Carried over from the template
+ml/**/runs/
+*.joblib
+tests/**/reports/
+playwright-report/
+test-results/
+k6-results/
+
+# Local wheelhouse for TLS-intercepted networks (make wheelhouse)
+backend/wheelhouse/

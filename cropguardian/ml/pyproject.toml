@@ -1,0 +1,35 @@
+[project]
+name = "cg-ml"
+version = "0.1.0"
+description = "Crop Guardian ML library: data pipeline, training, calibration, evaluation, export (spec section 9)"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "C4", "RUF", "PL", "PT", "N"]
+ignore = ["PLR2004", "PLR0913", "S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S603", "S607", "PLR2004", "PT011", "PT018", "E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["cg_ml"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --strict-config -ra"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+branch = true
+source = ["cg_ml"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

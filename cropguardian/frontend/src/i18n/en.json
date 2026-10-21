@@ -1,0 +1,145 @@
+{
+  "app": {
+    "name": "Crop Guardian",
+    "tagline": "Take a photo of a rice leaf and get the right advice"
+  },
+  "common": {
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "back": "Go back",
+    "language": "Language",
+    "skipToContent": "Skip to main content",
+    "loading": "Loading…"
+  },
+  "nav": {
+    "home": "Home",
+    "scan": "Scan",
+    "history": "History",
+    "alerts": "Alerts",
+    "more": "More",
+    "howItWorks": "How it works",
+    "trust": "Trust Centre",
+    "map": "Map",
+    "pitch": "Pitch",
+    "tryDemo": "Try the demo",
+    "signIn": "Sign in"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "AgriSphere AI · Crop Guardian",
+      "headline": "One leaf photo. A whole area protected.",
+      "sub": "Take a photo of a rice leaf. Identify the disease. Warn your area in time.",
+      "trustLine": "Built on public Bangladeshi field datasets · every answer is cited",
+      "primaryCta": "Try the demo",
+      "secondaryCta": "How it works"
+    },
+    "stats": {
+      "pending": "Model evaluation in progress"
+    },
+    "how": {
+      "title": "How it works",
+      "step1": { "title": "Snap", "text": "Fill the frame with one leaf." },
+      "step2": {
+        "title": "Check",
+        "text": "We first check it is a rice leaf, then identify the disease."
+      },
+      "step3": {
+        "title": "Know when unsure",
+        "text": "If the AI is not sure, a reviewer looks at the photo."
+      },
+      "step4": { "title": "Act", "text": "Get cited advice in Bangla." },
+      "step5": {
+        "title": "Warn the area",
+        "text": "When many reports come from one area, an approved alert is sent."
+      }
+    },
+    "demoNotice": "This is a demo. Outbreak data shown here is simulated."
+  },
+  "scan": {
+    "title": "Take a leaf photo",
+    "takePhoto": "Take photo",
+    "upload": "Choose from gallery",
+    "sample": "Use a sample photo",
+    "sending": "Sending photo…",
+    "cameraDenied": "The camera could not be started. Choose a photo from your gallery.",
+    "hint": {
+      "oneLeaf": "Fill the frame with one leaf",
+      "moreLight": "Take the photo again where there is more light",
+      "blurry": "Hold the phone steady and take the photo again",
+      "tooSmall": "Move closer to the leaf",
+      "ok": "The photo looks good"
+    },
+    "stage": {
+      "check": "Checking photo",
+      "detect": "Identifying disease",
+      "advice": "Preparing advice"
+    }
+  },
+  "result": {
+    "title": "Result",
+    "healthy": "The leaf looks healthy",
+    "possibleDisease": "Possible disease",
+    "band": {
+      "high": "High confidence",
+      "medium": "Medium confidence"
+    },
+    "showHeatmap": "Where the AI looked",
+    "otherChances": "Other possibilities",
+    "feedback": {
+      "helpful": "This helped",
+      "notHelpful": "This did not help"
+    }
+  },
+  "advice": {
+    "title": "Advice",
+    "basedOn": "Based on published BRRI/DAE guidance · not yet reviewed by an agronomist",
+    "listen": "Listen",
+    "sources": "Sources",
+    "seekHelp": "When to visit the agriculture office",
+    "chemicalSafety": "Read the label and wear protective clothing before using any chemical.",
+    "generating": "Preparing advice…",
+    "unavailable": "Advice cannot be prepared right now. See the general safe steps below."
+  },
+  "notSure": {
+    "title": "I am not sure",
+    "body": "The disease cannot be told reliably from this photo. We will not guess and give wrong advice.",
+    "retake": "Take the photo again",
+    "sentToReviewer": "The photo has been sent to a reviewer.",
+    "contactOffice": "Contact your local agriculture office",
+    "tipLight": "Take the photo where there is more light.",
+    "tipClose": "Take the photo close to a single leaf."
+  },
+  "notRice": {
+    "title": "This does not look like a rice leaf",
+    "body": "Take the photo again, close to a rice leaf."
+  },
+  "outbox": {
+    "waiting": "Waiting to send",
+    "offline": "You are offline. Your photo is saved.",
+    "sendNow": "Send now",
+    "sent": "Photo sent"
+  },
+  "demo": {
+    "ribbon": "DEMO DATA",
+    "exit": "Exit demo",
+    "simulated": "SIMULATED"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "waking": "The server is waking up, please wait a moment…",
+    "offline": "No internet connection.",
+    "notFound": "This page was not found.",
+    "forbidden": "You do not have permission to view this page."
+  },
+  "disease": {
+    "healthy": "Healthy leaf",
+    "bacterial_leaf_blight": "Bacterial leaf blight",
+    "brown_spot": "Brown spot",
+    "narrow_brown_spot": "Narrow brown spot",
+    "blast": "Blast",
+    "sheath_blight": "Sheath blight",
+    "tungro": "Tungro"
+  }
+}
