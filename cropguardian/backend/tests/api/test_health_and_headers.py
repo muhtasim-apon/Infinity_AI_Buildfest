@@ -79,7 +79,9 @@ def test_request_id_echoed_and_malformed_replaced(client):
 
 @pytest.mark.security
 def test_bad_host_rejected(client):
-    assert client.get("/health", headers={"Host": "evil.example.com"}).status_code == 400
+    assert (
+        client.get("/health/ready", headers={"Host": "evil.example.com"}).status_code == 400
+    )  # /health is liveness-exempt
 
 
 @pytest.mark.security

@@ -11,7 +11,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.api.v1 import health
 from app.core.config import Settings, get_settings
@@ -19,7 +18,9 @@ from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import (
     BodySizeLimitMiddleware,
+    LivenessExemptTrustedHost,
     RequestIdMiddleware,
+    RequestLogMiddleware,
     SecurityHeadersMiddleware,
     build_csp,
 )
@@ -58,10 +59,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = None
 
     # add_middleware wraps outward: the LAST added runs FIRST. Spec order is
-    # request-id -> trusted host -> body limit -> security headers, so add in reverse.
+    # request-id -> request log -> trusted host -> body limit -> security headers: add in reverse.
     app.add_middleware(SecurityHeadersMiddleware, csp=build_csp())
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=1_048_576)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.trusted_hosts)
+    app.add_middleware(LivenessExemptTrustedHost, allowed_hosts=settings.trusted_hosts)
     if settings.cors_origins:
         app.add_middleware(
             CORSMiddleware,
@@ -70,6 +71,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
             allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-CSRF-Token"],
         )
+    app.add_middleware(RequestLogMiddleware)  # inside request-id, outside everything else
     app.add_middleware(RequestIdMiddleware)
 
     install_error_handlers(app)

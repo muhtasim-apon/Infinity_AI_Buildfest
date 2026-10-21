@@ -6,6 +6,7 @@ must refuse to start rather than run insecurely (spec 0.2.3, "fail closed", 16.1
 
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from typing import Literal
 
@@ -16,6 +17,13 @@ _INSECURE_SECRETS = {"", "change-me", "changeme", "secret", "password", "dev-sec
 _MIN_SECRET_LEN = 32
 
 
+def _default_env() -> Literal["development", "production"]:
+    """Render sets RENDER=true on every service. If CG_ENV was forgotten there, assume production so
+    the strict validation below runs (and refuses to start) instead of silently running in dev mode
+    with /docs enabled and a localhost-only host list."""
+    return "production" if os.environ.get("RENDER") else "development"
+
+
 class ConfigError(RuntimeError):
     """Raised when production configuration is unsafe. Message never contains secret values."""
 
@@ -24,7 +32,9 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
 
     # --- core ---------------------------------------------------------------------------------
-    cg_env: Literal["development", "test", "staging", "production"] = "development"
+    cg_env: Literal["development", "test", "staging", "production"] = Field(
+        default_factory=_default_env
+    )
     log_level: Literal["debug", "info", "warning", "error"] = "info"
     app_base_url: str = "http://localhost:5173"
     api_base_url: str = "http://localhost:8000"

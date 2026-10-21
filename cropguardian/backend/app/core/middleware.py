@@ -6,12 +6,15 @@ Session, tenant, CSRF and rate limiting arrive in Phase 1 and slot in after thes
 from __future__ import annotations
 
 import re
+import time
 import uuid
 
 from starlette.datastructures import MutableHeaders
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.core.errors import problem
+from app.core.logging import get_logger
 
 _REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{8,64}$")
 
@@ -134,3 +137,65 @@ class SecurityHeadersMiddleware:
             await send(message)
 
         await self.app(scope, receive, send_with_headers)
+
+
+LIVENESS_PATHS = frozenset({"/health", "/healthz"})
+
+
+class LivenessExemptTrustedHost(TrustedHostMiddleware):
+    """Trusted-host check (spec 16.3) except for the two liveness paths.
+
+    Why: platform health checkers (Render, Docker, load balancers) call the instance by an internal
+    address, not the public hostname. Rejecting them (400) keeps a deploy from ever going live. The
+    exempt endpoints return a constant body and touch no data; other paths stay host-checked.
+    """
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] == "http" and scope.get("path") in LIVENESS_PATHS:
+            await self.app(scope, receive, send)
+            return
+        await super().__call__(scope, receive, send)
+
+
+_access_log = get_logger("cg.access")
+
+
+class RequestLogMiddleware:
+    """One structured line per request: method, path (never the query string), status, duration, id.
+
+    Why: uvicorn's own access log is disabled because it prints query strings (possible tokens).
+    Liveness probes are logged at debug level so a 5-second health check does not drown traffic.
+    Sits just inside the request-id middleware so it also records requests rejected further in.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        started = time.perf_counter()
+        status = 500
+
+        async def capture(message: Message) -> None:
+            nonlocal status
+            if message["type"] == "http.response.start":
+                status = int(message["status"])
+            await send(message)
+
+        try:
+            await self.app(scope, receive, capture)
+        finally:
+            path = str(scope.get("path", ""))
+            emit = (
+                _access_log.debug if path in LIVENESS_PATHS and status < 400 else _access_log.info
+            )
+            emit(
+                "request",
+                method=scope.get("method"),
+                path=path,
+                status=status,
+                duration_ms=round((time.perf_counter() - started) * 1000, 1),
+                request_id=scope.get("state", {}).get("request_id"),
+            )

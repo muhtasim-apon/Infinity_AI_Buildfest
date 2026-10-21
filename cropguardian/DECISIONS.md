@@ -49,3 +49,8 @@ Format: ID · date · decision · reason · alternatives.
 - **D-015 · 2026-10-21 · Local image builds behind TLS interception.** `make wheelhouse` downloads Linux cp312 wheels on
   the host; the Dockerfile installs from `backend/wheelhouse/` with `--no-index` when it exists, else the normal
   hash-locked/pinned online install. The wheelhouse is gitignored and never exists on Render/CI.
+- **D-016 · 2026-10-21 · Render health checks and fail-closed environment.** Found live: a deploy never went live because
+  the host allow-list rejected Render's health checks. `/health` and `/healthz` (constant body, no data) are exempt from the
+  host check; all other paths stay checked. `RENDER=true` (set by the platform) makes an unset `CG_ENV` default to
+  `production` so strict validation runs. Added `RequestLogMiddleware` (method, path without query, status, duration,
+  request id; liveness at debug level) because uvicorn's access log is disabled for privacy and rejections were invisible.

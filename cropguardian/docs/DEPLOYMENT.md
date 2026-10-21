@@ -34,6 +34,38 @@ buckets) + Render Key Value (Redis). Keep-warm: GitHub Actions `keepwarm.yml` an
    buffers or refuses it, set `SERVE_SPA=true` and serve the SPA from the API container; record an ADR in DECISIONS.md.
    (Not yet verified — the SPA is a placeholder and no SSE endpoint exists before Phase 4.)
 
+
+## Render service `cropgurdian_backend` — inspected via MCP on 2026-10-21 (read-only)
+Service `srv-db933ae7bikc73bplnng`, workspace "My Workspace" (also holds unrelated services Abhijatri, EduHub, SHETU — never touch them).
+Observed: Docker, free plan, Singapore, 1 instance, branch `main`, Root Directory `cropguardian/backend`, Dockerfile `./Dockerfile`,
+auto-deploy on every commit, health check path `/healthz`. No Key Value instance exists. Memory of the new instance ~97 MB of 512 MB.
+
+**Incident found:** after the Root Directory change the new deploy built successfully and the instance started, but the deploy stayed
+`update_in_progress` and traffic kept going to the old starter (`/health` 404). The new instance logged **no** health-check requests:
+the host-header allow-list (localhost only, because `CG_ENV` was unset and the app defaulted to `development`) rejected the platform's
+health checks with 400. Fixed in code (DECISIONS D-016): liveness paths are exempt from the host check, and on Render an unset
+`CG_ENV` now means production (the service refuses to start without a real `SECRET_KEY`, https `APP_BASE_URL` and `DATABASE_URL`).
+
+### Environment variables to set on the service (names; values in the Render dashboard)
+| Name | Value | Secret? |
+|---|---|---|
+| `CG_ENV` | `production` | no |
+| `SECRET_KEY` | 64 random hex chars (`python -c "import secrets;print(secrets.token_hex(32))"`) | **yes** |
+| `DATABASE_URL` | Supabase **transaction pooler** URI (port 6543), `$` written as `%24` | **yes** |
+| `APP_BASE_URL` | `https://infinityaibuildfest-prototype-five.vercel.app` | no |
+| `TRUSTED_HOSTS` | `["cropgurdian-backend.onrender.com"]` | no |
+| `CORS_ORIGINS` | `["https://infinityaibuildfest-prototype-five.vercel.app"]` (only while the SPA is on another origin) | no |
+| `JOBS_MODE` | `off` until a Redis exists, then `inprocess` | no |
+| `LOG_LEVEL` | `info` | no |
+| `METRICS_TOKEN` | random 24+ chars (only if you want `/metrics` externally; otherwise leave unset = hidden) | **yes** |
+Remove obsolete starter variables that the new app ignores (`ENVIRONMENT`, `SUPABASE_*`) once nothing else uses them.
+
+### Dashboard settings (the MCP cannot change these)
+- Health Check Path: `/health` (the legacy `/healthz` alias still works).
+- Auto-Deploy: change from "On commit" to **"After CI checks pass"** so a red build never deploys.
+- Build Filters: only `cropguardian/backend/**` (so a docs-only push does not redeploy).
+- Pre-Deploy Command (paid plans only): not available on free; run migrations from your machine with `make migrate`.
+
 ## Local stacks
 - Dev: `make env certs up` → `https://localhost` (Nginx TLS, API, Postgres+pgvector, Redis, RustFS S3). `make down`.
 - Test DB for gates: `make test-db` (Postgres + Redis on localhost ports 55432/56379, tmpfs).
