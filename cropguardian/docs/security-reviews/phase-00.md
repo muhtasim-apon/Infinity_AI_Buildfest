@@ -39,9 +39,9 @@ pipeline, `kb/`. Unresolved high items are marked **UNRESOLVED-HIGH** (the gate 
 | R3 | `/health` is public and returns process uptime | accepted (no sensitive data) |
 | R4 | `X-Forwarded-For` is overwritten by Nginx; the app does not yet read client IPs (rate limiting arrives in Phase 1 and must honour `TRUSTED_PROXY_IPS`) | open for Phase 1 |
 | R5 | RustFS (dev S3 store) is an unaudited young project, pinned by digest; dev/test only | accepted |
-| R6 | Supabase role membership grant (`GRANT cg_app ... TO current_user`) may not be permitted for the pooler user; the migration logs a NOTICE and continues | open: verify on the hosted DB and re-run `check_rls.py` there |
-| R7 | Team notes say the old Supabase DB password was weak and exposed together with a secret key via `.env.example`. **gitleaks finds nothing in the 7-commit git history**, so any exposure was outside git (a pasted terminal/chat, a dashboard screenshot, an earlier uncommitted draft). Cannot be verified from here | **UNRESOLVED-HIGH** until the owner rotates the DB password and secret key (steps in `docs/DEPLOYMENT.md`) and records the date here |
-| R11 | A Render API key was pasted into this chat during MCP setup (with literal `<` `>` brackets, so possibly not even valid) | **UNRESOLVED-HIGH**: revoke it in Render → Account Settings → API Keys and add a new one without pasting it anywhere |
+| R6 | Supabase role membership grant (`GRANT cg_app ... TO current_user`) may not be permitted for the pooler user; the migration logs a NOTICE and continues | verified 2026-10-21: the grant succeeded on the hosted DB (see phase-01.md R6); `check_rls.py` against Supabase not yet re-run |
+| R7 | Team notes say the old Supabase DB password was weak and exposed together with a secret key via `.env.example`. **gitleaks finds nothing in the 7-commit git history**, so any exposure was outside git (a pasted terminal/chat, a dashboard screenshot, an earlier uncommitted draft). Cannot be verified from here | **RESOLVED 2026-10-21 (owner-attested)**: owner reports the DB password and secret key were rotated. The assistant cannot verify the rotation; it only observed that the hosted `/health/ready` still reports `db: ok` afterwards |
+| R11 | A Render API key was pasted into this chat during MCP setup (with literal `<` `>` brackets, so possibly not even valid) | **RESOLVED 2026-10-21 (owner-attested)**: owner reports the key was revoked in Render. Consistent with the Render MCP now answering `unauthorized` |
 | R8 | Third-party skills: `webapp-testing/scripts/with_server.py` uses `shell=True` by design | accepted: local use only (documented in `.claude/skills/README.md`) |
 | R9 | `ml/` data pipeline extracts third-party archives: zip-slip, symlink, ratio and size limits are enforced and tested; RAR extraction shells out to 7-Zip/unrar with fixed arguments and re-validates the result | accepted |
 | R10 | KB documents are untrusted input; OCR/PDF parsing has no sandbox yet (Phase 5 adds parser time-outs, size limits) | open for Phase 5 |
@@ -53,6 +53,5 @@ pipeline, `kb/`. Unresolved high items are marked **UNRESOLVED-HIGH** (the gate 
 (Phase 6). Hosted stack configuration (not deployed).
 
 ## Sign-off
-Gate rule: no unresolved high finding. **R7 and R11 are UNRESOLVED-HIGH** and only the owner can close them (rotate the Supabase
-DB password and secret key, then change this entry to RESOLVED with the date). Until then the gate step
-`6 security review` fails by design.
+Gate rule: no unresolved high finding. R7 and R11 were closed by the owner on 2026-10-21 (owner-attested, not independently
+verifiable). R12 is tracked in the Phase 1 review because sessions depend on it.

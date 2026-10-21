@@ -1,0 +1,13 @@
+# Exact-fingerprint ignores for gitleaks. One line per verified FALSE POSITIVE; never add a path glob here.
+# Each entry below is a made-up test fixture (token "0123456789abcdef0123", password "violet-harbor-lantern-91",
+# SECRET_KEY "test-secret-key-0123...", TOTP secret "ABCDEF234567"). None is a real credential.
+# Reviewed 2026-10-21; see DECISIONS.md D-019. Format: commit:file:rule:line
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/backend/tests/security/authz_matrix.yaml:generic-api-key:24
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/backend/tests/security/authz_matrix.yaml:generic-api-key:34
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/backend/tests/api/identity_support.py:generic-api-key:44
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/frontend/src/app/guards.test.tsx:generic-api-key:69
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/backend/tests/api/test_identity_flows.py:generic-api-key:497
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/backend/tests/api/test_identity_flows.py:generic-api-key:502
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/frontend/src/app/pages/auth.test.tsx:generic-api-key:344
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/frontend/src/app/pages/auth.test.tsx:generic-api-key:370
+5f30c798e67eeccf2766bf29b7a5fb084c6f014a:cropguardian/frontend/src/app/pages/auth.test.tsx:generic-api-key:379

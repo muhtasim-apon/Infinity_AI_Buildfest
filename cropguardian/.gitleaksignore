@@ -1,0 +1,14 @@
+# Exact-fingerprint ignores for the working-tree scan (`gitleaks dir`, run from this directory).
+# The history scan reads the repository-root .gitleaksignore. One line per verified FALSE POSITIVE; never add a
+# path glob. Each entry is a made-up test fixture, not a credential. Reviewed 2026-10-21; see DECISIONS.md D-019.
+# Fingerprints include line numbers: if a test file shifts, re-review the new finding instead of just re-pinning.
+# Format: file:rule:line
+backend/tests/api/identity_support.py:generic-api-key:44
+backend/tests/security/authz_matrix.yaml:generic-api-key:24
+backend/tests/security/authz_matrix.yaml:generic-api-key:34
+backend/tests/api/test_identity_flows.py:generic-api-key:497
+backend/tests/api/test_identity_flows.py:generic-api-key:502
+frontend/src/app/guards.test.tsx:generic-api-key:69
+frontend/src/app/pages/auth.test.tsx:generic-api-key:344
+frontend/src/app/pages/auth.test.tsx:generic-api-key:370
+frontend/src/app/pages/auth.test.tsx:generic-api-key:379

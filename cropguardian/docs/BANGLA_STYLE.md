@@ -84,3 +84,14 @@ Owner: Raisa (copy) · consumers: Sara (`cropguardian-ui`, `frontend/src/i18n/bn
 Three team members read the advice for all 7 classes aloud and rate fluency 1-5 and "would a farmer
 understand this?" yes/no. Results are recorded as **team-rated** (not expert-rated) in
 `docs/RAG.md`; no fluency claim is made beyond that.
+
+## 8. Sign-in, consent and notification wording (Phase 1)
+Team-authored, **not expert-reviewed**. Texts live in `bn.json` (UI), `backend/app/core/consent_texts.py` (versioned
+consents) and `backend/app/templates/` (SMS and email).
+- **Errors never blame and never reveal:** one message for a wrong phone/email/password; the same "if the account exists"
+  sentence for recovery and registration.
+- **Consents:** three purposes (service required; training use and area alerts optional, default off). Each optional text
+  says it can be withdrawn at any time. A wording change is a new version (`consent-v2`), never an edit.
+- **SMS:** Bangla first, one line, the code, then "কাউকে কোড বলবেন না"; English second. Digits in codes are always ASCII.
+- **Email:** Bangla block first, English second; links are https only; names are escaped and length-limited.
+- **Security notices** (new device) ignore notification preferences and say what to do ("আপনি না হলে এখনই পাসওয়ার্ড বদলান").

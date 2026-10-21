@@ -113,3 +113,16 @@ instances (cold-start seconds, memory at startup, Key Value limits) must be reco
 ## Backups and restore (spec 22.3)
 `make backup` / `make restore-drill` are Phase 12 targets and currently stubs. Before demo day: `pg_dump` of the
 Supabase DB with the migrator connection, encrypted, and a restore into a scratch project.
+
+## Phase 1 additions (identity)
+Set these on the Render service **before** deploying Phase 1 code (the API refuses to start without them):
+| Name | Value |
+|---|---|
+| `REDIS_URL` | internal URL of the Render Key Value `cropguardian-redis` (Singapore, free, `noeviction`, persistence off) |
+| `SMS_PROVIDER` / `EMAIL_PROVIDER` | `disabled` (production refuses `console`) |
+| `TRUSTED_PROXY_HOPS` | `1` (otherwise every visitor shares Render's proxy IP and the per-IP limits hit everyone) |
+| `DEMO_ENABLED` / `DEMO_SEED_ON_START` | `true` / `true` |
+| `PUBLIC_ORIGIN` | origin used in emailed links |
+| `SECRET_KEY` | **rotate now** (R12): it keys sessions, CSRF and encrypted TOTP seeds |
+Also: `CG_ENV=test` or `development` is refused when `RENDER` is set. First admin: `python scripts/create_admin.py --email ... --name ...`
+(run in the service shell; password via `CG_ADMIN_PASSWORD` or prompt). Migrations 0001+0002 on Supabase are applied only on the owner's explicit go-ahead; then run `check_rls.py` there.

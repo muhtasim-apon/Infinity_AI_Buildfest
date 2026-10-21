@@ -79,10 +79,26 @@ def test_not_on_render_defaults_to_development(monkeypatch):
     assert Settings(_env_file=None).cg_env == "development"
 
 
-def test_explicit_cg_env_wins_over_render(monkeypatch):
+@pytest.mark.parametrize("env", ["test", "development"])
+def test_insecure_cg_env_is_refused_on_render(monkeypatch, env):
+    # Phase 1 review finding 5: the test router and CAPTCHA bypass must never run on a hosted service.
     monkeypatch.setenv("RENDER", "true")
-    monkeypatch.setenv("CG_ENV", "test")
-    assert Settings(_env_file=None).cg_env == "test"
+    monkeypatch.setenv("CG_ENV", env)
+    with pytest.raises(ConfigError, match="CG_ENV must be production or staging"):
+        Settings(_env_file=None)
+
+
+def test_explicit_staging_is_accepted_on_render(monkeypatch):
+    monkeypatch.setenv("RENDER", "true")
+    monkeypatch.setenv("CG_ENV", "staging")
+    monkeypatch.setenv("SECRET_KEY", "k" * 40)
+    monkeypatch.setenv("APP_BASE_URL", "https://web.example.org")
+    monkeypatch.setenv("DATABASE_URL", "postgresql://u:p@h/db")
+    monkeypatch.setenv("REDIS_URL", "redis://:pw@red:6379/0")
+    monkeypatch.setenv("SMS_PROVIDER", "disabled")
+    monkeypatch.setenv("EMAIL_PROVIDER", "disabled")
+    monkeypatch.setenv("TRUSTED_HOSTS", f'["{PUBLIC_HOST}"]')
+    assert Settings(_env_file=None).cg_env == "staging"
 
 
 @pytest.mark.security

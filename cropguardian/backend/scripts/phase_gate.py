@@ -14,6 +14,7 @@ import argparse
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import time
@@ -98,8 +99,34 @@ def docker_ok() -> bool:
     )
 
 
+# Connection settings for the throwaway test Postgres + Redis (docker-compose.test.yml, `make test-db`).
+TEST_STACK_ENV = {
+    "MIGRATION_DATABASE_URL": "postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:55432/cropguardian",
+    "TEST_SUPER_DATABASE_URL": "postgresql://postgres:test-only-password@127.0.0.1:55432/cropguardian",
+    "TEST_API_DATABASE_URL": "postgresql://cg_api:dev-api-pw@127.0.0.1:55432/cropguardian",
+    "TEST_REDIS_URL": "redis://127.0.0.1:56379/0",
+    "PYTHONPATH": str(BACKEND),
+}  # fmt: skip
+
+
+def test_stack_up() -> bool:
+    """True when the test Postgres and Redis ports accept connections."""
+    for port in (55432, 56379):
+        try:
+            socket.create_connection(("127.0.0.1", port), timeout=1).close()
+        except OSError:
+            return False
+    return True
+
+
 def tool_step(
-    name: str, module_or_bin: str, cmd: list[str], cwd: Path, offline: bool, is_module: bool = True
+    name: str,
+    module_or_bin: str,
+    cmd: list[str],
+    cwd: Path,
+    offline: bool,
+    is_module: bool = True,
+    env: dict[str, str] | None = None,
 ) -> Step:
     t0 = time.time()
     present = have_module(module_or_bin) if is_module else shutil.which(module_or_bin) is not None
@@ -110,7 +137,7 @@ def tool_step(
             0.0,
             f"{module_or_bin} not installed" + ("" if offline else " (use --offline to accept)"),
         )
-    code, note = run(cmd, cwd)
+    code, note = run(cmd, cwd, env=env)
     return Step(name, "PASS" if code == 0 else "FAIL", time.time() - t0, "" if code == 0 else note)
 
 
@@ -178,7 +205,8 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         common = ["--redact", "--no-banner", "--config", cfg]
         for label, args, cwd in (
             ("history", [binary, "git", *common, str(REPO.parent)], REPO),
-            ("working tree", [binary, "dir", *common, str(REPO)], REPO),
+            # "." (cwd is REPO) keeps .gitleaksignore fingerprints relative, so they match on any machine
+            ("working tree", [binary, "dir", *common, "."], REPO),
         ):
             code, note = run(args, cwd, timeout=300)
             if code != 0:
@@ -284,7 +312,13 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         return Step("8 migrations", "PASS", time.time() - t0, "up, down 1, up")
 
     def tests() -> Step:
-        return tool_step(
+        # Identity code (Phase 1+) is exercised by the real-Postgres tests, so the 85% floor only makes
+        # sense over the whole suite. Without the test stack the unit-only run keeps the same floor.
+        stack = test_stack_up()
+        marker = "not perf and not chaos and not rag_live" + (
+            "" if stack else " and not integration"
+        )
+        step = tool_step(
             "9 backend tests",
             "pytest",
             [
@@ -293,14 +327,20 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
                 "pytest",
                 "-q",
                 "-m",
-                "not perf and not chaos and not rag_live and not integration",
+                marker,
                 "--cov",
                 "--cov-branch",
                 "--cov-report=term-missing:skip-covered",
             ],
             BACKEND,
             offline,
+            env=TEST_STACK_ENV if stack else None,
         )
+        if step.status == "PASS":
+            step.note = (
+                "full suite on real Postgres+Redis" if stack else "unit only (no test stack)"
+            )
+        return step
 
     def security_suite() -> Step:
         return tool_step(
@@ -461,13 +501,7 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         code, note = run([*compose_test, "up", "-d", "--wait"], REPO, timeout=300)
         if code != 0:
             return Step(name, "FAIL", time.time() - t0, f"test stack: {note}")
-        env = {
-            "MIGRATION_DATABASE_URL": "postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:55432/cropguardian",
-            "TEST_SUPER_DATABASE_URL": "postgresql://postgres:test-only-password@127.0.0.1:55432/cropguardian",
-            "TEST_API_DATABASE_URL": "postgresql://cg_api:dev-api-pw@127.0.0.1:55432/cropguardian",
-            "TEST_REDIS_URL": "redis://127.0.0.1:56379/0",
-            "PYTHONPATH": str(BACKEND),
-        }
+        env = TEST_STACK_ENV
         code, note = run([PY, "-m", "alembic", "upgrade", "head"], BACKEND, env=env)
         if code != 0:
             return Step(name, "FAIL", time.time() - t0, f"alembic upgrade: {note}")
