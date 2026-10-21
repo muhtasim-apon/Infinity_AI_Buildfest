@@ -1,0 +1,9 @@
+{{ name }}, নতুন ডিভাইস থেকে আপনার অ্যাকাউন্টে লগইন হয়েছে।
+সময়: {{ when }}। ডিভাইস: {{ device }}।
+আপনি না হলে এখনই পাসওয়ার্ড বদলান।
+
+---
+
+{{ name }}, a new device signed in to your account.
+Time: {{ when }}. Device: {{ device }}.
+If this was not you, change your password now.

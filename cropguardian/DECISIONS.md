@@ -54,3 +54,8 @@ Format: ID · date · decision · reason · alternatives.
   host check; all other paths stay checked. `RENDER=true` (set by the platform) makes an unset `CG_ENV` default to
   `production` so strict validation runs. Added `RequestLogMiddleware` (method, path without query, status, duration,
   request id; liveness at debug level) because uvicorn's access log is disabled for privacy and rejections were invisible.
+- **D-017 · 2026-10-21 · Phase 1 dependency choices.** React Router **7.18.4** instead of 6 (spec 3): 6.30.6 has an open-redirect
+  advisory (GHSA-wrjc-x8rr-h8h6, backslash in `<Link>`/`useNavigate`) fixed only in >= 7.18; the data-router API
+  (`createBrowserRouter`, lazy routes) is the same. `@hookform/resolvers` pinned to 5.x (6.x has unresolved optional peers).
+  Backend test tooling bumped (pytest 9, pytest-asyncio 1.4, hypothesis 6.170) because `schemathesis` 4.x requires pytest 9.
+  Dev/test Redis runs with persistence off (read-only root FS made it refuse writes: MISCONF).

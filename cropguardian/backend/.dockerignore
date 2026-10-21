@@ -6,6 +6,8 @@ __pycache__
 .ruff_cache
 .coverage
 tests
-scripts
+scripts/*
+!scripts/create_admin.py
+!scripts/seed.py
 .env
 .env.*

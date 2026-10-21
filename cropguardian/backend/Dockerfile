@@ -22,6 +22,7 @@ COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.
 COPY --from=deps /usr/local/bin /usr/local/bin
 COPY app ./app
 COPY alembic ./alembic
+COPY scripts/create_admin.py scripts/seed.py ./scripts/
 COPY alembic.ini gunicorn.conf.py ./
 RUN useradd --create-home --uid 10001 appuser
 USER 10001

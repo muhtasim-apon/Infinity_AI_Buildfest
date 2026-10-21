@@ -107,6 +107,9 @@ def test_docs_disabled_in_production():
         secret_key="k" * 40,
         app_base_url="https://a.example.org",
         database_url="postgresql://u:p@h/db",
+        redis_url="redis://:pw@red:6379/0",
+        sms_provider="disabled",
+        email_provider="disabled",
         trusted_hosts=["testserver"],
         _env_file=None,
     )  # type: ignore[call-arg]

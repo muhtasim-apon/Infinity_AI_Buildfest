@@ -9,6 +9,9 @@ GOOD = {
     "app_base_url": "https://app.example.org",
     "database_url": "postgresql://u:p@h:6543/db",
     "trusted_hosts": ["api.example.org"],
+    "redis_url": "redis://:pw@redis.internal:6379/0",
+    "sms_provider": "disabled",
+    "email_provider": "disabled",
 }
 
 
@@ -38,6 +41,10 @@ def test_valid_production_accepted():
         {"cors_origins": ["http://insecure.example.org"]},
         {"trusted_hosts": ["*"]},
         {"database_url": ""},
+        {"redis_url": ""},
+        {"captcha_bypass": True},
+        {"sms_provider": "console"},
+        {"email_provider": "console"},
     ],
 )
 def test_insecure_production_refused(over):
@@ -66,3 +73,18 @@ def test_out_of_range_pool_size_rejected():
 def test_invalid_env_value_rejected():
     with pytest.raises(ValidationError):
         Settings(_env_file=None, cg_env="prod")
+
+
+def test_origin_for_links_prefers_public_origin():
+    assert make(public_origin="https://x.example.org/").origin_for_links == "https://x.example.org"
+    assert make().origin_for_links == "https://app.example.org"
+
+
+@pytest.mark.security
+@pytest.mark.parametrize("env", ["test", "development"])
+def test_hosted_platform_refuses_test_and_development_modes(monkeypatch, env):
+    monkeypatch.setenv("RENDER", "true")
+    with pytest.raises(ConfigError):
+        Settings(_env_file=None, cg_env=env)
+    monkeypatch.delenv("RENDER")
+    assert Settings(_env_file=None, cg_env=env).cg_env == env  # locally they are fine

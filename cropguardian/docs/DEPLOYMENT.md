@@ -60,6 +60,12 @@ health checks with 400. Fixed in code (DECISIONS D-016): liveness paths are exem
 | `METRICS_TOKEN` | random 24+ chars (only if you want `/metrics` externally; otherwise leave unset = hidden) | **yes** |
 Remove obsolete starter variables that the new app ignores (`ENVIRONMENT`, `SUPABASE_*`) once nothing else uses them.
 
+**Second incident (same day):** deploy of commit `29596a9` built, then the app exited with code 3. Log line:
+`ConfigError: insecure production configuration: SECRET_KEY missing, default or shorter than 32 chars`. The service had the
+old starter's `SUPABASE_SECRET_KEY` but not `SECRET_KEY`, which the new app requires (production validation refuses to start
+without it, by design). Fixed by setting `SECRET_KEY` (random, 64 hex). Lesson: the startup refusal names only the failed check,
+never a value, which is exactly what made this diagnosable from logs.
+
 ### Dashboard settings (the MCP cannot change these)
 - Health Check Path: `/health` (the legacy `/healthz` alias still works).
 - Auto-Deploy: change from "On commit" to **"After CI checks pass"** so a red build never deploys.
@@ -97,6 +103,8 @@ instances (cold-start seconds, memory at startup, Key Value limits) must be reco
 |---|---|---|---|
 | API warm `/health` latency (old starter, 404) | ~0.44 s | 2026-10-21 | single `curl` from the dev laptop |
 | New API image, local production-mode start to healthy | ~7 s | 2026-10-21 | `docker run` + polling, no model loaded yet (not a Render number) |
+| Hosted API memory, new image, idle | ~77 MB of 512 MB | 2026-10-21 | Render metrics via MCP, one sample right after deploy |
+| Hosted deploy duration (build + switch-over) | ~41 s | 2026-10-21 | Render deploy `dep-dbc6nq8n74is73fiqin0`, warm build cache |
 | API cold start | _not measured_ | | |
 | API RSS at startup | _not measured_ (Phase 4, with the ONNX models) | | |
 | Render Key Value free limits | _not verified_ | | |

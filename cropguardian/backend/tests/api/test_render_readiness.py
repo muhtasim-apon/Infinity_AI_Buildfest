@@ -18,6 +18,9 @@ def prod_settings(**over) -> Settings:
         "secret_key": "k" * 40,
         "app_base_url": "https://web.example.org",
         "database_url": "postgresql://u:p@h/db",
+        "redis_url": "redis://:pw@red:6379/0",
+        "sms_provider": "disabled",
+        "email_provider": "disabled",
         "trusted_hosts": [PUBLIC_HOST],
         "_env_file": None,
     }
@@ -60,6 +63,9 @@ def test_render_without_cg_env_defaults_to_production_and_refuses_insecure_confi
     monkeypatch.setenv("SECRET_KEY", "k" * 40)
     monkeypatch.setenv("APP_BASE_URL", "https://web.example.org")
     monkeypatch.setenv("DATABASE_URL", "postgresql://u:p@h/db")
+    monkeypatch.setenv("REDIS_URL", "redis://:pw@red:6379/0")
+    monkeypatch.setenv("SMS_PROVIDER", "disabled")
+    monkeypatch.setenv("EMAIL_PROVIDER", "disabled")
     monkeypatch.setenv("TRUSTED_HOSTS", f'["{PUBLIC_HOST}"]')
     s = Settings(_env_file=None)
     assert s.cg_env == "production"

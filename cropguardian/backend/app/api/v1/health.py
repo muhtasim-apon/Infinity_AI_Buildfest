@@ -43,6 +43,15 @@ async def ready(request: Request) -> JSONResponse:
             await conn.execute(text("select 1"))
     except Exception as exc:  # report the failure type only, never the connection string
         return JSONResponse({"db": "down", "error": type(exc).__name__}, status_code=503)
+    container = getattr(request.app.state, "container", None)
+    if container is not None and container.redis is not None:
+        try:
+            await container.redis.ping()
+        except Exception as exc:  # sessions and rate limits need Redis: not ready without it
+            return JSONResponse(
+                {"db": "ok", "redis": "down", "error": type(exc).__name__}, status_code=503
+            )
+        return JSONResponse({"db": "ok", "redis": "ok"})
     return JSONResponse({"db": "ok"})
 
 

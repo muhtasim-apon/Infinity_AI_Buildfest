@@ -66,7 +66,10 @@ def _rid(request: Request) -> str | None:
 def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(AppError)
     async def _app_error(request: Request, exc: AppError) -> JSONResponse:
-        return problem(exc.status, exc.code, exc.detail, _rid(request), **exc.extra)
+        response = problem(exc.status, exc.code, exc.detail, _rid(request), **exc.extra)
+        if exc.status == 429 and "retry_after" in exc.extra:
+            response.headers["Retry-After"] = str(exc.extra["retry_after"])
+        return response
 
     @app.exception_handler(StarletteHTTPException)
     async def _http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:

@@ -28,14 +28,17 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: ["redis-server", "--maxmemory", "200mb", "--maxmemory-policy", "noeviction",
-              "--requirepass", "${REDIS_PASSWORD:?run make env}"]
+    # Persistence is OFF: the root FS is read-only and /data is a tmpfs, so a snapshot cannot be written and
+    # Redis would refuse every write (MISCONF) - that broke sessions and rate limits. Sessions also live in
+    # Postgres (DB fallback), and rate-limit state is disposable.
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "200mb",
+              "--maxmemory-policy", "noeviction", "--requirepass", "${REDIS_PASSWORD:?run make env}"]
     user: "999:999"
     <<: *hardening
     tmpfs: ["/data"]
     networks: [app]
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep PONG"]
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD --no-auth-warning set cg:healthcheck 1 EX 30 | grep OK"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -86,6 +89,15 @@ services:
       S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
       METRICS_TOKEN: ${METRICS_TOKEN:?run make env}
       TRUSTED_HOSTS: '["localhost","127.0.0.1","api"]'
+      # Identity (Phase 1). Local stack only: console providers print codes/links to the API log;
+      # production refuses them (Settings). The public origin is the Nginx HTTPS address.
+      APP_BASE_URL: https://localhost
+      API_BASE_URL: https://localhost
+      TRUSTED_PROXY_HOPS: "1"
+      SMS_PROVIDER: console
+      EMAIL_PROVIDER: console
+      DEMO_ENABLED: "true"
+      DEMO_SEED_ON_START: "true"
     <<: *hardening
     tmpfs: ["/tmp"]
     networks: [app]

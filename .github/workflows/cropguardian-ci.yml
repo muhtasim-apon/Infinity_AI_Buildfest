@@ -27,10 +27,16 @@ jobs:
         ports: ["5432:5432"]
         options: >-
           --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 3s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 20
     env:
       MIGRATION_DATABASE_URL: postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:5432/cropguardian
       TEST_API_DATABASE_URL: postgresql://cg_api:dev-api-pw@127.0.0.1:5432/cropguardian
       TEST_SUPER_DATABASE_URL: postgresql://postgres:test-only-password@127.0.0.1:5432/cropguardian
+      TEST_REDIS_URL: redis://127.0.0.1:6379/0
       PYTHONPATH: backend
     steps:
       - uses: actions/checkout@v4

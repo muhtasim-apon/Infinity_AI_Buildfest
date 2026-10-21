@@ -1,0 +1,79 @@
+# Authorization matrix (spec 16.5, 19.4). Every route x every principal. A route without an entry fails
+# `test_every_route_has_a_matrix_entry`, so a new endpoint cannot ship without an explicit decision.
+#
+# kind -> outcome per principal (anonymous farmer reviewer admin demo_farmer demo_reviewer demo_admin)
+#   public       allow  allow  allow  allow  allow  allow  allow
+#   session      401    allow  allow  allow  allow  allow  allow
+#   farmer_only  401    allow  403    403    allow  403    403
+#   staff_only   401    403    allow  allow  403    403    403
+#   admin_only   404    404    404    allow  404    404    allow   (demo_admin: see `overrides`)
+# `allow` means the request passed authorization: status must be in `ok` (default below).
+# `overrides` replace the outcome for one principal; `destructive` routes get a fresh principal per call.
+default_ok: [200, 201, 202, 204, 400, 409, 422]
+
+routes:
+  "GET /api/v1/captcha/challenge": {kind: public}
+  "GET /api/v1/auth/csrf": {kind: public}
+  "GET /api/v1/auth/state": {kind: public}
+  "GET /api/v1/consents/texts": {kind: public, ok: [200]}
+  "POST /api/v1/auth/register/farmer":
+    kind: public
+    body: {phone: "12345", password: "x", display_name: "T", accept_service: true}
+  "POST /api/v1/auth/register/staff":
+    kind: public
+    body: {token: "0123456789abcdef0123", password: "x", display_name: "T"}
+  "POST /api/v1/auth/otp/send": {kind: public, body: {phone: "12345"}}
+  "POST /api/v1/auth/otp/verify": {kind: public, body: {phone: "12345", code: "123456"}}
+  "POST /api/v1/auth/login":
+    kind: public
+    destructive: true
+    ok: [401]
+    body: {identifier: "nobody-{rand}@example.org", password: "wrong-password-1"}
+  "POST /api/v1/auth/password/forgot": {kind: public, body: {identifier: "nobody@example.org"}}
+  "POST /api/v1/auth/password/reset": {kind: public, body: {new_password: "x", token: "no-such-token"}}
+  "POST /api/v1/auth/email/verify": {kind: public, body: {token: "0123456789abcdef0123"}}
+  "POST /api/v1/demo/session":
+    kind: public
+    destructive: true
+    ok: [201]
+    body: {role: "DEMO_FARMER"}
+
+  "POST /api/v1/auth/logout": {kind: session, destructive: true, ok: [204]}
+  "POST /api/v1/auth/logout-all": {kind: session, destructive: true, ok: [204]}
+  "POST /api/v1/auth/password/change":
+    kind: session
+    body: {current_password: "wrong-password-1", new_password: "another-strong-pass-12"}
+  "POST /api/v1/auth/email/resend": {kind: session}
+  "GET /api/v1/me": {kind: session, ok: [200]}
+  "PATCH /api/v1/me":
+    kind: session
+    body: {display_name: "Matrix Tester"}
+    overrides: {demo_farmer: 403, demo_reviewer: 403, demo_admin: 403}
+  "GET /api/v1/me/sessions": {kind: session, ok: [200]}
+  "DELETE /api/v1/me/sessions/{session_id}":
+    kind: session
+    ok: [404]
+    path: {session_id: "00000000-0000-4000-8000-000000000000"}
+
+  "GET /api/v1/me/consents": {kind: farmer_only, ok: [200]}
+  "PUT /api/v1/me/consents":
+    kind: farmer_only
+    body: {purpose: "training_use", granted: true}
+    ok: [200]
+
+  "POST /api/v1/auth/login/totp": {kind: staff_only, body: {code: "123456"}}
+  "POST /api/v1/auth/step-up": {kind: staff_only, body: {code: "123456"}}
+  "POST /api/v1/auth/totp/setup": {kind: staff_only, destructive: true, ok: [200, 409]}
+  "POST /api/v1/auth/totp/confirm": {kind: staff_only, body: {code: "123456"}}
+  "POST /api/v1/auth/recovery-codes":
+    kind: staff_only
+    destructive: true
+    ok: [200]
+    overrides: {reviewer: 403}  # a reviewer without a fresh step-up is refused
+
+  "GET /api/v1/admin/users": {kind: admin_only, ok: [200]}
+  "POST /api/v1/admin/invites":
+    kind: admin_only
+    ok: [201]
+    body: {email: "invitee-{rand}@example.org", role: "REVIEWER", region_codes: ["D1"]}
+    overrides: {demo_admin: 404}  # demo administrators cannot invite anyone

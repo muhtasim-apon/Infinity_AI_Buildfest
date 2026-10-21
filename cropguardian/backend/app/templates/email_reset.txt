@@ -1,0 +1,9 @@
+{{ name }}, নতুন পাসওয়ার্ড দিতে নিচের লিংকে যান।
+{{ link }}
+লিংকটি ৩০ মিনিট কাজ করবে। আপনি না চাইলে কিছু করতে হবে না।
+
+---
+
+{{ name }}, open the link below to set a new password.
+{{ link }}
+The link works for 30 minutes. If you did not ask for this, you do not need to do anything.

@@ -6,6 +6,7 @@ must refuse to start rather than run insecurely (spec 0.2.3, "fail closed", 16.1
 
 from __future__ import annotations
 
+import hmac
 import os
 from functools import lru_cache
 from typing import Literal
@@ -15,6 +16,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _INSECURE_SECRETS = {"", "change-me", "changeme", "secret", "password", "dev-secret"}
 _MIN_SECRET_LEN = 32
+DEV_SECRET = "dev-only-secret-key-never-use-in-production-0000"  # noqa: S105
 
 
 def _default_env() -> Literal["development", "production"]:
@@ -71,20 +73,46 @@ class Settings(BaseSettings):
         default_factory=lambda: ["api.anthropic.com", "api.open-meteo.com"]
     )
 
+    # --- identity (Phase 1) -------------------------------------------------------------------
+    public_origin: str = ""  # origin used in emailed links; defaults to app_base_url
+    sms_provider: Literal["console", "disabled"] = "console"
+    email_provider: Literal["console", "disabled"] = "console"
+    demo_enabled: bool = False
+    demo_seed_on_start: bool = False
+    trusted_proxy_hops: int = Field(
+        default=0, ge=0, le=3
+    )  # proxies in front that append X-Forwarded-For
+    captcha_bypass: bool = False  # honoured ONLY when cg_env == "test"
+
     # --- observability ------------------------------------------------------------------------
     sentry_dsn: str = ""
     metrics_token: str = ""
+
+    @property
+    def origin_for_links(self) -> str:
+        return (self.public_origin or self.app_base_url).rstrip("/")
 
     @property
     def is_production(self) -> bool:
         return self.cg_env in ("production", "staging")
 
     @model_validator(mode="after")
-    def _validate_production(self) -> Settings:
+    def _validate_production(self) -> Settings:  # noqa: PLR0912
+        if os.environ.get("RENDER") and self.cg_env not in ("production", "staging"):
+            # CG_ENV=test enables the test router and CAPTCHA bypass; development opens /docs.
+            # A hosted service must never run in either mode, whatever the dashboard says.
+            raise ConfigError(
+                "insecure configuration: CG_ENV must be production or staging on Render"
+            )
         if not self.is_production:
+            if not self.secret_key:
+                self.secret_key = DEV_SECRET  # keeps HMAC/AES features usable in dev and tests
             return self
         problems: list[str] = []
-        if self.secret_key.lower() in _INSECURE_SECRETS or len(self.secret_key) < _MIN_SECRET_LEN:
+        weak = self.secret_key.lower() in _INSECURE_SECRETS or hmac.compare_digest(
+            self.secret_key, DEV_SECRET
+        )
+        if weak or len(self.secret_key) < _MIN_SECRET_LEN:
             problems.append("SECRET_KEY missing, default or shorter than 32 chars")
         if not self.app_base_url.startswith("https://"):
             problems.append("APP_BASE_URL must be https in production")
@@ -96,6 +124,16 @@ class Settings(BaseSettings):
             problems.append("TRUSTED_HOSTS wildcard is forbidden")
         if not self.database_url:
             problems.append("DATABASE_URL is required")
+        if not self.redis_url:
+            problems.append(
+                "REDIS_URL is required (sessions and rate limits fail closed without it)"
+            )
+        if self.captcha_bypass:
+            problems.append("CAPTCHA_BYPASS is forbidden outside the test environment")
+        if self.sms_provider == "console":
+            problems.append("SMS_PROVIDER=console prints codes to logs: use disabled")
+        if self.email_provider == "console":
+            problems.append("EMAIL_PROVIDER=console prints links to logs: use disabled")
         if problems:
             # Only the *names* of failed checks are reported; values are never echoed.
             raise ConfigError("insecure production configuration: " + "; ".join(problems))

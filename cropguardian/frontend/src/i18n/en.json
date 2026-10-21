@@ -40,7 +40,10 @@
     },
     "how": {
       "title": "How it works",
-      "step1": { "title": "Snap", "text": "Fill the frame with one leaf." },
+      "step1": {
+        "title": "Snap",
+        "text": "Fill the frame with one leaf."
+      },
       "step2": {
         "title": "Check",
         "text": "We first check it is a rice leaf, then identify the disease."
@@ -49,7 +52,10 @@
         "title": "Know when unsure",
         "text": "If the AI is not sure, a reviewer looks at the photo."
       },
-      "step4": { "title": "Act", "text": "Get cited advice in Bangla." },
+      "step4": {
+        "title": "Act",
+        "text": "Get cited advice in Bangla."
+      },
       "step5": {
         "title": "Warn the area",
         "text": "When many reports come from one area, an approved alert is sent."
@@ -131,7 +137,25 @@
     "waking": "The server is waking up, please wait a moment…",
     "offline": "No internet connection.",
     "notFound": "This page was not found.",
-    "forbidden": "You do not have permission to view this page."
+    "forbidden": "You do not have permission to view this page.",
+    "invalidCredentials": "The phone, email or password is not correct.",
+    "locked": "Too many wrong attempts. Try again in 15 minutes.",
+    "rateLimited": "Too many attempts. Try again in a little while.",
+    "retryAfter": "Try again in {{seconds}} seconds.",
+    "captchaRequired": "Complete the verification first.",
+    "sessionExpired": "Your session has ended. Sign in again.",
+    "stepUpRequired": "Enter a code again for this action.",
+    "validation": "Some details are not right. Check the marked fields.",
+    "unavailable": "The service is not available now. Try again shortly.",
+    "passwordWeak": "This password is too easy. Choose a stronger one.",
+    "passwordCommon": "Many people use this password. Choose another.",
+    "phoneInvalid": "The mobile number is not valid.",
+    "emailInvalid": "The email is not valid.",
+    "registerFailed": "Registration is not possible with these details. Sign in or recover your password.",
+    "forbiddenTitle": "You do not have access",
+    "notFoundTitle": "Page not found",
+    "goHome": "Back to home",
+    "requestId": "Request number: {{id}}"
   },
   "disease": {
     "healthy": "Healthy leaf",
@@ -141,5 +165,134 @@
     "blast": "Blast",
     "sheath_blight": "Sheath blight",
     "tungro": "Tungro"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "identifier": "Phone number or email",
+      "password": "Password",
+      "submit": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "registerLink": "Register",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "tryDemo": "Or try the demo",
+      "keepSignedIn": "Keep me signed in on this device"
+    },
+    "register": {
+      "title": "Farmer registration",
+      "name": "Your name",
+      "phone": "Mobile number",
+      "phoneHint": "For example 01712345678",
+      "password": "Password",
+      "passwordHint": "At least 8 characters. Avoid easy passwords.",
+      "submit": "Register",
+      "haveAccount": "Already registered?",
+      "loginLink": "Sign in"
+    },
+    "staff": {
+      "title": "Staff registration",
+      "subtitle": "Only invited staff can register.",
+      "email": "Email",
+      "passwordHint": "At least 12 characters.",
+      "submit": "Complete registration",
+      "inviteInvalid": "The invitation is invalid or has expired."
+    },
+    "otp": {
+      "title": "Enter the code",
+      "sent": "A 6-digit code has been sent to your phone.",
+      "code": "6-digit code",
+      "submit": "Verify",
+      "resend": "Send the code again",
+      "resendIn": "You can send it again in {{seconds}} seconds.",
+      "expired": "The code has expired. Get a new code.",
+      "wrong": "The code is not correct. Check it again.",
+      "attemptsLeft": "You can try {{count}} more times.",
+      "disabled": "Sending codes by phone is turned off in this demo. Choose the demo."
+    },
+    "emailVerify": {
+      "title": "Verify your email",
+      "sent": "A link has been sent to your email.",
+      "resend": "Send the link again",
+      "success": "Your email is verified.",
+      "invalid": "The link is invalid or has expired."
+    },
+    "forgot": {
+      "title": "Password recovery",
+      "subtitle": "Enter your phone number or email.",
+      "submit": "Send the link",
+      "sentGeneric": "If the account exists, instructions have been sent."
+    },
+    "reset": {
+      "title": "Set a new password",
+      "newPassword": "New password",
+      "submit": "Change password",
+      "done": "Your password was changed. Sign in again.",
+      "sessionsEnded": "You were signed out of all other devices.",
+      "invalidLink": "The link is invalid or has expired."
+    },
+    "totp": {
+      "title": "Second-step code",
+      "subtitle": "Enter the 6-digit code from your authenticator app.",
+      "code": "6-digit code",
+      "submit": "Confirm",
+      "useRecovery": "Use a recovery code",
+      "recoveryCode": "Recovery code",
+      "setupTitle": "Turn on two-step protection",
+      "setupScan": "Add this key to your authenticator app.",
+      "secretLabel": "Secret key",
+      "setupConfirm": "Confirm with the code from the app",
+      "recoveryTitle": "Recovery codes",
+      "recoveryWarn": "Keep these codes somewhere safe now. They will not be shown again.",
+      "recoveryDone": "I have saved the codes"
+    },
+    "stepUp": {
+      "title": "Confirm again",
+      "subtitle": "You need to enter a code again for this action."
+    },
+    "sessions": {
+      "title": "Your devices",
+      "current": "This device",
+      "revoke": "Sign out",
+      "revokeAll": "Sign out of all devices",
+      "lastSeen": "Last used: {{time}}",
+      "empty": "No devices."
+    },
+    "logout": "Sign out",
+    "captcha": {
+      "verifying": "Verifying…",
+      "failed": "Verification failed. Try again.",
+      "honeypot": "Leave this field empty",
+      "label": "I am not a robot"
+    }
+  },
+  "roles": {
+    "farmer": "Farmer",
+    "reviewer": "Reviewer",
+    "admin": "Admin",
+    "demo_farmer": "Farmer (demo)",
+    "demo_reviewer": "Reviewer (demo)",
+    "demo_admin": "Admin (demo)"
+  },
+  "demoPicker": {
+    "title": "Try the demo",
+    "subtitle": "Pick a role without creating an account.",
+    "farmer": "View as a farmer",
+    "reviewer": "View as a reviewer",
+    "admin": "View as an admin",
+    "note": "All demo data is fake. It is wiped after a while.",
+    "timeLeft": "Time left: {{minutes}} minutes"
+  },
+  "home": {
+    "placeholder": "This page is still being built.",
+    "farmer": "Farmer home",
+    "reviewer": "Reviewer home",
+    "admin": "Admin home",
+    "welcome": "Welcome, {{name}}."
+  },
+  "notify": {
+    "newDevice": "A new device signed in",
+    "newDeviceBody": "If this was not you, change your password now."
   }
 }

@@ -103,3 +103,15 @@ async def session_scope(
             {"uid": ctx.user_id, "role": ctx.role, "tenant": ctx.tenant, "region": ctx.region_csv},
         )
         yield session
+
+
+@asynccontextmanager
+async def system_scope(engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
+    """Server-internal SYSTEM context for pre-auth lookups, session rotation and clean-up.
+
+    Only server code calls this. The role string is a constant here: it is never derived from a
+    request, a header, a cookie or a token, and a `DbContext` built from a Principal can never carry
+    it (see `app.core.tenancy.db_context_for`).
+    """
+    async with session_scope(engine, DbContext(role="system", tenant="real")) as session:
+        yield session

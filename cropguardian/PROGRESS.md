@@ -6,7 +6,7 @@ Nothing in this repository has been committed or pushed by the assistant (owner'
 ## Phase status
 | Phase | Owner | Status | Gate |
 |---|---|---|---|
-| P0 Foundations | Apon | **PARTIAL** — 16 of 18 gate steps pass on a full run; 2 owner-only blockers | `make gate PHASE=0` → FAIL at security review (R7, R11) and hosted `/health` |
+| P0 Foundations | Apon | **PARTIAL** — 17 of 18 gate steps pass on a full run, hosted API live; 1 owner-only blocker | `make gate PHASE=0` → FAIL only at security review (R7, R11: rotate credentials) |
 | P2 Design system (17 Oct part) | Sara + Raisa | day-1 scope DONE | gate not run (P2 not complete) |
 | P3 ML data (17 Oct part) | Taeen | day-1 scope DONE | gate not run |
 | P5 KB (17 Oct part) | Salwa | day-1 scope DONE | gate not run |
@@ -31,7 +31,7 @@ Nothing in this repository has been committed or pushed by the assistant (owner'
 | backend tests (141 + 1 skipped on Windows), security suite, frontend tests (63) | PASS |
 | compose stack: build, up, healthy, migrate, 16 Nginx edge checks | PASS |
 | **security review** | **FAIL** — R7 and R11 UNRESOLVED-HIGH (owner: rotate Supabase DB password + secret key; revoke the Render API key pasted in chat) |
-| **hosted `/health`** | **FAIL** — hosted API is still the old starter (`/health` → 404) until you push and cut Render over |
+| hosted `/health` | PASS — live deploy `dep-dbc6nq8n74is73fiqin0` (commit `29596a9`): `/health` 200, `/health/ready` `{"db":"ok"}`, docs/openapi/metrics hidden, one copy of each security header, CORS only for the prototype origin, TRACE 405, 2 MB body 413, structured request logs in Render |
 
 Also verified: Chromium smoke through the real Nginx stack, production-mode rehearsal of the API image (see
 `docs/DEPLOYMENT.md`), anonymous access to the object-store buckets returns 403, ML tests 49 (94% branch coverage).
@@ -44,7 +44,7 @@ Also verified: Chromium smoke through the real Nginx stack, production-mode rehe
 3. Run `/security-review`; then I flip R7/R11 to RESOLVED and re-run the gate expecting `PHASE 0 GATE: PASS`.
 
 ## Known issues
-- Hosted `/health` is 404 until Render is cut over from `services/api` to `backend/` (`docs/DEPLOYMENT.md`).
+- Render health check path is still `/healthz` (works); set it to `/health` in the dashboard. Auto-deploy is on every commit and should be "After CI checks pass". Both are dashboard-only.
 - The Supabase MCP session is stale: it loads project ref `sgoxsghtkmcikzyxoqgj` (not `elkhvfcawllyoearrxop`) and fails OAuth discovery. Restart Claude Code. The Vercel MCP lists only project `abhijatri` (wrong account for the prototype). Render MCP works (one workspace) but I wait for your confirmation before using it.
 - The git root is the parent folder; CI lives in the root `.github/` (D-013).
 - D2 archive holds 3,150 images but its page/README state 2,545 (unexplained); D1 has 22 cross-class duplicate groups.

@@ -46,6 +46,8 @@ pipeline, `kb/`. Unresolved high items are marked **UNRESOLVED-HIGH** (the gate 
 | R9 | `ml/` data pipeline extracts third-party archives: zip-slip, symlink, ratio and size limits are enforced and tested; RAR extraction shells out to 7-Zip/unrar with fixed arguments and re-validates the result | accepted |
 | R10 | KB documents are untrusted input; OCR/PDF parsing has no sandbox yet (Phase 5 adds parser time-outs, size limits) | open for Phase 5 |
 
+| R12 | The Render `SECRET_KEY` was generated in an assistant session and passed through the chat | **ROTATE before sessions go live (Phase 1) and again for submission**: generate a new 64-hex value, set it in the Render dashboard, redeploy. It currently signs nothing |
+
 ## Not reviewed
 `frontend` application code (placeholder only), auth/sessions/CSRF (Phase 1), upload pipeline (Phase 4), LLM paths
 (Phase 6). Hosted stack configuration (not deployed).

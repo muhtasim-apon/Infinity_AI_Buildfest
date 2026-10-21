@@ -403,7 +403,9 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         if not healthy:
             return Step("20 P0 compose stack", "FAIL", time.time() - t0, "api never became healthy")
         code, note = run(
-            ["docker", "compose", "--profile", "tools", "run", "--rm", "migrate"], REPO, timeout=300
+            ["docker", "compose", "--profile", "tools", "run", "--rm", "--build", "migrate"],
+            REPO,
+            timeout=600,
         )
         if code != 0:
             return Step("20 P0 compose stack", "FAIL", time.time() - t0, f"migrate: {note}")
@@ -447,6 +449,112 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
             "" if code == 0 else note,
         )
 
+    def identity_suite() -> Step:
+        """Whole backend suite against REAL Postgres + Redis (no silent skips), then coverage floors."""
+        t0 = time.time()
+        name = "21 P1 identity suite"
+        if not docker_ok():
+            return Step(
+                name, "SKIP", 0.0, "docker not running" + ("" if offline else " (use --offline)")
+            )
+        compose_test = ["docker", "compose", "-f", "docker-compose.test.yml"]
+        code, note = run([*compose_test, "up", "-d", "--wait"], REPO, timeout=300)
+        if code != 0:
+            return Step(name, "FAIL", time.time() - t0, f"test stack: {note}")
+        env = {
+            "MIGRATION_DATABASE_URL": "postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:55432/cropguardian",
+            "TEST_SUPER_DATABASE_URL": "postgresql://postgres:test-only-password@127.0.0.1:55432/cropguardian",
+            "TEST_API_DATABASE_URL": "postgresql://cg_api:dev-api-pw@127.0.0.1:55432/cropguardian",
+            "TEST_REDIS_URL": "redis://127.0.0.1:56379/0",
+            "PYTHONPATH": str(BACKEND),
+        }
+        code, note = run([PY, "-m", "alembic", "upgrade", "head"], BACKEND, env=env)
+        if code != 0:
+            return Step(name, "FAIL", time.time() - t0, f"alembic upgrade: {note}")
+        RUNS.mkdir(parents=True, exist_ok=True)
+        report = RUNS / "coverage-p1.json"
+        proc = subprocess.run(
+            [PY, "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider", "-rs", "--cov=app",
+             "--cov-branch", f"--cov-report=json:{report}", "--cov-fail-under=80"],
+            cwd=BACKEND, capture_output=True, text=True, timeout=1800, check=False,
+            env={**os.environ, **env},
+        )  # fmt: skip
+        out = proc.stdout + proc.stderr
+        if proc.returncode != 0:
+            return Step(
+                name, "FAIL", time.time() - t0, " | ".join(out.strip().splitlines()[-6:])[:400]
+            )
+        silent = [ln for ln in out.splitlines() if "SKIPPED" in ln and "TEST_" in ln]
+        if silent:
+            return Step(
+                name, "FAIL", time.time() - t0, f"tests silently skipped: {silent[0][:200]}"
+            )
+        code, note = run([PY, "scripts/check_coverage.py", str(report)], BACKEND)
+        return Step(
+            name,
+            "PASS" if code == 0 else "FAIL",
+            time.time() - t0,
+            note if code else "real Postgres+Redis; coverage floors met",
+        )
+
+    def compose_smoke() -> Step:
+        """register+verify+login, admin TOTP flow, 429 on login, audit chain - on the real stack."""
+        t0 = time.time()
+        name = "22 P1 compose smoke"
+        if not docker_ok():
+            return Step(
+                name, "SKIP", 0.0, "docker not running" + ("" if offline else " (use --offline)")
+            )
+        bash = shutil.which("bash")
+        if bash is None:
+            return Step(name, "SKIP", 0.0, "bash not found")
+        run(
+            ["docker", "compose", "restart", "api"], REPO, timeout=120
+        )  # re-seed demo users after migrate
+        deadline = time.time() + 120
+        while time.time() < deadline:
+            probe, out = run(
+                ["docker", "compose", "ps", "api", "--format", "{{.Health}}"], REPO, timeout=30
+            )
+            if probe == 0 and out.strip().endswith("healthy") and "unhealthy" not in out:
+                break
+            time.sleep(3)
+        run(["docker", "compose", "restart", "nginx"], REPO, timeout=60)
+        time.sleep(3)
+        code, note = run(
+            [PY, "scripts/p1_smoke.py", "--insecure-loopback"], BACKEND, timeout=300,
+            env={"PYTHONPATH": str(BACKEND)},
+        )  # fmt: skip
+        return Step(
+            name,
+            "PASS" if code == 0 else "FAIL",
+            time.time() - t0,
+            note if code else "15 end-to-end checks",
+        )
+
+    def hosted_ready() -> Step:
+        t0 = time.time()
+        base = os.environ.get("HOSTED_HEALTH_URL", "").rsplit("/health", 1)[0]
+        if not base:
+            return Step(
+                "23 P1 hosted readiness",
+                "SKIP",
+                0.0,
+                "HOSTED_HEALTH_URL not set" + ("" if offline else " (use --offline)"),
+            )
+        code, note = run(
+            [PY, "-c", "import json,sys,urllib.request as u;d=json.load(u.urlopen(sys.argv[1]+'/health/ready',timeout=60));sys.exit(0 if d=={'db':'ok','redis':'ok'} else 1)", base],
+            REPO, timeout=90,
+        )  # fmt: skip
+        return Step(
+            "23 P1 hosted readiness",
+            "PASS" if code == 0 else "FAIL",
+            time.time() - t0,
+            "db + redis ok"
+            if code == 0
+            else "hosted /health/ready is not db+redis ok (deploy the new code and set REDIS_URL)",
+        )
+
     common = [
         environment,
         openapi,
@@ -466,7 +574,10 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         security_suite,
         frontend_tests,
     ]
-    phase_specific = {0: [compose_healthy, hosted_health]}.get(phase, [])
+    phase_specific = {
+        0: [compose_healthy, hosted_health],
+        1: [compose_healthy, identity_suite, compose_smoke, hosted_health, hosted_ready],
+    }.get(phase, [])
     return [*common, *phase_specific]
 
 

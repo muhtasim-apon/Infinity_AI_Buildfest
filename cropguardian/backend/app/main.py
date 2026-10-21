@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import health
+from app.api.v1 import account, auth, health
 from app.core.config import Settings, get_settings
 from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging, get_logger
@@ -26,6 +26,8 @@ from app.core.middleware import (
 )
 from app.db.session import make_engine
 from app.jobs.worker import start_inprocess_worker, stop_inprocess_worker
+from app.services.container import build_container
+from app.services.demo import seed_demo_users
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -37,12 +39,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.settings = settings
         app.state.engine = make_engine(settings) if settings.database_url else None
+        app.state.container = (
+            build_container(settings, app.state.engine) if app.state.engine is not None else None
+        )
+        if (
+            app.state.container is not None
+            and settings.demo_enabled
+            and settings.demo_seed_on_start
+        ):
+            try:
+                await seed_demo_users(app.state.engine)
+            except Exception as exc:  # non-fatal: the API must still start if the schema is behind
+                log.warning("demo_seed_failed", error_type=type(exc).__name__)
         app.state.worker = await start_inprocess_worker(settings)
         log.info("startup", env=settings.cg_env, jobs_mode=settings.jobs_mode)
         try:
             yield
         finally:
             await stop_inprocess_worker(app.state.worker)
+            if app.state.container is not None:
+                await app.state.container.close()
             if app.state.engine is not None:
                 await app.state.engine.dispose()
 
@@ -57,6 +73,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     app.state.settings = settings
     app.state.engine = None
+    app.state.container = None
 
     # add_middleware wraps outward: the LAST added runs FIRST. Spec order is
     # request-id -> request log -> trusted host -> body limit -> security headers: add in reverse.
@@ -76,6 +93,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     install_error_handlers(app)
     app.include_router(health.router)
+    app.include_router(auth.router)
+    app.include_router(account.router)
+    if settings.cg_env == "test":
+        from app.api.v1 import test_support
+
+        app.include_router(test_support.router)
     return app
 
 
