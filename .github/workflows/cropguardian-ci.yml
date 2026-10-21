@@ -42,7 +42,7 @@ jobs:
           cache-dependency-path: |
             cropguardian/backend/requirements-dev.txt
             cropguardian/ml/requirements-dev.txt
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
