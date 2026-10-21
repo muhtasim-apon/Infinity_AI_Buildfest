@@ -33,7 +33,7 @@ jobs:
       TEST_SUPER_DATABASE_URL: postgresql://postgres:test-only-password@127.0.0.1:5432/cropguardian
       PYTHONPATH: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
         with:
