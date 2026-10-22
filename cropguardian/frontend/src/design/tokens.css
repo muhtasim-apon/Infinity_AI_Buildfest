@@ -48,6 +48,21 @@
   --shadow-lg: 0 12px 32px rgb(18 32 26 / 0.14);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 5px var(--primary);
 
+  /* motion (spec 15.2): mirrors src/design/motion.ts; motion.test.ts fails on drift */
+  --duration-press: 80ms;
+  --duration-fast: 120ms;
+  --duration-shake: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --duration-page: 240ms;
+  --duration-reveal: 400ms;
+  --duration-draw: 600ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --shimmer-duration: 1.4s;
+  --breathe-duration: 2.4s;
+
   --font-bn: 'Noto Sans Bengali', 'Inter', system-ui, sans-serif;
   --font-latin: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;

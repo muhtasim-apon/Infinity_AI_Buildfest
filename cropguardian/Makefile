@@ -8,11 +8,11 @@ export TEST_SUPER_DATABASE_URL ?= postgresql://postgres:test-only-password@127.0
 export TEST_API_DATABASE_URL ?= postgresql://cg_api:dev-api-pw@127.0.0.1:55432/cropguardian
 export MIGRATION_DATABASE_URL ?= postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:55432/cropguardian
 
-.PHONY: help env certs up down logs up-prod migrate test test-unit test-backend test-frontend security \
+.PHONY: budgets a11y visual visual-update lighthouse gallery help env certs up down logs up-prod migrate test test-unit test-backend test-frontend security \
         gate lock wheelhouse openapi lint fmt test-db test-db-down deps-update stubs
 
 help: ## list targets
-	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  %-16s %s\n",$$1,$$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  %-16s %s\n",$$1,$$2}'
 
 env: ## generate .env with strong random secrets (never overwrites)
 	@$(PY) backend/scripts/make_env.py
@@ -87,9 +87,35 @@ e2e: ## Playwright journeys through nginx (stack must be up)
 deps-update: ## show outdated pins (review, then edit requirements.txt)
 	cd backend && ../$(PY) -m pip list --outdated
 
+# Phase 2 (spec 19.7): the accessibility, visual, performance and gallery targets. Playwright ones need
+# the stack up (`make up`); `visual` compares against committed baselines (`visual-update` rewrites them).
+E2E_WIDTHS := --project=w360 --project=w768 --project=w1366
+
+budgets: ## bundle budgets (spec 15.9) on a fresh production build
+	cd frontend && npm run build --silent
+
+a11y: ## axe on every built screen at 360/768/1366, both themes and languages (stack must be up)
+	cd e2e && npx playwright test a11y $(E2E_WIDTHS)
+
+visual: ## visual regression against the committed baselines (stack must be up)
+	@test -f e2e/journeys/visual.spec.ts || { echo "make visual: not built yet (Phase 2 Block 3)"; exit 2; }
+	cd e2e && npx playwright test visual --project=w360 --project=w1366
+
+visual-update: ## rewrite the visual baselines after an intended design change (review the diff!)
+	@test -f e2e/journeys/visual.spec.ts || { echo "make visual-update: not built yet (Phase 2 Block 3)"; exit 2; }
+	cd e2e && npx playwright test visual --project=w360 --project=w1366 --update-snapshots
+
+lighthouse: ## Lighthouse on the production build of the landing page (spec 15.11 thresholds)
+	@test -f frontend/scripts/lighthouse.mjs || { echo "make lighthouse: not built yet (Phase 2 Block 3)"; exit 2; }
+	cd frontend && node scripts/lighthouse.mjs
+
+gallery: ## runs/demos/gallery.html: every built screen, light/dark, 390 and 1440, bn and en
+	@test -f e2e/journeys/gallery.spec.ts || { echo "make gallery: not built yet (Phase 2 Block 3)"; exit 2; }
+	cd e2e && npx playwright test gallery --project=w360 --project=w1366
+
 # Targets from spec 19.7 that belong to later phases fail loudly instead of pretending to work.
-STUB_TARGETS := seed seed-demo demo-reset create-admin a11y visual visual-update fuzz zap load chaos \
-                lighthouse readiness gallery advice-warm kb-ingest rag-eval ml-prepare ml-train ml-eval \
+STUB_TARGETS := seed seed-demo demo-reset create-admin fuzz zap load chaos \
+                readiness advice-warm kb-ingest rag-eval ml-prepare ml-train ml-eval \
                 ml-export ml-cards register-model geo backup restore-drill docs
 .PHONY: $(STUB_TARGETS)
 $(STUB_TARGETS):

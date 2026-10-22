@@ -269,34 +269,47 @@ export function RegisterPage() {
             <input type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
           </label>
         </div>
-        <fieldset className="mt-6">
-          <legend className="font-medium">{pick(service?.title)}</legend>
-          <p className="mt-1 text-sm text-muted">{pick(service?.body)}</p>
-          <label className="mt-2 flex min-h-[44px] items-start gap-2">
-            <input type="checkbox" className="mt-1" {...register('accept_service')} />
-            <span>{pick(service?.title)}</span>
-          </label>
-          {errors.accept_service ? (
-            <p role="alert" className="text-sm text-danger">
-              {t(V)}
-            </p>
-          ) : null}
-          {optional.map((c) => (
-            <div key={c.purpose} className="mt-3">
-              <label className="flex min-h-[44px] items-start gap-2">
-                <input
-                  type="checkbox"
-                  className="mt-1"
-                  {...register(c.purpose === 'training_use' ? 'training_use' : 'push_alerts')}
-                />
-                <span>
-                  <span className="font-medium">{pick(c.title)}</span>
-                  <span className="block text-sm text-muted">{pick(c.body)}</span>
-                </span>
-              </label>
-            </div>
-          ))}
-        </fieldset>
+        {/* The consent labels ARE the checkbox names, so the fieldset only exists once the wording has
+            loaded: an unnamed checkbox is a critical a11y failure (axe `label`) and a consent the
+            farmer cannot read must not be submittable (fail closed). */}
+        {service ? (
+          <fieldset className="mt-6">
+            <legend className="font-medium">{pick(service.title)}</legend>
+            <p className="mt-1 text-sm text-muted">{pick(service.body)}</p>
+            <label className="mt-2 flex min-h-[44px] items-start gap-2">
+              <input type="checkbox" className="mt-1" {...register('accept_service')} />
+              <span>{pick(service.title)}</span>
+            </label>
+            {errors.accept_service ? (
+              <p role="alert" className="text-sm text-danger">
+                {t(V)}
+              </p>
+            ) : null}
+            {optional.map((c) => (
+              <div key={c.purpose} className="mt-3">
+                <label className="flex min-h-[44px] items-start gap-2">
+                  <input
+                    type="checkbox"
+                    className="mt-1"
+                    {...register(c.purpose === 'training_use' ? 'training_use' : 'push_alerts')}
+                  />
+                  <span>
+                    <span className="font-medium">{pick(c.title)}</span>
+                    <span className="block text-sm text-muted">{pick(c.body)}</span>
+                  </span>
+                </label>
+              </div>
+            ))}
+          </fieldset>
+        ) : wording.isError ? (
+          <p role="alert" className="mt-6 text-danger">
+            {t('errors.unavailable')}
+          </p>
+        ) : (
+          <p role="status" className="mt-6 text-muted">
+            {t('common.loading')}
+          </p>
+        )}
         <p role="status" className="mt-4 text-sm text-muted">
           {t(
             captcha.status === 'failed'
@@ -307,7 +320,7 @@ export function RegisterPage() {
           )}
         </p>
         <FormError error={error} />
-        <Button type="submit" disabled={isSubmitting || captcha.status !== 'ready'}>
+        <Button type="submit" disabled={isSubmitting || captcha.status !== 'ready' || !service}>
           {t('auth.register.submit')}
         </Button>
       </form>

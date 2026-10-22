@@ -10,6 +10,8 @@ export default defineConfig({
     cssCodeSplit: true,
     assetsInlineLimit: 0,
     sourcemap: false,
+    // dist/.vite/manifest.json lets scripts/check-budgets.mjs see the real chunk graph (budgets, 3D isolation)
+    manifest: true,
     modulePreload: { polyfill: false },
   },
   server: { port: 5173, strictPort: true, proxy: { '/api': 'http://localhost:8000' } },

@@ -1,3 +1,4 @@
+import './lib/zodConfig' // first: keeps Zod from probing eval under the strict CSP (D-027)
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './app/App'

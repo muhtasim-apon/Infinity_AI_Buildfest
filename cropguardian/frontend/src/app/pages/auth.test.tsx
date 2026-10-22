@@ -1,9 +1,9 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { axe } from 'vitest-axe'
 import { describe, expect, it } from 'vitest'
-import { problem, server, signedIn } from '../../../tests/msw'
+import { CONSENTS, problem, server, signedIn } from '../../../tests/msw'
 import { bnText, renderApp } from '../../../tests/render'
 
 const where = () => screen.getByTestId('location').textContent
@@ -248,6 +248,39 @@ describe('registration and OTP', () => {
     expect(trap).toHaveAttribute('aria-hidden', 'true')
     expect(trap?.querySelector('input')).toHaveAttribute('tabindex', '-1')
   })
+
+  it('never shows an unnamed consent checkbox while the wording loads (axe `label`, found by E2E)', async () => {
+    statefulAuth()
+    server.use(
+      http.get('*/api/v1/consents/texts', async () => {
+        await delay(400)
+        return HttpResponse.json(CONSENTS)
+      }),
+    )
+    const { container } = renderApp('/register')
+    await screen.findByText(bnText('auth.register.title'))
+    // loading window: no checkbox exists, a status says so, submit is locked, and the page is clean
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
+    expect(screen.getByRole('button', { name: bnText('auth.register.submit') })).toBeDisabled()
+    expect(await axe(container)).toHaveNoViolations()
+    // once loaded, every checkbox carries its consent text as its accessible name
+    const boxes = await screen.findAllByRole('checkbox')
+    expect(boxes.length).toBeGreaterThan(0)
+    for (const box of boxes) expect(box).toHaveAccessibleName()
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('fails closed when the consent wording cannot be loaded: message shown, submit stays locked', async () => {
+    statefulAuth()
+    server.use(http.get('*/api/v1/consents/texts', () => problem(503, 'unavailable')))
+    renderApp('/register')
+    await screen.findByText(bnText('auth.register.title'))
+    expect(await screen.findByText(bnText('errors.unavailable'))).toBeInTheDocument()
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
+    // even after the CAPTCHA is solved, a consent the farmer cannot read must not be submittable
+    await screen.findByText(bnText('auth.captcha.label'), undefined, { timeout: 5000 })
+    expect(screen.getByRole('button', { name: bnText('auth.register.submit') })).toBeDisabled()
+  }, 20_000) // waits for a real proof-of-work solve
 
   it('shows the weak-password message from the server', async () => {
     statefulAuth()

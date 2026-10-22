@@ -25,9 +25,11 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]  # cropguardian/
 BACKEND = REPO / "backend"
 FRONTEND = REPO / "frontend"
+E2E = REPO / "e2e"
 RUNS = REPO / "runs" / "gates"
 PY = sys.executable
 NPM = shutil.which("npm") or "npm"  # npm.cmd on Windows
+NPX = shutil.which("npx") or "npx"
 DEPENDS: dict[int, list[int]] = {
     0: [],
     1: [0],
@@ -215,11 +217,14 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
 
     def project_checks() -> Step:
         t0 = time.time()
-        for script in ("check_forbidden", "check_layers", "check_honesty"):
+        scripts = ["check_forbidden", "check_layers", "check_honesty"]
+        if phase >= 2:
+            scripts.append("check_i18n")  # spec 19.6 step 6: from Phase 2
+        for script in scripts:
             code, note = run([PY, f"scripts/{script}.py"], BACKEND)
             if code != 0:
                 return Step("6 project checks", "FAIL", time.time() - t0, f"{script}: {note}")
-        return Step("6 project checks", "PASS", time.time() - t0, "forbidden, layers, honesty")
+        return Step("6 project checks", "PASS", time.time() - t0, ", ".join(x[6:] for x in scripts))
 
     def rls() -> Step:
         t0 = time.time()
@@ -515,9 +520,11 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
         )  # fmt: skip
         out = proc.stdout + proc.stderr
         if proc.returncode != 0:
-            return Step(
-                name, "FAIL", time.time() - t0, " | ".join(out.strip().splitlines()[-6:])[:400]
-            )
+            lines = out.strip().splitlines()
+            # name the failing tests first: the tail alone cannot identify a flaky one
+            failed = [ln for ln in lines if ln.startswith(("FAILED ", "ERROR "))][:5]
+            note = " | ".join([*failed, *lines[-3:]])[:600]
+            return Step(name, "FAIL", time.time() - t0, note)
         silent = [ln for ln in out.splitlines() if "SKIPPED" in ln and "TEST_" in ln]
         if silent:
             return Step(
@@ -589,6 +596,84 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
             else "hosted /health/ready is not db+redis ok (deploy the new code and set REDIS_URL)",
         )
 
+    # ---- Phase 2+ checks (spec 20 Phase 2 "Gate checks", 19.6 steps 15-17) -----------------------
+    # A target that does not exist yet is a FAIL here, never N/A: a P2 PASS must mean every check ran.
+    def not_built(name: str, target: Path, what: str) -> Step | None:
+        if target.exists():
+            return None
+        rel = target.relative_to(REPO).as_posix()
+        return Step(name, "FAIL", 0.0, f"not built yet: {rel} ({what})")
+
+    def playwright_step(name: str, spec: str, args: list[str]) -> Step:
+        t0 = time.time()
+        missing = not_built(name, E2E / "journeys" / spec, "spec not written")
+        if missing:
+            return missing
+        if not (E2E / "node_modules").exists():
+            return Step(name, "FAIL", 0.0, "e2e not installed (npm --prefix e2e ci)")
+        if not docker_ok():
+            return Step(
+                name, "SKIP", 0.0, "docker not running" + ("" if offline else " (use --offline)")
+            )
+        code, note = run([NPX, "playwright", "test", spec.split(".")[0], *args], E2E, timeout=1800)
+        return Step(
+            name, "PASS" if code == 0 else "FAIL", time.time() - t0, "" if code == 0 else note
+        )
+
+    def p2_budgets() -> Step:
+        return tool_step(
+            "P2 bundle budgets",
+            "npm",
+            [NPM, "run", "budgets", "--silent"],
+            FRONTEND,
+            offline,
+            is_module=False,
+        )
+
+    def p2_no_inline() -> Step:
+        return tool_step(
+            "P2 no inline scripts/styles",
+            "node",
+            ["node", "scripts/check-csp-compat.mjs"],
+            FRONTEND,
+            offline,
+            is_module=False,
+        )
+
+    def p2_e2e_layout() -> Step:
+        widths = ["--project=w360", "--project=w768", "--project=w1366"]
+        name = "15 P2 E2E 360/768/1366"
+        for spec in ("layout.spec.ts", "shells.spec.ts"):
+            missing = not_built(name, E2E / "journeys" / spec, "spec not written")
+            if missing:
+                return missing
+        return playwright_step(name, "layout.spec.ts", widths)
+
+    def p2_axe() -> Step:
+        widths = ["--project=w360", "--project=w768", "--project=w1366"]
+        return playwright_step("16 P2 axe on every built screen", "a11y.spec.ts", widths)
+
+    def p2_visual() -> Step:
+        return playwright_step(
+            "17 P2 visual regression", "visual.spec.ts", ["--project=w360", "--project=w1366"]
+        )
+
+    def p2_script(name: str, script: str, what: str) -> Step:
+        t0 = time.time()
+        missing = not_built(name, FRONTEND / "scripts" / script, what)
+        if missing:
+            return missing
+        code, note = run(["node", f"scripts/{script}"], FRONTEND, timeout=900)
+        return Step(
+            name, "PASS" if code == 0 else "FAIL", time.time() - t0, "" if code == 0 else note
+        )
+
+    def p2_lighthouse() -> Step:
+        return p2_script("P2 Lighthouse thresholds", "lighthouse.mjs", "landing performance budget")
+
+    def p2_stills() -> Step:
+        return p2_script("P2 stills manifest current", "check-stills.mjs", "hero stills manifest")
+
     common = [
         environment,
         openapi,
@@ -611,6 +696,19 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
     phase_specific = {
         0: [compose_healthy, hosted_health],
         1: [compose_healthy, identity_suite, compose_smoke, hosted_health, hosted_ready],
+        2: [
+            compose_healthy,
+            compose_smoke,
+            p2_budgets,
+            p2_no_inline,
+            p2_e2e_layout,
+            p2_axe,
+            p2_visual,
+            p2_lighthouse,
+            p2_stills,
+            hosted_health,
+            hosted_ready,
+        ],
     }.get(phase, [])
     return [*common, *phase_specific]
 

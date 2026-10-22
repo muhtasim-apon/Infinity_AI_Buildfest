@@ -294,5 +294,22 @@
   "notify": {
     "newDevice": "A new device signed in",
     "newDeviceBody": "If this was not you, change your password now."
+  },
+  "ui": {
+    "required": "Required",
+    "optional": "Optional",
+    "notifications": "Notifications",
+    "band": {
+      "low": "Low confidence"
+    },
+    "risk": {
+      "low": "Low risk",
+      "medium": "Medium risk",
+      "high": "High risk"
+    },
+    "confirm": {
+      "typeToConfirm": "Type “{{text}}” to confirm",
+      "confirm": "Confirm"
+    }
   }
 }
