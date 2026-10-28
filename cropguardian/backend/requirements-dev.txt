@@ -13,4 +13,4 @@ pip-tools==7.4.1
 truststore==0.10.5
 schemathesis==4.32.2
 factory-boy==3.3.3
-coverage==7.16.2
+coverage==7.17.0
