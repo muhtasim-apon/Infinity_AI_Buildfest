@@ -38,7 +38,7 @@ export function StaffTopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch
         >
           <Search className="h-4 w-4" aria-hidden="true" />
           {t('staff.palette.open')}
-          <kbd className="rounded border border-border px-1.5 text-xs">Ctrl K</kbd>
+          <kbd className="rounded border border-border px-1.5 text-xs">{t('staff.shortcut')}</kbd>
         </Button>
         <IconButton aria-label={t('staff.palette.open')} className="sm:hidden" onClick={onSearch}>
           <Search className="h-5 w-5" aria-hidden="true" />

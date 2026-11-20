@@ -34,7 +34,7 @@ EMAIL_KINDS = ("verify", "reset", "invite", "new_device")
 SUBJECTS = {
     "verify": "ইমেইল যাচাই করুন · Verify your email",
     "reset": "পাসওয়ার্ড পুনরুদ্ধার · Reset your password",
-    "invite": "ফসল রক্ষীতে আমন্ত্রণ · Invitation to Crop Guardian",
+    "invite": "কাকতাড়ুয়াতে আমন্ত্রণ · Invitation to Kakatarua",
     "new_device": "নতুন ডিভাইস থেকে লগইন · New device sign-in",
 }
 

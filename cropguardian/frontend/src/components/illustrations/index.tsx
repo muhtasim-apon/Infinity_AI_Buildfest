@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { duration, ease } from '../../design/motion'
 import { useMotionPolicy } from '../../design/useMotion'
 import { cn } from '../../lib/cn'
+import { ScarecrowMark } from '../app/FieldScene'
 
 /**
  * Team-drawn illustration set (spec 15.5.2: icons and pictures carry meaning, text supports them; no
@@ -361,28 +362,7 @@ export function BracketFrame({
   )
 }
 
-/** The brand mark (the favicon): paddy-green tile, white leaf, gold sun. */
+/** The brand mark (the favicon): a scarecrow (কাকতাড়ুয়া) on a paddy-green tile. */
 export function LogoMark({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      className={cn('h-8 w-8', className)}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <rect width="64" height="64" rx="14" className="fill-primary" />
-      <path
-        d="M32 11c-9.5 8.2-15 16.6-15 26 0 8.4 6.4 15 15 15s15-6.6 15-15c0-9.4-5.5-17.8-15-26z"
-        className="fill-primary-on"
-      />
-      <path
-        d="M32 24v27M32 36l-7.5-6.5M32 43l7.5-6.5"
-        className="stroke-primary"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <circle cx="48" cy="16" r="5.5" className="fill-accent" />
-    </svg>
-  )
+  return <ScarecrowMark className={className} />
 }

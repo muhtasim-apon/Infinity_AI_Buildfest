@@ -16,7 +16,7 @@ interface Tab {
   primary?: boolean
 }
 
-/** হোম · ইতিহাস · (ছবি) · সতর্কতা · আরও: scan sits in the centre, raised (spec 15.4 wireframe F1). */
+/** হোম · ইতিহাস · (ছবি) · সতর্কতা · আরও: a floating pill bar; scan sits in the centre as a gold disc. */
 export const FARMER_TABS: Tab[] = [
   { to: '/app', end: true, icon: House, label: 'nav.home' },
   { to: '/app/history', icon: Clock, label: 'nav.history' },
@@ -38,9 +38,9 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label={t('navShell.tabs')}
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[480px] border-t border-border bg-surface pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-3 bottom-[calc(12px+env(safe-area-inset-bottom))] z-40 mx-auto max-w-[456px] rounded-full bg-primary px-2 shadow-lg"
     >
-      <ul className="grid h-16 grid-cols-5">
+      <ul className="grid h-[68px] grid-cols-5 items-center">
         {FARMER_TABS.map((tab) => {
           const Icon = tab.icon
           return (
@@ -52,8 +52,8 @@ export function BottomTabBar() {
                   cn(
                     'relative flex w-full flex-col items-center justify-center gap-0.5 text-xs font-medium',
                     'transition-colors duration-fast ease-standard',
-                    tab.primary ? '-mt-6 justify-start' : 'min-h-[48px]',
-                    isActive ? 'text-primary' : 'text-muted',
+                    'min-h-[56px] rounded-full',
+                    isActive ? 'text-primary-on' : 'text-primary-on opacity-80',
                   )
                 }
               >
@@ -62,12 +62,12 @@ export function BottomTabBar() {
                     {tab.primary ? (
                       <span
                         className={cn(
-                          'flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-on',
-                          'shadow-lg ring-4 ring-bg transition-transform duration-fast ease-standard',
+                          'flex h-11 w-11 items-center justify-center rounded-full bg-accent text-text',
+                          'shadow-md transition-transform duration-fast ease-standard',
                           'motion-ok:active:scale-95',
                         )}
                       >
-                        <Icon className="h-7 w-7" aria-hidden="true" />
+                        <Icon className="h-6 w-6" aria-hidden="true" />
                       </span>
                     ) : (
                       <>
@@ -75,14 +75,14 @@ export function BottomTabBar() {
                           <motion.span
                             layoutId={`tab-pill-${group}`}
                             transition={transition}
-                            className="absolute inset-x-5 top-0 h-0.5 rounded-full bg-primary"
+                            className="absolute inset-x-1 inset-y-1 rounded-full bg-primary-hover"
                             aria-hidden="true"
                           />
                         ) : null}
-                        <Icon className="h-6 w-6" aria-hidden="true" />
+                        <Icon className="relative h-5 w-5" aria-hidden="true" />
                       </>
                     )}
-                    <span className={cn(tab.primary && 'mt-0.5')}>{t(tab.label)}</span>
+                    <span className="relative text-[11px] leading-tight">{t(tab.label)}</span>
                   </>
                 )}
               </NavLink>

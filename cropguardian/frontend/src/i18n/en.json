@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Crop Guardian",
+    "name": "Kakatarua",
     "tagline": "Take a photo of a rice leaf and get the right advice"
   },
   "common": {
@@ -28,7 +28,7 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "AgriSphere AI · Crop Guardian",
+      "eyebrow": "AgriSphere AI · Kakatarua",
       "headline": "One leaf photo. A whole area protected.",
       "sub": "Take a photo of a rice leaf. Identify the disease. Warn your area in time.",
       "trustLine": "Built on public Bangladeshi field datasets · every answer is cited",
@@ -419,10 +419,11 @@
       "abstained": "Unsure results",
       "emptyTitle": "No photos yet",
       "emptyHint": "The queue appears here when photos arrive."
-    }
+    },
+    "shortcut": "Ctrl K"
   },
   "footer": {
-    "tagline": "ফসল রক্ষী · for Bangladesh's rice farmers",
+    "tagline": "কাকতাড়ুয়া · for Bangladesh's rice farmers",
     "honesty": "This is a demo. No results are claimed here."
   },
   "navShell": {
@@ -531,7 +532,7 @@
     },
     "trust": {
       "title": "Trust Centre",
-      "intro": "What Crop Guardian knows, where it comes from, and what it does not know.",
+      "intro": "What Kakatarua knows, where it comes from, and what it does not know.",
       "sourcesTitle": "Knowledge-base sources",
       "chunks": "{{count}} passages",
       "excludedTitle": "Deliberately left out",
@@ -566,6 +567,20 @@
       "notSure": "Not sure",
       "healthy": "Healthy",
       "noData": "No photos in the last 30 days."
+    },
+    "ui2": {
+      "heroTitle": "Beside your field, always",
+      "heroBody": "Photograph a leaf. Identify the disease, hear an honest 'not sure' when the app is unsure, and get advice from BRRI sources.",
+      "heroTrust": "How it works and its limits",
+      "statScans": "Photos",
+      "statDiagnosed": "Diagnosed",
+      "statAlerts": "Alerts",
+      "ringTitle": "Confident answers",
+      "ringBody": "Share of photos the app answered with confidence. For the rest it said 'not sure' instead of guessing.",
+      "ringEmpty": "Take your first photo to see this.",
+      "diseasesTitle": "Diseases it knows",
+      "viewAll": "View all",
+      "diseaseHint": "BRRI factsheet"
     }
   }
 }

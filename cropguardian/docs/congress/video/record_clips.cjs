@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs')
 const { chromium } = require(path.resolve(__dirname, '../../../e2e/node_modules/@playwright/test'))
 
-const BASE = 'https://infinityaibuildfest-prototype-five.vercel.app'
+const BASE = process.env.APP_BASE || 'https://infinityaibuildfest-prototype-five.vercel.app'
 const out = path.resolve(process.argv[2])
 const photos = path.resolve(process.argv[3])
 const only = (process.argv[4] || '').replace('only=', '').split(',').filter(Boolean)

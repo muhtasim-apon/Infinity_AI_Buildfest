@@ -1,0 +1,107 @@
+1
+00:00:01,800 --> 00:00:07,144
+In Bangladesh, rice is the
+staple crop, grown on small family farms.
+
+2
+00:00:07,274 --> 00:00:13,314
+When a leaf turns sick, there is often no expert nearby,
+and advice is rarely in plain Bangla.
+
+3
+00:00:13,444 --> 00:00:21,124
+The Bangladesh Rice Research Institute warns that blast can
+cut yield by up to eighty percent, and bacterial leaf blight by about thirty.
+
+4
+00:00:21,254 --> 00:00:27,943
+Rice diseases threaten harvests wherever rice
+is grown. A wrong guess means the wrong spray and lost money.
+
+5
+00:00:30,000 --> 00:00:33,884
+Meet Kakatarua, the scarecrow that watches your field.
+
+6
+00:00:34,015 --> 00:00:40,904
+A farmer photographs one rice leaf. AI
+suggests the disease, or honestly says it is not sure.
+
+7
+00:00:41,034 --> 00:00:47,749
+Advice comes only from official rice research factsheets, in
+plain Bangla, every step with its source.
+
+8
+00:00:47,879 --> 00:00:54,638
+It never invents a dose, never names a pesticide, and no outbreak
+alert reaches farmers until a human approves it.
+
+9
+00:01:00,000 --> 00:01:05,570
+This is the live app: Bangla
+first, English one tap away, with read-aloud.
+
+10
+00:01:05,700 --> 00:01:15,779
+The farmer picks a division, never an exact location, and takes
+a photo. GPS data is removed, and blurry photos are refused before any AI call.
+
+11
+00:01:15,909 --> 00:01:23,448
+Meta's Muse Spark model must choose from nine
+rice diseases. Here it found brown spot, with medium confidence.
+
+12
+00:01:23,578 --> 00:01:33,303
+The farmer gets five simple steps from the BRRI brown spot factsheet, each
+with its source, and a reminder to ask the agriculture office before using any chemical.
+
+13
+00:01:33,433 --> 00:01:41,212
+When the photo is poor or the model is unsure, Kakatarua says: I am
+not sure, and gives retake tips instead of guessing.
+
+14
+00:01:41,342 --> 00:01:50,802
+Three photos of one disease in one division within a week create a
+draft alert. A reviewer approves it before farmers see: possible outbreak, unverified.
+
+15
+00:02:00,000 --> 00:02:06,020
+Under the hood: photo in,
+AI triage, retrieval, validated advice out.
+
+16
+00:02:06,149 --> 00:02:13,579
+Contextual retrieval searches thirty-nine passages from nine BRRI
+factsheets, each with an AI-written context line.
+
+17
+00:02:13,709 --> 00:02:21,058
+A validator checks every citation and every number,
+and our own MCP server exposes the same knowledge base to developers.
+
+18
+00:02:21,188 --> 00:02:29,268
+Row-level security on Supabase, FastAPI on Render,
+React on Vercel, and more than one thousand automated tests.
+
+19
+00:02:30,000 --> 00:02:38,424
+First live test: on five labelled field photos, both confident
+answers were right, and all three wrong guesses were held back as not sure.
+
+20
+00:02:38,554 --> 00:02:45,879
+Our targets: zero wrong advice shown, verified outbreak alerts
+within a week, and fewer unnecessary sprays.
+
+21
+00:02:46,009 --> 00:02:54,608
+Next: a labelled evaluation, agronomist review and
+more crops, sponsored by cooperatives, NGOs and extension programmes.
+
+22
+00:02:54,738 --> 00:02:58,748
+Kakatarua. Honest help for every rice field.

@@ -26,6 +26,8 @@ import { Badge, SimulatedBadge } from '../../components/ui/badge'
 import { Button } from '../../components/ui/button'
 import { Card, CardTitle } from '../../components/ui/card'
 import { ConfidenceBandChip } from '../../components/ui/chips'
+import { Ring } from '../../components/ui/progress'
+import { FieldScene } from '../../components/app/FieldScene'
 import { NativeSelect } from '../../components/ui/controls'
 import { EmptyState, ErrorState, SkeletonCard } from '../../components/ui/states'
 import {
@@ -35,13 +37,14 @@ import {
   scanKeys,
   uploadScan,
   useAlerts,
+  useKbSources,
   useScan,
   useScans,
   type OutbreakAlert,
   type Scan,
 } from '../../features/scans/api'
 import { ApiError } from '../../lib/api'
-import { formatExact, formatNumber } from '../../lib/format'
+import { dayPart, formatDate, formatExact, formatNumber } from '../../lib/format'
 import { flushOutbox, outbox } from '../../lib/outbox'
 import { useOnline } from '../../lib/useOnline'
 import { isLocale } from '../../i18n'
@@ -117,34 +120,120 @@ export function FarmerLayout() {
 // ------------------------------------------------------------------------------------- home
 export function FarmerHomePage() {
   const { t } = useTranslation()
+  const locale = useLocale()
   const { state } = useAuth()
   const scans = useScans()
   const alerts = useAlerts()
+  const kb = useKbSources()
   const demo = state?.role?.startsWith('DEMO_') ?? false
+  const all = scans.data ?? []
+  const diagnosed = all.filter((s) => s.status === 'diagnosed').length
+  const confident = all.filter((s) => s.status !== 'not_sure').length
+  const now = new Date()
+  const n = (x: number) => formatNumber(x, locale)
+  const diseases = Object.entries(kb.data?.diseases ?? {})
+  const tones = [
+    'bg-disease-1',
+    'bg-disease-2',
+    'bg-disease-3',
+    'bg-disease-4',
+    'bg-disease-5',
+    'bg-disease-6',
+    'bg-disease-7',
+  ]
   return (
-    <section className="space-y-6">
-      <div className="flex items-start justify-between gap-2">
-        <h1 className="text-2xl font-semibold">
-          {t('home.welcome', { name: state?.display_name ?? '' })}
-        </h1>
-        {demo ? <SimulatedBadge /> : null}
-      </div>
-      <Card className="bg-primary-soft">
-        <div className="flex items-center gap-3">
-          <Leaf className="h-10 w-10 shrink-0 text-primary" aria-hidden="true" />
-          <div>
-            <p className="text-xl font-semibold">{t('farmerHome.hero.title')}</p>
-            <p className="text-muted">{t('farmerHome.hero.body')}</p>
+    <section className="space-y-5">
+      <div className="relative -mx-4 -mt-2 h-72 overflow-hidden rounded-b-xl">
+        <FieldScene className="absolute inset-0" scarecrow={false} />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-primary from-40% to-transparent to-90%"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-x-0 bottom-0 p-5 text-primary-on">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm opacity-90">{formatDate(now, locale)}</p>
+            {demo ? <SimulatedBadge /> : null}
+          </div>
+          <h1 className="mt-1 text-2xl font-bold">
+            {t(`farmerHome.greeting.${dayPart(now)}`, { name: state?.display_name ?? '' })}
+          </h1>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {[
+              [n(all.length), t('cg.ui2.statScans')],
+              [n(diagnosed), t('cg.ui2.statDiagnosed')],
+              [n(alerts.data?.length ?? 0), t('cg.ui2.statAlerts')],
+            ].map(([value, label]) => (
+              <div
+                key={label}
+                className="rounded-lg border border-primary-on px-3 py-2 text-center"
+              >
+                <p className="text-xl font-bold tabular-nums">{value}</p>
+                <p className="text-xs opacity-90">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
-        <Button asChild size="xl-farmer" className="mt-4">
-          <Link to="/app/scan">
-            <Camera className="h-6 w-6" aria-hidden="true" />
-            {t('farmerHome.hero.cta')}
-          </Link>
-        </Button>
-        <p className="mt-2 text-sm text-muted">{t('cg.scan.riceOnly')}</p>
+      </div>
+
+      <Card className="flex items-center gap-4">
+        <Ring
+          value={all.length ? confident / all.length : 0}
+          label={t('cg.ui2.ringTitle')}
+          size={84}
+        >
+          <span className="text-lg font-bold tabular-nums">
+            {all.length ? `${n(confident)}/${n(all.length)}` : n(0)}
+          </span>
+        </Ring>
+        <div>
+          <p className="text-lg font-semibold">{t('cg.ui2.ringTitle')}</p>
+          <p className="text-sm text-muted">
+            {all.length ? t('cg.ui2.ringBody') : t('cg.ui2.ringEmpty')}
+          </p>
+        </div>
       </Card>
+
+      <Button asChild size="xl-farmer" className="rounded-full">
+        <Link to="/app/scan">
+          <Camera className="h-6 w-6" aria-hidden="true" />
+          {t('farmerHome.hero.cta')}
+        </Link>
+      </Button>
+      <p className="-mt-3 text-center text-sm text-muted">{t('cg.scan.riceOnly')}</p>
+
+      {diseases.length ? (
+        <div>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{t('cg.ui2.diseasesTitle')}</h2>
+            <Link
+              to="/trust"
+              className="min-h-[44px] content-center text-sm text-primary underline"
+            >
+              {t('cg.ui2.viewAll')}
+            </Link>
+          </div>
+          <ul className="-mx-4 mt-2 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+            {diseases.map(([code, names], idx) => (
+              <li
+                key={code}
+                className="w-36 shrink-0 snap-start overflow-hidden rounded-lg border border-border bg-surface shadow-xs"
+              >
+                <div
+                  className={`flex h-20 items-center justify-center ${tones[idx % tones.length]}`}
+                >
+                  <Leaf className="h-9 w-9 text-primary-on" aria-hidden="true" />
+                </div>
+                <div className="p-3">
+                  <p className="font-semibold" lang="bn">
+                    {locale === 'bn' ? names.bn : names.en}
+                  </p>
+                  <p className="text-xs text-muted">{t('cg.ui2.diseaseHint')}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div>
         <h2 className="text-lg font-semibold">{t('farmerHome.alerts.title')}</h2>

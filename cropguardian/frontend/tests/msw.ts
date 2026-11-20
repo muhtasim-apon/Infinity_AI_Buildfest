@@ -60,6 +60,25 @@ export const defaultHandlers = [
   http.get('*/api/v1/scans', () => HttpResponse.json({ scans: [] })),
   http.get('*/api/v1/alerts', () => HttpResponse.json({ alerts: [] })),
   http.get('*/api/v1/scans-stats', () => HttpResponse.json({ days: 30, divisions: [] })),
+  http.get('*/api/v1/kb/sources', () =>
+    HttpResponse.json({
+      kb_version: 'test',
+      transcription: '',
+      policy: '',
+      sources: [],
+      excluded: [],
+      diseases: {},
+      divisions: {},
+      limits: {
+        abstain_below: 0.6,
+        confidence: '',
+        retrieval: '',
+        crops: ['rice'],
+        image_retention: '',
+        outbreak_rule: { min_cases: 3, window_days: 7, needs_reviewer_approval: true },
+      },
+    }),
+  ),
 ]
 
 export const server = setupServer(...defaultHandlers)

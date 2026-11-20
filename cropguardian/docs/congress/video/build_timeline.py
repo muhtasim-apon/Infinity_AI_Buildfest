@@ -9,10 +9,10 @@ import json
 import wave
 from pathlib import Path
 
-LEAD_IN = 2.0  # title card before the first line
-LINE_GAP = 0.45
-SCENE_GAP = 0.9
-TAIL = 3.0  # end card after the last line
+LEAD_IN = 1.8  # title card before the first line
+LINE_GAP = 0.38
+SCENE_GAP = 0.75
+TAIL = 1.2  # end card after the last line
 
 
 def srt_time(t: float) -> str:
@@ -58,9 +58,14 @@ def main() -> None:
     for s_idx, scene in enumerate(script["scenes"]):
         if not first:
             t += SCENE_GAP - LINE_GAP
+        pad = 0.0
+        if "at" in scene and t < float(scene["at"]):  # pin the scene to its official start time
+            pad = float(scene["at"]) - t
+            t = float(scene["at"])
         scene_start = t
         lines = []
         for i, line in enumerate(scene["lines"]):
+            line = line["text"] if isinstance(line, dict) else line
             path = Path(a.tts) / f"{scene['id']}_{i:02d}.wav"
             with wave.open(str(path)) as w:
                 if params is None:
@@ -71,7 +76,7 @@ def main() -> None:
                 data = w.readframes(w.getnframes())
                 dur = w.getnframes() / w.getframerate()
             if not (s_idx == 0 and i == 0):
-                gap = LINE_GAP if i > 0 else SCENE_GAP
+                gap = LINE_GAP if i > 0 else SCENE_GAP + pad
                 frames.append(silence(gap))
             start, end = t, t + dur
             frames.append(data)

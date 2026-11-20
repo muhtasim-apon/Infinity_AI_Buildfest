@@ -1,61 +1,110 @@
 {
-  "title": "Crop Guardian (ফসল রক্ষী) - 3-minute pitch",
+  "title": "Kakatarua (কাকতাড়ুয়া) - 3-minute pitch, CloudCamp 'Vibe to Production in 180 Seconds' structure",
   "voice": "Microsoft Zira Desktop",
-  "notes": "Every figure is sourced: yield-loss numbers are quoted from the BRRI factsheets in the knowledge base; test counts are from the 20 Nov 2026 local runs (backend 778 + frontend 265). No accuracy or impact figure is claimed.",
+  "structure": "0:00-0:30 problem | 0:30-1:00 solution | 1:00-2:00 demo | 2:00-2:30 AI approach | 2:30-3:00 impact + next step",
+  "notes": "Every figure is sourced: yield-loss numbers quote the BRRI factsheets in the knowledge base; test counts are from the 20 Nov 2026 runs (backend 778 + frontend 265); live test = 5 labelled RiceLeafBD photos with prompt vision_v2 (brown spot 0.60 diagnosed correct, healthy 0.85 correct, 3 wrong guesses at 0.35-0.50 abstained). KPIs are targets, not results.",
   "scenes": [
     {
       "id": "problem",
       "lines": [
-        "In Bangladesh, rice feeds the nation.",
-        "But when a leaf turns sick, a farmer often has no one to ask.",
-        "According to the Bangladesh Rice Research Institute, blast can cut yield by up to eighty percent, and bacterial leaf blight by about thirty.",
-        "A wrong guess means the wrong spray, lost money, and a disease that keeps spreading."
+        {
+          "text": "In Bangladesh, rice is the staple crop, grown on small family farms."
+        },
+        {
+          "text": "When a leaf turns sick, there is often no expert nearby, and advice is rarely in plain Bangla."
+        },
+        {
+          "text": "The Bangladesh Rice Research Institute warns that blast can cut yield by up to eighty percent, and bacterial leaf blight by about thirty.",
+          "say": "The Bangladesh Rice Research Institute warns that blast can cut yield by up to eighty percent, and bacterial leaf blight by about thirty."
+        },
+        {
+          "text": "Rice diseases threaten harvests wherever rice is grown. A wrong guess means the wrong spray and lost money."
+        }
       ]
     },
     {
-      "id": "scan",
+      "id": "solution",
       "lines": [
-        "Meet Crop Guardian: Fosol Rokkhi, the crop guardian.",
-        "A farmer opens a Bangla web app on any phone, picks a division, never an exact location, and photographs one rice leaf.",
-        "The photo is cleaned of GPS data, checked for quality, and sent to Meta's Llama 4 vision model, which must answer from a fixed list of nine rice diseases."
-      ]
+        {
+          "text": "Meet Kakatarua, the scarecrow that watches your field.",
+          "say": "Meet Kak-ta-rua, the scarecrow that watches your field."
+        },
+        {
+          "text": "A farmer photographs one rice leaf. AI suggests the disease, or honestly says it is not sure."
+        },
+        {
+          "text": "Advice comes only from official rice research factsheets, in plain Bangla, every step with its source."
+        },
+        {
+          "text": "It never invents a dose, never names a pesticide, and no outbreak alert reaches farmers until a human approves it."
+        }
+      ],
+      "at": 30
     },
     {
-      "id": "advice",
+      "id": "demo",
       "lines": [
-        "If the model is confident, the farmer sees the likely disease with a simple confidence band, never a fake percentage.",
-        "Then three to five plain Bangla steps, taken from official rice research factsheets, each with its source.",
-        "A validator rejects invented numbers and any pesticide name.",
-        "And when the photo is poor or the model is unsure, the app says so: I am not sure.",
-        "It gives retake tips and points to the local agriculture office, instead of guessing."
-      ]
+        {
+          "text": "This is the live app: Bangla first, English one tap away, with read-aloud."
+        },
+        {
+          "text": "The farmer picks a division, never an exact location, and takes a photo. GPS data is removed, and blurry photos are refused before any AI call."
+        },
+        {
+          "text": "Meta's Muse Spark model must choose from nine rice diseases. Here it found brown spot, with medium confidence."
+        },
+        {
+          "text": "The farmer gets five simple steps from the BRRI brown spot factsheet, each with its source, and a reminder to ask the agriculture office before using any chemical.",
+          "say": "The farmer gets five simple steps from the B R R I brown spot factsheet, each with its source, and a reminder to ask the agriculture office before using any chemical."
+        },
+        {
+          "text": "When the photo is poor or the model is unsure, Kakatarua says: I am not sure, and gives retake tips instead of guessing.",
+          "say": "When the photo is poor or the model is unsure, Kak-ta-rua says: I am not sure, and gives retake tips instead of guessing."
+        },
+        {
+          "text": "Three photos of one disease in one division within a week create a draft alert. A reviewer approves it before farmers see: possible outbreak, unverified."
+        }
+      ],
+      "at": 60
     },
     {
-      "id": "outbreak",
+      "id": "ai",
       "lines": [
-        "When three photos from one division show the same disease within a week, Crop Guardian drafts an outbreak alert.",
-        "Nothing reaches farmers automatically.",
-        "A human reviewer approves it, the decision is audit logged, and only then do farmers see: possible outbreak, unverified."
-      ]
-    },
-    {
-      "id": "tech",
-      "lines": [
-        "Under the hood: a React app on Vercel, a FastAPI service on Render, and Supabase Postgres with row level security on every table.",
-        "The photo itself is never stored.",
-        "Retrieval filters the knowledge base by disease and ranks passages by their words. Vector search is planned, not claimed.",
-        "More than one thousand automated tests cover the abstain logic, the validator, upload attacks and data isolation.",
-        "Claude Code helped us build it, and Claude transcribed the image-only factsheets."
-      ]
+        {
+          "text": "Under the hood: photo in, AI triage, retrieval, validated advice out."
+        },
+        {
+          "text": "Contextual retrieval searches thirty-nine passages from nine BRRI factsheets, each with an AI-written context line.",
+          "say": "Contextual retrieval searches thirty-nine passages from nine B R R I factsheets, each with an AI-written context line."
+        },
+        {
+          "text": "A validator checks every citation and every number, and our own MCP server exposes the same knowledge base to developers.",
+          "say": "A validator checks every citation and every number, and our own M C P server exposes the same knowledge base to developers."
+        },
+        {
+          "text": "Row-level security on Supabase, FastAPI on Render, React on Vercel, and more than one thousand automated tests."
+        }
+      ],
+      "at": 120
     },
     {
       "id": "impact",
       "lines": [
-        "We claim no accuracy figure yet. Our public Trust Centre lists every source and every limit.",
-        "Next: a labelled evaluation on Bangladeshi field photos, agronomist review, and more crops.",
-        "Cooperatives, NGOs and extension programmes can sponsor it for their farmers.",
-        "Crop Guardian. Honest help for every rice field."
-      ]
+        {
+          "text": "First live test: on five labelled field photos, both confident answers were right, and all three wrong guesses were held back as not sure."
+        },
+        {
+          "text": "Our targets: zero wrong advice shown, verified outbreak alerts within a week, and fewer unnecessary sprays."
+        },
+        {
+          "text": "Next: a labelled evaluation, agronomist review and more crops, sponsored by cooperatives, NGOs and extension programmes."
+        },
+        {
+          "text": "Kakatarua. Honest help for every rice field.",
+          "say": "Kak-ta-rua. Honest help for every rice field."
+        }
+      ],
+      "at": 150
     }
   ]
 }

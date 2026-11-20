@@ -1,11 +1,11 @@
-আপনাকে ফসল রক্ষীতে {{ role_bn }} হিসেবে আমন্ত্রণ জানানো হয়েছে।
+আপনাকে কাকতাড়ুয়াতে {{ role_bn }} হিসেবে আমন্ত্রণ জানানো হয়েছে।
 নিবন্ধন সম্পূর্ণ করতে নিচের লিংকে যান।
 {{ link }}
 লিংকটি ৭২ ঘণ্টা কাজ করবে এবং একবারই ব্যবহার করা যাবে।
 
 ---
 
-You have been invited to Crop Guardian as {{ role_en }}.
+You have been invited to Kakatarua as {{ role_en }}.
 Open the link below to complete your registration.
 {{ link }}
 The link works for 72 hours and can be used only once.

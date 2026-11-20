@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Crop Guardian pitch storyboard</title>
+<title>Kakatarua pitch storyboard</title>
 <style>
   :root {
     --paddy: #1f7a3a; --paddy-dark: #0f4d24; --leaf: #3fa34d; --gold: #e2b33c; --sky1: #bfe6ff; --sky2: #fff6dc;
@@ -160,21 +160,34 @@
   <div class="stat" id="stat2" style="top:400px"><b>~30%</b><span>average yield loss from <strong>bacterial leaf blight</strong></span><small>Source: BRRI Factsheet 2 (Patapora)</small></div>
   <div class="dim" id="dim1"></div>
   <div class="chain" id="chain"><div class="chip">Wrong guess</div><div class="arrow">→</div><div class="chip">Wrong spray, lost money</div><div class="arrow">→</div><div class="chip">Disease keeps spreading</div></div>
-  <div class="title-card" id="titlecard"><div><h1 class="bn">ফসল রক্ষী</h1><p>Crop Guardian · honest AI help for rice farmers in Bangladesh</p></div></div>
+  <div class="title-card" id="titlecard"><div><svg viewBox="0 0 120 200" width="150" height="250"><rect x="56" y="40" width="8" height="160" rx="3" fill="#b8860b"/><rect x="6" y="70" width="108" height="8" rx="3" fill="#b8860b"/><path d="M28 66 L92 66 L84 140 L36 140 Z" fill="#c0392b"/><path d="M36 140 L84 140 L88 166 L32 166 Z" fill="#2a7fc4"/><circle cx="60" cy="48" r="20" fill="#fdf3d0"/><path d="M28 36 L60 2 L92 36 Z" fill="#e2b33c"/><ellipse cx="60" cy="36" rx="40" ry="7" fill="#b8860b"/><circle cx="53" cy="48" r="2.6" fill="#222"/><circle cx="67" cy="48" r="2.6" fill="#222"/><path d="M52 57 Q60 62 68 57" stroke="#222" stroke-width="2" fill="none"/></svg><h1 class="bn">কাকতাড়ুয়া</h1><p>Kakatarua · honest AI help for rice farmers in Bangladesh</p></div></div>
+</section>
+
+<!-- ===== Solution ===== -->
+<section class="scene" id="s-solution">
+  <div class="split"></div>
+  <div style="position:absolute;left:90px;top:90px;width:520px;height:820px;border-radius:40px;overflow:hidden;background:linear-gradient(180deg,#bfe6ff,#fff6dc 58%,#7cc35a 59%,#2f6f2c);box-shadow:0 30px 80px #0004;display:grid;place-items:center"><svg viewBox="0 0 120 200" width="300" height="500"><rect x="56" y="40" width="8" height="160" rx="3" fill="#b8860b"/><rect x="6" y="70" width="108" height="8" rx="3" fill="#b8860b"/><path d="M28 66 L92 66 L84 140 L36 140 Z" fill="#c0392b"/><path d="M36 140 L84 140 L88 166 L32 166 Z" fill="#2a7fc4"/><circle cx="60" cy="48" r="20" fill="#fdf3d0"/><path d="M28 36 L60 2 L92 36 Z" fill="#e2b33c"/><ellipse cx="60" cy="36" rx="40" ry="7" fill="#b8860b"/><circle cx="53" cy="48" r="2.6" fill="#222"/><circle cx="67" cy="48" r="2.6" fill="#222"/><path d="M52 57 Q60 62 68 57" stroke="#222" stroke-width="2" fill="none"/></svg><div style="position:absolute;bottom:40px;color:#fff;font-size:64px;font-weight:800" class="bn">কাকতাড়ুয়া</div></div>
+  <div class="callouts" style="left:700px;top:130px;width:1100px">
+    <div class="callout" id="c-o1"><div class="ic">📷</div><div><h3>Photo → AI diagnosis, or “not sure”</h3><p>A rice leaf in; one of 9 BRRI diseases out, or an honest abstention</p></div></div>
+    <div class="callout" id="c-o2"><div class="ic">📚</div><div><h3>Advice only from BRRI factsheets</h3><p>Plain Bangla steps, every step with its source</p></div></div>
+    <div class="callout" id="c-o3"><div class="ic">🚫</div><div><h3>No invented doses, no pesticide names</h3><p>A validator blocks them before anything reaches a farmer</p></div></div>
+    <div class="callout" id="c-o4"><div class="ic">🧑‍🌾</div><div><h3>Human-approved outbreak alerts</h3><p>Nothing automated reaches farmers</p></div></div>
+  </div>
 </section>
 
 <!-- ===== Scan ===== -->
 <section class="scene" id="s-scan">
   <div class="split"></div>
   <div class="phone" style="left:120px"><div class="notch"></div><div class="screen"><video id="v-scan" muted playsinline></video></div></div>
-  <div class="brand"><svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#1f7a3a"/><path d="M20 44 Q32 8 46 18 Q44 40 20 44Z" fill="#9fe3a9"/></svg><span class="bn">ফসল রক্ষী</span>&nbsp;Crop Guardian</div>
+  <div class="brand"><svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#1f7a3a"/><path d="M20 44 Q32 8 46 18 Q44 40 20 44Z" fill="#9fe3a9"/></svg><span class="bn">কাকতাড়ুয়া</span>&nbsp;Kakatarua</div>
   <div class="callouts">
-    <div class="callout" id="c-s1"><div class="ic">🗺️</div><div><h3>Division, never GPS</h3><p>Bangla-first web app on any phone; works offline and syncs later</p></div></div>
+    <div class="callout" id="c-s0"><div class="ic">🔤</div><div><h3><span class="bn">বাংলা</span> first · English one tap away</h3><p>Read-aloud on every result; works offline and syncs later</p></div></div>
+    <div class="callout" id="c-s1"><div class="ic">🗺️</div><div><h3>Division, never GPS</h3><p>The farmer chooses a division; no location is collected</p></div></div>
     <div class="callout" id="c-s2"><div class="ic">🧹</div><div><h3>GPS stripped · quality checked</h3><p>Dark or blurry photos are refused before any AI call</p></div></div>
-    <div class="callout" id="c-s3"><div class="ic">🦙</div><div><h3>Llama 4 vision · fixed list</h3><p>Must choose one of 9 BRRI rice diseases, healthy, or unknown</p></div></div>
+    <div class="callout" id="c-s3"><div class="ic">🔬</div><div><h3>Meta Muse Spark · fixed list</h3><p>Must choose one of 9 BRRI rice diseases, healthy, or unknown</p></div></div>
   </div>
   <div class="credit">Leaf photos: RiceLeafBD field datasets (CC BY 4.0). Live app, demo data labelled SIMULATED.</div>
-  <div class="big-brand" id="bigbrand"><div><h1 class="bn">ফসল রক্ষী</h1><h2>Crop Guardian</h2><p>Photo → diagnosis or honest “not sure” → cited Bangla advice → human-approved alerts</p></div></div>
+  <div class="big-brand" id="bigbrand"><div><svg viewBox="0 0 120 200" width="120" height="200"><rect x="56" y="40" width="8" height="160" rx="3" fill="#b8860b"/><rect x="6" y="70" width="108" height="8" rx="3" fill="#b8860b"/><path d="M28 66 L92 66 L84 140 L36 140 Z" fill="#c0392b"/><path d="M36 140 L84 140 L88 166 L32 166 Z" fill="#2a7fc4"/><circle cx="60" cy="48" r="20" fill="#fdf3d0"/><path d="M28 36 L60 2 L92 36 Z" fill="#e2b33c"/><ellipse cx="60" cy="36" rx="40" ry="7" fill="#b8860b"/><circle cx="53" cy="48" r="2.6" fill="#222"/><circle cx="67" cy="48" r="2.6" fill="#222"/><path d="M52 57 Q60 62 68 57" stroke="#222" stroke-width="2" fill="none"/></svg><h1 class="bn">কাকতাড়ুয়া</h1><h2>Kakatarua</h2><p>Photo → diagnosis or honest “not sure” → cited Bangla advice → human-approved alerts</p></div></div>
 </section>
 
 <!-- ===== Advice + not sure ===== -->
@@ -226,12 +239,14 @@
   <div class="node" id="n-vercel" style="left:470px;top:250px;width:300px">React · Vercel<small>/api → Render</small></div>
   <div class="node" id="n-api" style="left:900px;top:250px;width:300px">FastAPI · Render<small>CSRF · rate limits</small></div>
   <div class="node guard" id="n-gate" style="left:900px;top:430px;width:300px">Quality gate<small>EXIF/GPS strip · blur · size</small></div>
-  <div class="node ai" id="n-vision" style="left:900px;top:600px;width:300px">Llama 4 vision<small>abstain &lt; 0.60 · rice only</small></div>
-  <div class="node ai" id="n-advice" style="left:1330px;top:590px;width:480px">BRRI retrieval → Llama advice<small>disease filter · ≤ 8 cited passages</small></div>
+  <div class="node ai" id="n-vision" style="left:900px;top:600px;width:300px">Muse Spark vision<small>abstain &lt; 0.60 · rice only</small></div>
+  <div class="node ai" id="n-advice" style="left:1330px;top:590px;width:480px">BRRI retrieval → advice<small>disease filter · ≤ 8 cited passages</small></div>
   <div class="node guard" id="n-valid" style="left:900px;top:770px;width:420px">Validator<small>citations · verbatim numbers · no pesticides</small></div>
   <div class="node db" id="n-db" style="left:330px;top:600px;width:360px">Supabase Postgres<small>forced row-level security · audit log</small></div>
   <div class="tag" id="t-photo" style="left:110px;top:420px">🚫📷 photo never stored</div>
   <div class="tag" id="t-vec" style="left:110px;top:500px">vector search: planned, not claimed</div>
+  <div class="tag" id="t-ctx" style="left:1330px;top:470px">📚 39 BRRI passages · contextual retrieval</div>
+  <div class="tag" id="t-mcp" style="left:1330px;top:790px">🔌 our MCP server: cropguardian-kb</div>
   <div class="counter" id="counter"><b id="count">0</b><span>automated tests (778 backend + 265 frontend)</span><br><span style="font-size:28px;opacity:.85">built with Claude Code · KB transcribed by Claude</span></div>
 </section>
 
@@ -239,10 +254,10 @@
 <section class="scene" id="s-impact">
   <div class="impact"></div>
   <div class="h-title">Honest by design</div>
-  <div class="pillar" id="pl1" style="left:110px"><div class="ic">🔎</div><h3>No accuracy claimed yet</h3><p>A public Trust Centre lists every source, every exclusion and every limit, straight from the live API.</p></div>
-  <div class="pillar" id="pl2" style="left:690px"><div class="ic">🧪</div><h3>Next</h3><p>Labelled evaluation on Bangladeshi field photos · agronomist review · more crops · vector search.</p></div>
-  <div class="pillar" id="pl3" style="left:1270px"><div class="ic">🤝</div><h3>Who pays</h3><p>Cooperatives, NGOs and extension programmes sponsor it; farmers use it free.</p></div>
-  <div class="end" id="end"><div><h1 class="bn">ফসল রক্ষী</h1><h2>Crop Guardian</h2><p>Honest help for every rice field.</p><div class="url">infinityaibuildfest-prototype-five.vercel.app</div><div class="src">Knowledge: BRRI rice-disease factsheets · Leaf photos: RiceLeafBD (CC BY 4.0) · Voice: synthetic · Demo data labelled SIMULATED</div></div></div>
+  <div class="pillar" id="pl1" style="left:110px"><div class="ic">🔎</div><h3>First live test</h3><p>5 labelled field photos: 2 confident answers, both right; 3 wrong guesses held back as “not sure”. Not an accuracy figure yet.</p></div>
+  <div class="pillar" id="pl2" style="left:690px"><div class="ic">🎯</div><h3>Target KPIs</h3><p>0 wrong advice shown · verified outbreak alerts within 7 days · fewer unnecessary sprays. Measured from every stored scan.</p></div>
+  <div class="pillar" id="pl3" style="left:1270px"><div class="ic">🚀</div><h3>Next</h3><p>Labelled evaluation · agronomist review · more crops. Sponsored by cooperatives, NGOs and extension programmes; free for farmers.</p></div>
+  <div class="end" id="end"><div><svg viewBox="0 0 120 200" width="120" height="200"><rect x="56" y="40" width="8" height="160" rx="3" fill="#b8860b"/><rect x="6" y="70" width="108" height="8" rx="3" fill="#b8860b"/><path d="M28 66 L92 66 L84 140 L36 140 Z" fill="#c0392b"/><path d="M36 140 L84 140 L88 166 L32 166 Z" fill="#2a7fc4"/><circle cx="60" cy="48" r="20" fill="#fdf3d0"/><path d="M28 36 L60 2 L92 36 Z" fill="#e2b33c"/><ellipse cx="60" cy="36" rx="40" ry="7" fill="#b8860b"/><circle cx="53" cy="48" r="2.6" fill="#222"/><circle cx="67" cy="48" r="2.6" fill="#222"/><path d="M52 57 Q60 62 68 57" stroke="#222" stroke-width="2" fill="none"/></svg><h1 class="bn">কাকতাড়ুয়া</h1><h2>Kakatarua</h2><p>Honest help for every rice field.</p><div class="url">infinityaibuildfest-prototype-five.vercel.app</div><div class="src">Knowledge: BRRI rice-disease factsheets · Leaf photos: RiceLeafBD (CC BY 4.0) · Voice: synthetic · Demo data labelled SIMULATED</div></div></div>
 </section>
 
 <script>
@@ -267,9 +282,13 @@ const on = (id, v = true) => $(id) && $(id).classList.toggle('on', v);
   svg.innerHTML = html;
 })();
 
-function play(vid, src, rate = 1, from = 0) {
-  const v = $(vid); if (!src) return; if (v.getAttribute('src') !== src) v.src = src; v.playbackRate = rate; v.currentTime = from;
-  v.onended = () => v.pause(); v.play().catch(() => {});
+function play(vid, src, rate = 1, from = 0, until = null) {
+  const v = $(vid); if (!src) return;
+  const go = () => { v.currentTime = from; v.playbackRate = rate; v.play().catch(() => {}); };
+  v.ontimeupdate = until ? () => { if (v.currentTime >= until) v.pause(); } : null;
+  v.onended = () => v.pause();
+  if (v.getAttribute('src') !== src) { v.addEventListener('loadedmetadata', go, { once: true }); v.src = src; v.load(); }
+  else go();
 }
 
 const CLIPS = window.__CLIPS || {};
@@ -277,47 +296,44 @@ const at = [];
 function cue(t, fn) { at.push([t, fn, false]); }
 function sceneOn(id) { document.querySelectorAll('.scene').forEach(s => s.classList.toggle('on', s.id === 's-' + id)); }
 
-// --- cues (all relative to the narration timeline) ---
-const P = S.problem, SC = S.scan, A = S.advice, O = S.outbreak, T = S.tech, I = S.impact;
+// --- cues (all relative to the narration timeline; segments follow CloudCamp's 180-second structure) ---
+const P = S.problem, SO = S.solution, D = S.demo, A = S.ai, I = S.impact;
 if (P) {
   cue(0, () => { sceneOn('problem'); on('titlecard'); });
   cue(P.start + 0.2, () => { $('titlecard').style.transition = 'opacity .8s'; $('titlecard').style.opacity = 0; });
   cue(P.lines[1].start - 0.5, () => { $('farmer').classList.add('walk'); });
   cue(P.lines[1].start + 2.6, () => { $('farmer').classList.add('stop'); on('zoom'); });
   cue(P.lines[2].start, () => { on('stat1'); });
-  cue(P.lines[2].start + 4.8, () => on('stat2'));
+  cue(P.lines[2].start + 4.5, () => on('stat2'));
   cue(P.lines[3].start, () => { on('zoom', false); on('stat1', false); on('stat2', false); on('dim1'); on('chain'); });
 }
-if (SC) {
-  cue(SC.start - 0.4, () => { sceneOn('scan'); });
-  cue(SC.lines[1].start, () => { $('bigbrand').classList.add('off'); play('v-scan', CLIPS.scan); on('c-s1'); });
-  cue(SC.lines[2].start, () => on('c-s2'));
-  cue(SC.lines[2].start + 4.5, () => on('c-s3'));
+if (SO) {
+  cue(SO.start - 0.4, () => sceneOn('solution'));
+  SO.lines.forEach((l, k) => cue(l.start + (k === 0 ? 1.0 : 0), () => on('c-o' + (k + 1))));
+}
+if (D) {
+  cue(D.start - 0.4, () => { sceneOn('scan'); $('bigbrand').classList.add('off'); play('v-scan', CLIPS.scan, 1, 0, CLIPS.scanAt ? CLIPS.scanAt - 0.8 : null); on('c-s0'); });
+  cue(D.lines[1].start, () => on('c-s1'));
+  cue(D.lines[1].start + 4.0, () => on('c-s2'));
+  cue(D.lines[2].start, () => on('c-s3'));
+  cue(D.lines[3].start - 0.3, () => { sceneOn('advice'); play('v-advice', CLIPS.scan, 0.55, Math.max(0, (CLIPS.scanAt || 0) - 0.3)); on('c-a2'); });
+  cue(D.lines[3].start + 4.5, () => on('c-a3'));
+  cue(D.lines[4].start, () => { play('v-advice', CLIPS.notsure, 1, Math.max(0, (CLIPS.notsureAt || 0) - 0.5)); on('c-a2', false); on('c-a3', false); setTimeout(() => on('c-a4'), 400); });
+  const O = D.lines[5].start;
+  cue(O - 0.3, () => sceneOn('outbreak'));
+  cue(O + 0.3, () => on('p1')); cue(O + 0.9, () => on('p2')); cue(O + 1.5, () => on('p3'));
+  cue(O + 2.4, () => on('alertcard'));
+  cue(O + 4.6, () => on('reviewer'));
+  cue(O + 6.2, () => on('stamp'));
+  cue(O + 7.8, () => on('farmerphone'));
 }
 if (A) {
-  cue(A.start - 0.4, () => { sceneOn('advice'); play('v-advice', CLIPS.result || CLIPS.scan, 1, CLIPS.result ? 0 : Math.max(0, (CLIPS.scanAt || 0) - 0.5)); on('c-a1'); });
-  cue(A.lines[1].start, () => on('c-a2'));
-  cue(A.lines[2].start, () => on('c-a3'));
-  cue(A.lines[3].start, () => { play('v-advice', CLIPS.notsure, 1, Math.max(0, (CLIPS.notsureAt || 0) - 0.5)); on('c-a1', false); on('c-a2', false); on('c-a3', false); setTimeout(() => on('c-a4'), 500); });
-}
-if (O) {
-  cue(O.start - 0.4, () => sceneOn('outbreak'));
-  cue(O.lines[0].start + 0.5, () => on('p1'));
-  cue(O.lines[0].start + 1.5, () => on('p2'));
-  cue(O.lines[0].start + 2.5, () => on('p3'));
-  cue(O.lines[0].start + 4.0, () => on('alertcard'));
-  cue(O.lines[2].start, () => on('reviewer'));
-  cue(O.lines[2].start + 2.2, () => on('stamp'));
-  cue(O.lines[2].start + 4.6, () => on('farmerphone'));
-}
-if (T) {
-  cue(T.start - 0.4, () => sceneOn('tech'));
-  const seq = [['n-phone', 0], ['w1', .6], ['n-vercel', .8], ['w2', 1.6], ['n-api', 1.8], ['w7', 4.2], ['n-db', 4.4]];
-  seq.forEach(([id, d]) => cue(T.lines[0].start + d, () => on(id)));
-  cue(T.lines[1].start, () => on('t-photo'));
-  [['w3', 0], ['n-gate', .2], ['w4', 1.2], ['n-vision', 1.4], ['w5', 3.0], ['n-advice', 3.2], ['w6', 5.0], ['n-valid', 5.2]].forEach(([id, d]) => cue(T.lines[2].start + d, () => on(id)));
-  cue(T.lines[2].start + 6.0, () => on('t-vec'));
-  cue(T.lines[3].start, () => { on('counter'); const t0 = performance.now(); const tick = () => { const k = Math.min(1, (performance.now() - t0) / 2200); $('count').textContent = Math.round(1043 * k).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(tick); }; tick(); });
+  cue(A.start - 0.4, () => sceneOn('tech'));
+  [['n-phone', 0], ['w1', .3], ['n-vercel', .5], ['w2', 1.0], ['n-api', 1.2], ['w3', 1.8], ['n-gate', 2.0], ['w4', 2.6], ['n-vision', 2.8], ['w5', 3.4], ['n-advice', 3.6], ['w6', 4.2], ['n-valid', 4.4]].forEach(([id, d]) => cue(A.lines[0].start + d, () => on(id)));
+  cue(A.lines[1].start, () => { on('t-ctx'); on('t-photo'); });
+  cue(A.lines[2].start + 3.0, () => { on('t-mcp'); on('t-vec'); });
+  cue(A.lines[3].start, () => { on('w7'); on('n-db'); });
+  cue(A.lines[3].start + 2.5, () => { on('counter'); const t0 = performance.now(); const tick = () => { const k = Math.min(1, (performance.now() - t0) / 2200); $('count').textContent = Math.round(1043 * k).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(tick); }; tick(); });
 }
 if (I) {
   cue(I.start - 0.4, () => sceneOn('impact'));

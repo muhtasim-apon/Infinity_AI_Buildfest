@@ -30,7 +30,7 @@ describe('route guards (spec 15.4)', () => {
     renderApp('/home')
     await waitFor(() => expect(where()).toBe('/app'), { timeout: 5000 })
     expect(
-      await screen.findByText(bnText('farmerHome.hero.title'), {}, { timeout: 5000 }),
+      await screen.findByText(bnText('cg.ui2.ringTitle'), {}, { timeout: 5000 }),
     ).toBeInTheDocument()
   })
 
@@ -88,7 +88,7 @@ describe('route guards (spec 15.4)', () => {
     unmount()
     as('FARMER')
     renderApp('/app')
-    await screen.findByText(bnText('farmerHome.hero.title'), {}, { timeout: 5000 })
+    await screen.findByText(bnText('cg.ui2.ringTitle'), {}, { timeout: 5000 })
     expect(screen.queryByText(bnText('demo.ribbon'))).not.toBeInTheDocument()
   })
 

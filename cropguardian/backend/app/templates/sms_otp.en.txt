@@ -1,1 +1,1 @@
-Crop Guardian: your code is {{ code }}. Use it within 5 minutes. Do not share it with anyone.
+Kakatarua: your code is {{ code }}. Use it within 5 minutes. Do not share it with anyone.

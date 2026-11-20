@@ -1,1 +1,1 @@
-"""Crop Guardian backend package."""
+"""Kakatarua backend package."""

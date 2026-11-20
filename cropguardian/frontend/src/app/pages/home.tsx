@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { authApi, homePath } from '../../lib/authApi'
 import { useAuth } from '../auth'
+import { FieldScene } from '../../components/app/FieldScene'
 import { Button, FormError } from '../ui'
 import { useCaptcha } from '../useCaptcha'
 
@@ -18,23 +19,36 @@ export function EntryPage() {
     return <Navigate to={homePath(state.role)} replace />
   }
   return (
-    <section>
-      <h1 className="text-3xl font-semibold text-primary">{t('app.name')}</h1>
-      <p className="mt-2 text-muted">{t('app.tagline')}</p>
-      <p className="mt-4 rounded-lg border border-border bg-surface p-4">
+    <section className="-mx-4 -mt-2">
+      <div className="relative h-[640px] overflow-hidden rounded-b-xl">
+        <FieldScene className="absolute inset-0" />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-primary from-38% to-transparent to-62%"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-x-0 bottom-0 p-6 text-primary-on">
+          <p className="text-lg font-semibold opacity-90">{t('app.name')}</p>
+          <h1 className="mt-1 text-4xl font-bold leading-tight">{t('cg.ui2.heroTitle')}</h1>
+          <p className="mt-3 text-base opacity-95">{t('cg.ui2.heroBody')}</p>
+          <Link
+            className="mt-6 flex min-h-[56px] items-center justify-center rounded-full bg-accent px-6 text-lg font-semibold text-text shadow-md"
+            to="/demo"
+          >
+            {t('nav.tryDemo')}
+          </Link>
+          <Link
+            className="mt-3 flex min-h-[48px] items-center justify-center rounded-full border border-primary-on px-6 font-semibold"
+            to="/login"
+          >
+            {t('nav.signIn')}
+          </Link>
+        </div>
+      </div>
+      <div className="mx-4 mt-4 rounded-lg border border-border bg-surface p-4 text-sm text-muted">
         {t('landing.demoNotice')}
-      </p>
-      <Link
-        className="mt-6 flex min-h-[48px] items-center justify-center rounded-md bg-primary px-4 font-semibold text-primary-on"
-        to="/demo"
-      >
-        {t('nav.tryDemo')}
-      </Link>
-      <Link
-        className="mt-3 flex min-h-[48px] items-center justify-center rounded-md border border-border px-4"
-        to="/login"
-      >
-        {t('nav.signIn')}
+      </div>
+      <Link className="mx-4 mt-3 flex min-h-[48px] items-center text-primary underline" to="/trust">
+        {t('cg.ui2.heroTrust')}
       </Link>
     </section>
   )
