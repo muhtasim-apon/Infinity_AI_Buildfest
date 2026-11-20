@@ -1,4 +1,4 @@
-"""Kakatarua API application factory (spec 16.9 middleware order).
+"""Kaktarua API application factory (spec 16.9 middleware order).
 
 Debug features (docs, OpenAPI) are off in production (16.14). CORS is off by default because the SPA
 and API share one origin; development allows exactly the Vite origin.
@@ -64,7 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     prod = settings.is_production
     app = FastAPI(
-        title="Kakatarua API",
+        title="Kaktarua API",
         version="0.1.0",
         docs_url=None if prod else "/docs",
         redoc_url=None,

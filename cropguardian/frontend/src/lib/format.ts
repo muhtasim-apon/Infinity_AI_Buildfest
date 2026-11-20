@@ -46,6 +46,19 @@ export function formatNumber(n: number, locale: Locale, maximumFractionDigits = 
 /** Big counts abbreviated (spec 15.13.4): 12500 -> "12.5K" / "১২.৫ হা". */
 export function formatCompact(n: number, locale: Locale): string {
   assertFinite(n)
+  if (locale === 'en') {
+    // Explicit K/M/B: ICU/CLDR versions disagree on English compact forms ("12.5K" vs "12.5k" vs
+    // "13K"), and the spec fixes "12.5K"; the grouping/decimals still come from formatNumber.
+    const abs = Math.abs(n)
+    for (const [size, suffix] of [
+      [1e9, 'B'],
+      [1e6, 'M'],
+      [1e3, 'K'],
+    ] as const) {
+      if (abs >= size) return formatNumber(n / size, 'en', 1) + suffix
+    }
+    return formatNumber(n, 'en', 1)
+  }
   return new Intl.NumberFormat(tag(locale), {
     notation: 'compact',
     maximumFractionDigits: 1,

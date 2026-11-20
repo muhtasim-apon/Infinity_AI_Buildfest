@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kaktarua pitch v2 film</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/frontend/node_modules/three/build/three.module.js",
+          "three/addons/": "/frontend/node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="film.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="gl"></canvas>
+      <div id="css3d"></div>
+      <div id="hud"></div>
+      <div id="fade"></div>
+    </div>
+    <script type="module" src="film.js"></script>
+  </body>
+</html>

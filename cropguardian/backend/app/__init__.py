@@ -1,1 +1,1 @@
-"""Kakatarua backend package."""
+"""Kaktarua backend package."""

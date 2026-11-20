@@ -1,0 +1,61 @@
+{
+  "title": "Kaktarua (কাকতাড়ুয়া) - 3-minute pitch v2: cinematic 3D field + sci-fi system walkthrough",
+  "voice": "Microsoft David Desktop",
+  "structure": "0:00-0:30 problem (field) | 0:30-1:00 solution (phone, real app UI) | 1:00-2:00 system flow (sci-fi) | 2:00-2:30 AI approach (sci-fi) | 2:30-3:00 impact + next step (field + map)",
+  "notes": "Every claim matches the code or a measured run: pipeline per backend/app/services/scans.py; threshold 0.60 (domain/decision.py); retrieval = metadata filter + keyword overlap on contextual chunks, NO vector search yet (domain/kb_search.py); validator V1-V6 (domain/advice_validator.py); BRRI yield figures from the KB factsheets; app screens are real captures of the live app (20 Nov 2026). The transformer scene is labelled an illustration of how such models work. The closing map is a VISION with TARGETS, not adoption or endorsement.",
+  "scenes": [
+    {
+      "id": "problem",
+      "at": 0,
+      "lines": [
+        { "text": "Afternoon in a Bangladeshi paddy field. Rice feeds the nation, grown on small family farms." },
+        { "text": "But Rahim's leaves are turning brown, and there is no expert nearby to ask." },
+        { "text": "The Bangladesh Rice Research Institute warns that blast can cut yield by up to eighty percent, and bacterial leaf blight by about thirty." },
+        { "text": "One wrong guess means the wrong spray and wasted money." }
+      ]
+    },
+    {
+      "id": "solution",
+      "at": 30,
+      "lines": [
+        { "text": "So he opens Kaktarua, a Bangla-first app that works on any phone." },
+        { "text": "He photographs one sick leaf. Location data is stripped, and photo quality is checked first." },
+        { "text": "AI names the disease, here brown spot with medium confidence, or honestly says I am not sure below a sixty percent threshold." },
+        { "text": "Advice comes only from BRRI factsheets, in plain Bangla, every step with its source." }
+      ]
+    },
+    {
+      "id": "flow",
+      "at": 60,
+      "lines": [
+        { "text": "Inside the system: the photo leaves the React app on Vercel and reaches our FastAPI backend on Render." },
+        { "text": "First, the upload is hardened: type and size checks, a decompression-bomb guard, and GPS data removed by re-encoding." },
+        { "text": "Second, a local quality gate. A blurry or dark photo abstains before any AI call." },
+        { "text": "Third, Meta's Muse Spark vision model answers in strict JSON, choosing from nine rice diseases with a confidence score." },
+        { "text": "Below zero point six, the decision engine returns not sure. Above it, retrieval pulls up to eight BRRI passages for that disease." },
+        { "text": "The advice model writes Bangla steps from those passages only, and validator rules V1 to V6 check every citation, number and word." },
+        { "text": "Three matching scans in one division within a week create a draft outbreak alert. Nothing reaches farmers until a human approves it." }
+      ]
+    },
+    {
+      "id": "ai",
+      "at": 120,
+      "lines": [
+        { "text": "The model cuts the leaf into patches, turns each into a vector, and attention weighs every patch against the others." },
+        { "text": "Softmax of Q K transpose over root d, times V. Linear algebra, repeated billions of times, scores each disease." },
+        { "text": "Retrieval is contextual: thirty-nine BRRI passages, each with an AI-written context line. Vector search comes next." },
+        { "text": "Our MCP server exposes the same knowledge, and over one thousand automated tests guard the pipeline." }
+      ]
+    },
+    {
+      "id": "impact",
+      "at": 150,
+      "lines": [
+        { "text": "Back in the field, Rahim knows what to do, and calls the agriculture office before any chemical." },
+        { "text": "Our vision: every rice farmer in all eight divisions, with an honest second opinion in their pocket." },
+        { "text": "Our targets: zero wrong advice shown, verified outbreak alerts within a week, and fewer unnecessary sprays." },
+        { "text": "Kaktarua. Honest help for every rice field." }
+      ]
+    }
+  ]
+}

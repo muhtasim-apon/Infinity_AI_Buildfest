@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Kakatarua",
+    "name": "Kaktarua",
     "tagline": "Take a photo of a rice leaf and get the right advice"
   },
   "common": {
@@ -28,7 +28,7 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "AgriSphere AI · Kakatarua",
+      "eyebrow": "AgriSphere AI · Kaktarua",
       "headline": "One leaf photo. A whole area protected.",
       "sub": "Take a photo of a rice leaf. Identify the disease. Warn your area in time.",
       "trustLine": "Built on public Bangladeshi field datasets · every answer is cited",
@@ -532,7 +532,7 @@
     },
     "trust": {
       "title": "Trust Centre",
-      "intro": "What Kakatarua knows, where it comes from, and what it does not know.",
+      "intro": "What Kaktarua knows, where it comes from, and what it does not know.",
       "sourcesTitle": "Knowledge-base sources",
       "chunks": "{{count}} passages",
       "excludedTitle": "Deliberately left out",

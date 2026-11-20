@@ -54,6 +54,9 @@ describe('numbers', () => {
   it('abbreviates big counts and caps percentages at one decimal', () => {
     expect(formatCompact(12500, 'en')).toBe('12.5K')
     expect(formatCompact(999, 'en')).toBe('999')
+    expect(formatCompact(1_250_000, 'en')).toBe('1.3M')
+    expect(formatCompact(-4200, 'en')).toBe('-4.2K')
+    expect(formatCompact(3_000_000_000, 'en')).toBe('3B')
     expect(formatPercent(0.8765, 'en')).toBe('87.7%')
     expect(formatPercent(0, 'en')).toBe('0%')
   })

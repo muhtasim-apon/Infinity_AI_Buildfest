@@ -521,7 +521,7 @@ class AuthService:
                 {"u": user.id, "t": user.tenant_id, "s": sealed},
             )
         uri = pyotp.TOTP(secret).provisioning_uri(
-            name=user.email or user.id, issuer_name="Kakatarua"
+            name=user.email or user.id, issuer_name="Kaktarua"
         )
         return secret, uri
 
