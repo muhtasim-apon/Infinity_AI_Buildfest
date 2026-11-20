@@ -188,6 +188,7 @@ class LlamaService:
             "model": self.settings.llm_model,
             "messages": messages,
             "max_completion_tokens": max_tokens,
+            "reasoning_effort": "minimal",
             "temperature": 0.1,
             "response_format": {"type": "json_object"},
         }
@@ -223,7 +224,7 @@ class LlamaService:
                 ],
             },
         ]
-        return await self._complete(messages, max_tokens=300, kind="vision")
+        return await self._complete(messages, max_tokens=1_000, kind="vision")
 
     async def advice(self, disease_bn: str, sources: list[tuple[str, str]]) -> LlmReply:
         passages = "\n".join(
@@ -234,7 +235,7 @@ class LlamaService:
             {"role": "system", "content": prompt(ADVICE_PROMPT_VERSION)},
             {"role": "user", "content": user},
         ]
-        return await self._complete(messages, max_tokens=900, kind="advice")
+        return await self._complete(messages, max_tokens=2_000, kind="advice")
 
     async def aclose(self) -> None:
         await self.client.aclose()

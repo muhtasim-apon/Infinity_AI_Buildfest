@@ -167,7 +167,8 @@ async def test_vision_happy_path_sends_image_and_no_extra_fields() -> None:
     assert seen["auth"].startswith("Bearer ")
     body = json.loads(seen["body"])
     assert body["model"] == "muse-spark-1.3"
-    assert body["max_completion_tokens"] == 300
+    assert body["max_completion_tokens"] == 1_000
+    assert body["reasoning_effort"] == "minimal"
     assert "max_tokens" not in body
     assert b"data:image/jpeg;base64," in seen["body"]
 
