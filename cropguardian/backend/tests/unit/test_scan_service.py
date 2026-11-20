@@ -306,3 +306,33 @@ async def test_unknown_disease_gives_no_advice() -> None:
 def test_prompt_loader_rejects_path_tricks() -> None:
     with pytest.raises(ValueError):
         llm_mod.prompt("../secrets")
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "LLM|1|abc",
+        " LLM|1|abc\n",
+        '"LLM|1|abc"',
+        "'LLM|1|abc'",
+        "Bearer LLM|1|abc",
+        " bearer LLM|1|abc ",
+    ],
+)
+def test_api_key_copy_paste_noise_is_removed(raw: str) -> None:
+    assert llm_mod.clean_api_key(raw) == "LLM|1|abc"
+
+
+async def test_header_uses_the_cleaned_key() -> None:
+    seen: dict[str, str] = {}
+
+    def handler(req: httpx.Request) -> httpx.Response:
+        seen["auth"] = req.headers["authorization"]
+        return httpx.Response(200, json=ok_body("{}"))
+
+    await service(handler, llama_api_key='  "Bearer abc123\n').vision(b"x")
+    assert seen["auth"] == "Bearer abc123"
+
+
+def test_whitespace_only_key_is_not_configured() -> None:
+    assert LlamaService(settings(llama_api_key="  \n "), FakeRedis()).configured is False  # type: ignore[arg-type]

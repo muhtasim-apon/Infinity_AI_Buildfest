@@ -41,6 +41,15 @@ _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
 log = get_logger("cg.llm")
 
 
+def clean_api_key(raw: str) -> str:
+    """Dashboard copy-paste often adds whitespace, quotes or a 'Bearer ' prefix; any of them turns a
+    valid key into an HTTP 401. Normalise once; never log the value."""
+    key = raw.strip().strip("\"'").strip()
+    if key.lower().startswith("bearer "):
+        key = key[7:].strip()
+    return key
+
+
 class LlmUnavailableError(Exception):
     """No answer: key missing, cap reached, breaker open, network/timeout or bad status."""
 
@@ -114,8 +123,12 @@ class LlamaService:
         )
 
     @property
+    def api_key(self) -> str:
+        return clean_api_key(self.settings.llama_api_key)
+
+    @property
     def configured(self) -> bool:
-        return bool(self.settings.llama_api_key) and self.settings.advice_mode == "live"
+        return bool(self.api_key) and self.settings.advice_mode == "live"
 
     async def _within_cap(self) -> bool:
         cap = self.settings.llm_daily_call_cap
@@ -133,7 +146,7 @@ class LlamaService:
     async def _post(self, body: dict[str, Any]) -> dict[str, Any]:
         url = self.settings.llm_base_url.rstrip("/") + "/chat/completions"
         headers = {
-            "Authorization": f"Bearer {self.settings.llama_api_key}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
@@ -197,7 +210,7 @@ class LlamaService:
 
     async def vision(self, jpeg: bytes) -> LlmReply:
         data_url = "data:image/jpeg;base64," + base64.b64encode(jpeg).decode("ascii")
-        messages = [
+        messages: list[dict[str, Any]] = [
             {"role": "system", "content": prompt(VISION_PROMPT_VERSION)},
             {
                 "role": "user",
