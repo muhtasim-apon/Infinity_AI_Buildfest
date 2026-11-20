@@ -77,3 +77,21 @@ routes:
     ok: [201]
     body: {email: "invitee-{rand}@example.org", role: "REVIEWER", region_codes: ["D1"]}
     overrides: {demo_admin: 404}  # demo administrators cannot invite anyone
+
+  # --- scans, alerts, knowledge base (Gantt P2/P3; migration 0004) ---------------------------
+  "POST /api/v1/scans": {kind: farmer_only, ok: [422]}  # JSON instead of multipart: authz passes first
+  "GET /api/v1/scans": {kind: farmer_only, ok: [200]}
+  "GET /api/v1/scans/{scan_id}":
+    kind: farmer_only
+    ok: [404]
+    path: {scan_id: "00000000-0000-4000-8000-000000000000"}
+  "GET /api/v1/alerts": {kind: session, ok: [200]}  # RLS decides what each role sees
+  "POST /api/v1/alerts/{alert_id}/decision":
+    kind: staff_only
+    ok: [409]
+    path: {alert_id: "00000000-0000-4000-8000-000000000000"}
+    body: {decision: "approve"}
+    # real reviewer without a fresh step-up 2FA is refused (step_up_required); the matrix admin has one.
+    # demo staff decide demo-tenant drafts only (RLS keeps them out of real data).
+    overrides: {reviewer: 403, demo_reviewer: allow, demo_admin: allow}
+  "GET /api/v1/kb/sources": {kind: public, ok: [200]}

@@ -68,13 +68,25 @@ class RequestIdMiddleware:
 class BodySizeLimitMiddleware:
     """Reject bodies over `max_bytes` (Content-Length fast path + streaming count) with 413."""
 
-    def __init__(self, app: ASGIApp, max_bytes: int = 1_048_576) -> None:
+    def __init__(
+        self,
+        app: ASGIApp,
+        max_bytes: int = 1_048_576,
+        overrides: dict[str, int] | None = None,
+    ) -> None:
         self.app = app
+        self.default_max = max_bytes
         self.max_bytes = max_bytes
+        # exact-path overrides only (no prefixes), so a larger limit cannot leak to other routes
+        self.overrides = dict(overrides or {})
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
+            return
+        limit = self.overrides.get(scope.get("path", ""), self.default_max)
+        if limit != self.default_max:
+            await BodySizeLimitMiddleware(self.app, limit)(scope, receive, send)
             return
         rid = scope.get("state", {}).get("request_id")
         declared = dict(scope.get("headers", [])).get(b"content-length")

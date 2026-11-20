@@ -15,6 +15,8 @@ redis==5.2.1
 arq==0.26.1
 boto3==1.35.90
 httpx==0.28.1
+pillow==12.1.1  # scan upload: decode, EXIF strip, re-encode (D-032)
+python-multipart==0.0.30  # multipart/form-data for POST /api/v1/scans
 prometheus-client==0.21.1
 pyyaml==6.0.2
 argon2-cffi==25.1.0

@@ -14,7 +14,9 @@ from app.core.ratelimit import RateLimiter
 from app.core.redis import make_redis
 from app.core.sessions import SessionStore
 from app.services.auth import AuthService
+from app.services.llm import LlamaService
 from app.services.notify import Notifier
+from app.services.scans import ScanService
 from app.services.users import UsersService
 
 
@@ -29,8 +31,12 @@ class Container:
     notifier: Notifier
     auth: AuthService
     users: UsersService
+    llm: LlamaService | None = None
+    scans: ScanService | None = None
 
     async def close(self) -> None:
+        if self.llm is not None:
+            await self.llm.aclose()
         if self.redis is not None:
             await self.redis.aclose()
 
@@ -51,6 +57,9 @@ def build_container(settings: Settings, engine: AsyncEngine) -> Container:
         settings=settings, engine=engine, redis=redis, sessions=sessions, limiter=limiter,
         captcha=captcha, notifier=notifier,
     )  # fmt: skip
+    llm = LlamaService(settings, redis)
+    scans = ScanService(engine, llm, settings.max_upload_mb)
     return Container(
-        settings, engine, redis, sessions, limiter, captcha, notifier, auth, UsersService(engine)
-    )
+        settings, engine, redis, sessions, limiter, captcha, notifier, auth, UsersService(engine),
+        llm, scans,
+    )  # fmt: skip

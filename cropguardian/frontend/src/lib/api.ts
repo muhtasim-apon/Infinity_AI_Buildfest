@@ -73,6 +73,10 @@ interface RequestOptions {
   /** Calls that are allowed to 401 without signing the user out (login, state probe...). */
   quiet401?: boolean
   signal?: AbortSignal
+  /** Extra request headers (e.g. Idempotency-Key). Never credentials: cookies carry the session. */
+  headers?: Record<string, string>
+  /** Per-call timeout; photo uploads + model calls need longer than the default. */
+  timeoutMs?: number
 }
 
 async function ensureCsrf(): Promise<void> {
@@ -118,11 +122,13 @@ async function request<T>(
   if (unsafe) await ensureCsrf()
 
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? API_TIMEOUT_MS)
   options.signal?.addEventListener('abort', () => controller.abort(), { once: true })
 
-  const headers: Record<string, string> = { Accept: 'application/json' }
-  if (options.body !== undefined) headers['Content-Type'] = 'application/json'
+  const isForm = typeof FormData !== 'undefined' && options.body instanceof FormData
+  const headers: Record<string, string> = { ...options.headers, Accept: 'application/json' }
+  // multipart: the browser sets Content-Type with the boundary itself
+  if (options.body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
   if (unsafe && csrfToken) headers['X-CSRF-Token'] = csrfToken
 
   let response: Response
@@ -132,7 +138,12 @@ async function request<T>(
       headers,
       credentials: 'include',
       signal: controller.signal,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body:
+        options.body === undefined
+          ? undefined
+          : isForm
+            ? (options.body as FormData)
+            : JSON.stringify(options.body),
     })
   } catch {
     throw new ApiError(0, 'network')

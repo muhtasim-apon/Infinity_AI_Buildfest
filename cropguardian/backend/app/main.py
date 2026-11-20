@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import account, auth, health
+from app.api.v1 import account, auth, health, scans
 from app.core.config import Settings, get_settings
 from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging, get_logger
@@ -78,7 +78,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # add_middleware wraps outward: the LAST added runs FIRST. Spec order is
     # request-id -> request log -> trusted host -> body limit -> security headers: add in reverse.
     app.add_middleware(SecurityHeadersMiddleware, csp=build_csp())
-    app.add_middleware(BodySizeLimitMiddleware, max_bytes=1_048_576)
+    # 1 MiB everywhere except the photo upload (its own limit + multipart overhead).
+    app.add_middleware(
+        BodySizeLimitMiddleware,
+        max_bytes=1_048_576,
+        overrides={"/api/v1/scans": settings.max_upload_mb * 1024 * 1024 + 65_536},
+    )
     app.add_middleware(LivenessExemptTrustedHost, allowed_hosts=settings.trusted_hosts)
     if settings.cors_origins:
         app.add_middleware(
@@ -95,6 +100,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health.router)
     app.include_router(auth.router)
     app.include_router(account.router)
+    app.include_router(scans.router)
+    app.include_router(scans.public_router)
     if settings.cg_env == "test":
         from app.api.v1 import test_support
 

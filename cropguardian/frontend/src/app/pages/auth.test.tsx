@@ -41,7 +41,7 @@ describe('login page', () => {
     await user.type(await screen.findByLabelText(bnText('auth.login.identifier')), '01712345678')
     await user.type(screen.getByLabelText(bnText('auth.login.password')), 'river-lantern-47')
     await user.click(screen.getByRole('button', { name: bnText('auth.login.submit') }))
-    await waitFor(() => expect(where()).toBe('/home'))
+    await waitFor(() => expect(where()).toBe('/app'), { timeout: 5000 })
     expect(body).toEqual({
       identifier: '01712345678',
       password: 'river-lantern-47',
@@ -76,7 +76,7 @@ describe('login page', () => {
     await user.type(await screen.findByLabelText(bnText('auth.login.identifier')), 'a')
     await user.type(screen.getByLabelText(bnText('auth.login.password')), 'b')
     await user.click(screen.getByRole('button', { name: bnText('auth.login.submit') }))
-    await waitFor(() => expect(where()).toBe('/home'))
+    await waitFor(() => expect(where()).toBe('/app'), { timeout: 5000 })
   })
 
   it('shows one uniform message for wrong credentials and keeps the user on the page', async () => {
@@ -323,7 +323,7 @@ describe('registration and OTP', () => {
     await user.clear(code)
     await user.type(code, '123456')
     await user.click(screen.getByRole('button', { name: bnText('auth.otp.submit') }))
-    await waitFor(() => expect(where()).toBe('/home'))
+    await waitFor(() => expect(where()).toBe('/app'), { timeout: 5000 })
     expect(body).toEqual({ phone: '01712345678', code: '123456', keep_signed_in: true })
   })
 

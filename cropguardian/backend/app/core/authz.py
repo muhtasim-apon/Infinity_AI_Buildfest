@@ -86,6 +86,12 @@ POLICIES: dict[str, Policy] = {
     "auth:totp_login": Policy(frozenset({"reviewer", "admin"}), pre_totp=True, allow_demo=False),
     "auth:totp_setup": Policy(frozenset({"reviewer", "admin"}), pre_totp=True, allow_demo=False),
     "auth:recovery_codes": Policy(frozenset({"reviewer", "admin"}), step_up=True, allow_demo=False),
+    "scans:create": Policy(frozenset({"farmer"}), owner_only=True),
+    "scans:read": Policy(frozenset({"farmer"}), owner_only=True),
+    "alerts:read": Policy(frozenset({"farmer", "reviewer", "admin"})),
+    # Approving an outbreak alert is the one action that reaches farmers: real staff need a fresh
+    # step-up 2FA; the demo reviewer is exempt (demo tenant only, by RLS) - see authorize().
+    "alerts:decide": Policy(frozenset({"reviewer", "admin"}), step_up=True),
     "admin:users:list": Policy(frozenset({"admin"}), hide_as_404=True),
     "admin:invites:create": Policy(
         frozenset({"admin"}), step_up=True, hide_as_404=True, allow_demo=False

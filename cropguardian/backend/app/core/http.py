@@ -15,6 +15,8 @@ from urllib.parse import urlsplit
 
 import httpx
 
+HTTPError = httpx.HTTPError  # re-exported so callers never import httpx directly
+
 
 class OutboundBlockedError(Exception):
     """Raised when a URL is not allowed by the allow-list."""

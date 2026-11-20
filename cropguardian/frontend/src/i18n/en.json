@@ -437,5 +437,125 @@
     "offlineTitle": "You are offline",
     "offlineBody": "Try again when the connection is back.",
     "reload": "Reload the page"
+  },
+  "cg": {
+    "region": {
+      "label": "Your division",
+      "hint": "We only ask for the division, never your exact location."
+    },
+    "scan": {
+      "intro": "Take a clear, close photo of one rice leaf.",
+      "camera": "Take a photo",
+      "gallery": "Choose from gallery",
+      "preview": "Your photo",
+      "send": "Check for disease",
+      "change": "Choose another photo",
+      "working": "Checking the photo. This can take up to a minute.",
+      "queued": "The photo is saved on your phone and will be sent when you are online.",
+      "queueFull": "No space left on the phone queue. Try again when you are online.",
+      "privacy": "Photos are not kept after the check. Location data is removed from the photo.",
+      "riceOnly": "Only rice diseases are recognised for now."
+    },
+    "result": {
+      "diagnosed": "Possible disease",
+      "healthyBody": "No disease signs were found. Keep checking the field regularly.",
+      "aiNote": "An AI estimated this from the photo. The certainty is the model's own estimate, not verified.",
+      "stepsTitle": "What to do now",
+      "fromSource": "Steps copied word for word from the BRRI factsheet",
+      "fromLlm": "Written in plain language by the AI from the sources; every number checked against them",
+      "sourcesTitle": "Sources",
+      "page": "Page {{page}}",
+      "openSource": "Open the original factsheet",
+      "noAdvice": "No source-based advice is available for this disease yet. Contact the agriculture office.",
+      "scanAgain": "Take another photo",
+      "technical": "Technical details",
+      "technicalBody": "Model {{model}} · prompt {{prompt}} · knowledge base {{kb}}",
+      "listenUnavailable": "Read-aloud is not available on this phone.",
+      "stop": "Stop"
+    },
+    "reason": {
+      "model_error": "The photo could not be checked right now. Please try again shortly.",
+      "not_rice": "This does not look like a rice leaf. Only rice diseases are recognised for now.",
+      "not_a_plant": "No leaf is visible in the photo.",
+      "poor_image": "The photo is not clear. Take it again in good light, holding the phone still.",
+      "unknown_disease": "The signs do not match any disease we know.",
+      "low_confidence": "The disease cannot be identified with confidence from this photo."
+    },
+    "office": {
+      "title": "Ask the agriculture office",
+      "body": "Talk to your Upazila Agriculture Office or Sub-Assistant Agriculture Officer. They can visit the field and confirm the disease.",
+      "brri": "BRRI (Bangladesh Rice Research Institute), Gazipur"
+    },
+    "alerts": {
+      "title": "Area alerts",
+      "unverified": "Possible outbreak, unverified",
+      "body": "{{count}} photos showed {{disease}} in {{region}} division over the last {{days}} days.",
+      "approvedNote": "A reviewer approved this alert. Check your field and tell the agriculture office.",
+      "empty": "No approved alerts right now.",
+      "emptyHint": "Alerts appear here after a reviewer approves them."
+    },
+    "history": {
+      "notSure": "Not sure",
+      "healthy": "Healthy",
+      "open": "View result",
+      "queued": "{{count}} photos waiting to send"
+    },
+    "more": {
+      "title": "More",
+      "trust": "Trust Centre: sources and limits",
+      "sessions": "My sign-ins",
+      "logout": "Sign out",
+      "language": "Language"
+    },
+    "review": {
+      "title": "Outbreak alert review",
+      "intro": "A draft alert is created when 3 or more photos show the same disease in one division within 7 days. No farmer sees it unless you approve it.",
+      "drafts": "Waiting drafts",
+      "decided": "Decided",
+      "empty": "No draft alerts right now.",
+      "emptyHint": "Drafts appear here when farmers' photos meet the rule.",
+      "cases": "{{count}} photos",
+      "window": "{{from}} to {{to}}",
+      "approve": "Approve",
+      "reject": "Decline",
+      "approveTitle": "Show this alert to farmers?",
+      "approveBody": "After approval, farmers in this division see it labelled 'possible outbreak, unverified'. The decision is written to the audit log.",
+      "rejectTitle": "Decline this draft?",
+      "rejectBody": "Farmers will not see it. The decision is written to the audit log.",
+      "status": {
+        "draft": "Draft",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "done": "Decision saved"
+    },
+    "trust": {
+      "title": "Trust Centre",
+      "intro": "What Crop Guardian knows, where it comes from, and what it does not know.",
+      "sourcesTitle": "Knowledge-base sources",
+      "chunks": "{{count}} passages",
+      "excludedTitle": "Deliberately left out",
+      "limitsTitle": "Limits",
+      "honestyTitle": "Honesty commitments",
+      "notMeasured": "Not yet measured",
+      "honesty": {
+        "h1": "We did not train the disease model; Meta's Llama 4 vision model is used. No accuracy figure has been measured yet.",
+        "h2": "When confidence is low the app says 'not sure' instead of guessing.",
+        "h3": "Advice comes only from BRRI factsheets and every step shows its source. No agronomist has reviewed it yet.",
+        "h4": "Until the official banned-pesticide list is sourced, no chemical name or dose is ever given.",
+        "h5": "Outbreak alerts never reach farmers unless a human reviewer approves them.",
+        "h6": "All demo data is labelled DEMO DATA."
+      }
+    },
+    "division": {
+      "BD-A": "Barishal",
+      "BD-B": "Chattogram",
+      "BD-C": "Dhaka",
+      "BD-D": "Khulna",
+      "BD-E": "Rajshahi",
+      "BD-F": "Rangpur",
+      "BD-G": "Sylhet",
+      "BD-H": "Mymensingh"
+    }
   }
 }

@@ -57,6 +57,8 @@ export const defaultHandlers = [
   http.get('*/api/v1/auth/state', () => HttpResponse.json(anonymousState)),
   http.get('*/api/v1/captcha/challenge', () => HttpResponse.json(makeChallenge())),
   http.get('*/api/v1/consents/texts', () => HttpResponse.json(CONSENTS)),
+  http.get('*/api/v1/scans', () => HttpResponse.json({ scans: [] })),
+  http.get('*/api/v1/alerts', () => HttpResponse.json({ alerts: [] })),
 ]
 
 export const server = setupServer(...defaultHandlers)

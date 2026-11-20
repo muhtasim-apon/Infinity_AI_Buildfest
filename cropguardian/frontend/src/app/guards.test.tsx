@@ -25,12 +25,13 @@ describe('route guards (spec 15.4)', () => {
     )
   })
 
-  it('lets a farmer into /home, shows the 403 page on /review and a 404 on /admin', async () => {
+  it('lets a farmer into the farmer app (/home redirects to /app)', async () => {
     as('FARMER')
     renderApp('/home')
-    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
-      bnText('home.farmer'),
-    )
+    await waitFor(() => expect(where()).toBe('/app'), { timeout: 5000 })
+    expect(
+      await screen.findByText(bnText('farmerHome.hero.title'), {}, { timeout: 5000 }),
+    ).toBeInTheDocument()
   })
 
   it('wrong role: reviewer area for a farmer is 403', async () => {
@@ -86,8 +87,8 @@ describe('route guards (spec 15.4)', () => {
     expect(await screen.findByText(bnText('demo.ribbon'))).toBeInTheDocument()
     unmount()
     as('FARMER')
-    renderApp('/home')
-    await screen.findByText(bnText('home.farmer'))
+    renderApp('/app')
+    await screen.findByText(bnText('farmerHome.hero.title'), {}, { timeout: 5000 })
     expect(screen.queryByText(bnText('demo.ribbon'))).not.toBeInTheDocument()
   })
 
