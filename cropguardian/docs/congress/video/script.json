@@ -1,0 +1,61 @@
+{
+  "title": "Crop Guardian (ফসল রক্ষী) - 3-minute pitch",
+  "voice": "Microsoft Zira Desktop",
+  "notes": "Every figure is sourced: yield-loss numbers are quoted from the BRRI factsheets in the knowledge base; test counts are from the 20 Nov 2026 local runs (backend 778 + frontend 265). No accuracy or impact figure is claimed.",
+  "scenes": [
+    {
+      "id": "problem",
+      "lines": [
+        "In Bangladesh, rice feeds the nation.",
+        "But when a leaf turns sick, a farmer often has no one to ask.",
+        "According to the Bangladesh Rice Research Institute, blast can cut yield by up to eighty percent, and bacterial leaf blight by about thirty.",
+        "A wrong guess means the wrong spray, lost money, and a disease that keeps spreading."
+      ]
+    },
+    {
+      "id": "scan",
+      "lines": [
+        "Meet Crop Guardian: Fosol Rokkhi, the crop guardian.",
+        "A farmer opens a Bangla web app on any phone, picks a division, never an exact location, and photographs one rice leaf.",
+        "The photo is cleaned of GPS data, checked for quality, and sent to Meta's Llama 4 vision model, which must answer from a fixed list of nine rice diseases."
+      ]
+    },
+    {
+      "id": "advice",
+      "lines": [
+        "If the model is confident, the farmer sees the likely disease with a simple confidence band, never a fake percentage.",
+        "Then three to five plain Bangla steps, taken from official rice research factsheets, each with its source.",
+        "A validator rejects invented numbers and any pesticide name.",
+        "And when the photo is poor or the model is unsure, the app says so: I am not sure.",
+        "It gives retake tips and points to the local agriculture office, instead of guessing."
+      ]
+    },
+    {
+      "id": "outbreak",
+      "lines": [
+        "When three photos from one division show the same disease within a week, Crop Guardian drafts an outbreak alert.",
+        "Nothing reaches farmers automatically.",
+        "A human reviewer approves it, the decision is audit logged, and only then do farmers see: possible outbreak, unverified."
+      ]
+    },
+    {
+      "id": "tech",
+      "lines": [
+        "Under the hood: a React app on Vercel, a FastAPI service on Render, and Supabase Postgres with row level security on every table.",
+        "The photo itself is never stored.",
+        "Retrieval filters the knowledge base by disease and ranks passages by their words. Vector search is planned, not claimed.",
+        "More than one thousand automated tests cover the abstain logic, the validator, upload attacks and data isolation.",
+        "Claude Code helped us build it, and Claude transcribed the image-only factsheets."
+      ]
+    },
+    {
+      "id": "impact",
+      "lines": [
+        "We claim no accuracy figure yet. Our public Trust Centre lists every source and every limit.",
+        "Next: a labelled evaluation on Bangladeshi field photos, agronomist review, and more crops.",
+        "Cooperatives, NGOs and extension programmes can sponsor it for their farmers.",
+        "Crop Guardian. Honest help for every rice field."
+      ]
+    }
+  ]
+}

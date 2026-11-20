@@ -144,6 +144,22 @@ export function useDecideAlert() {
   })
 }
 
+export interface DivisionStats {
+  region_code: string
+  region_bn: string
+  region_en: string
+  diagnosed: number
+  not_sure: number
+  healthy: number
+}
+
+export function useScanStats() {
+  return useQuery({
+    queryKey: ['scan-stats'],
+    queryFn: () => api.get<{ days: number; divisions: DivisionStats[] }>('/api/v1/scans-stats'),
+  })
+}
+
 export function useKbSources() {
   return useQuery({
     queryKey: scanKeys.kb,

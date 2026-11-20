@@ -1,7 +1,9 @@
 """Knowledge-base retrieval over the versioned BRRI chunks (Gantt P2, Salwa step 3). Pure logic.
 
 What it is (and is not): metadata filter on the diagnosed disease + keyword overlap scoring on a
-Bangla/English tokeniser, top-k with chunk ids. There are NO embeddings and NO vector search yet
+Bangla/English tokeniser over each chunk's text PLUS its LLM-written context sentence (contextual
+retrieval, Anthropic-style: the context was written by Claude after reading the whole factsheet),
+top-k with chunk ids. There are NO embeddings and NO vector search yet
 (pgvector + multilingual-e5 is *planned*); the Trust Centre and the CloudCamp form say so.
 """
 
@@ -32,6 +34,11 @@ class Chunk:
     disease: str
     topic: str
     text: str
+    context: str = ""  # LLM-written situating sentence (contextual retrieval); indexed with text
+
+    @property
+    def indexed(self) -> str:
+        return f"{self.context} {self.text}".strip()
 
 
 @dataclass(frozen=True)
@@ -57,6 +64,7 @@ def parse_chunks(raw: Iterable[Mapping[str, Any]]) -> list[Chunk]:
                 disease=str(item["disease"]),
                 topic=str(item["topic"]),
                 text=str(item["text"]),
+                context=str(item.get("context", "")),
             )
         except (KeyError, TypeError, ValueError) as exc:
             raise ValueError(f"malformed chunk: {exc}") from exc
@@ -81,7 +89,7 @@ def search(
     for chunk in chunks:
         if disease is not None and chunk.disease != disease:
             continue
-        overlap = len(query & set(tokens(chunk.text))) if query else 0
+        overlap = len(query & set(tokens(chunk.indexed))) if query else 0
         if disease is None and overlap == 0:
             continue
         score = TOPIC_WEIGHT[chunk.topic] + overlap * 0.5

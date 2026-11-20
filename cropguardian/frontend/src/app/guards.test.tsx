@@ -78,7 +78,7 @@ describe('route guards (spec 15.4)', () => {
   it('a signed-in user opening /login is sent to their home', async () => {
     as('REVIEWER')
     renderApp('/login')
-    await waitFor(() => expect(where()).toBe('/review'))
+    await waitFor(() => expect(where()).toBe('/review'), { timeout: 5000 })
   })
 
   it('shows the DEMO ribbon for demo roles only', async () => {

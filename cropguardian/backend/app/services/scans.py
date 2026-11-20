@@ -248,7 +248,8 @@ class ScanService:
         if not hits:
             return {}, [], "none"
         retrieved = {h.chunk.id: h.chunk.text for h in hits}
-        sources = [(h.chunk.id, h.chunk.text) for h in hits]
+        # the model sees the situating context first, then the verbatim passage (contextual RAG)
+        sources = [(h.chunk.id, h.chunk.indexed) for h in hits]
         for _attempt in range(2):  # first try + one retry
             try:
                 reply = await self.llm.advice(self.kb.diseases[disease]["bn"], sources)
@@ -295,7 +296,9 @@ class ScanService:
                 reply = await self.llm.vision(processed.jpeg)
                 model = reply.model
                 result = decision.decide(reply.data, self.kb.disease_codes)
-            except LlmUnavailableError:
+            except LlmUnavailableError as exc:
+                # reason codes only (http_401, not_configured, daily_cap, ...): never a secret
+                model = f"unavailable:{exc.reason}"[:120]
                 result = decision.Decision(status="not_sure", reason="model_error")
         crop = result.crop
 
@@ -423,6 +426,38 @@ class ScanService:
         if row is None:  # RLS hides other users' rows: indistinguishable from missing
             raise AppError(404, "not_found")
         return self.view(dict(row))
+
+    async def stats(self, p: Principal, days: int = 30) -> dict[str, Any]:
+        """Scan counts per division and outcome for the reviewer chart. Counts only: no user ids,
+        no advice text. RLS limits staff to their own tenant (demo staff see demo scans)."""
+        authorize(p, "scans:stats")
+        days = max(1, min(days, 90))
+        ctx = db_context_for(p.user_id, p.role, p.region_codes)
+        async with session_scope(self.engine, ctx) as db:
+            rows = (
+                await db.execute(
+                    text(
+                        "SELECT region_code, status, count(*) FROM scans "
+                        "WHERE created_at >= :since GROUP BY region_code, status"
+                    ),
+                    {"since": utcnow() - timedelta(days=days)},
+                )
+            ).all()
+        by_region: dict[str, dict[str, Any]] = {
+            code: {
+                "region_code": code,
+                "region_bn": bn,
+                "region_en": en,
+                "diagnosed": 0,
+                "not_sure": 0,
+                "healthy": 0,
+            }
+            for code, (bn, en) in outbreak_rules.DIVISIONS.items()
+        }
+        for region, status, count in rows:
+            if region in by_region and status in ("diagnosed", "not_sure", "healthy"):
+                by_region[region][status] = int(count)
+        return {"days": days, "divisions": list(by_region.values())}
 
     # -- outbreaks -----------------------------------------------------------------------------
     async def refresh_outbreak(self, tenant: str, disease: str, region: str) -> None:

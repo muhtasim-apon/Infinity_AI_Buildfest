@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crop Guardian pitch storyboard</title>
+<style>
+  :root {
+    --paddy: #1f7a3a; --paddy-dark: #0f4d24; --leaf: #3fa34d; --gold: #e2b33c; --sky1: #bfe6ff; --sky2: #fff6dc;
+    --ink: #0d1f14; --muted: #46604f; --card: #ffffffee; --danger: #b3412b; --sky: #2a7fc4; --sim: #6b3fa0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b2a17; font-family: "Segoe UI", "Nirmala UI", sans-serif; color: var(--ink); }
+  .bn { font-family: "Nirmala UI", "Noto Sans Bengali", sans-serif; }
+  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
+  .scene.on { opacity: 1; }
+  .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 62%, #f4e3a8 100%); }
+  .sun { position: absolute; width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #fff3b0 0%, #ffd25a 55%, #ffb43a00 72%); left: 1500px; top: 120px; animation: rise 22s ease-out both; }
+  @keyframes rise { from { transform: translateY(120px); } to { transform: translateY(0); } }
+  .hills { position: absolute; left: 0; right: 0; bottom: 330px; height: 220px; }
+  .field { position: absolute; left: 0; right: 0; bottom: 0; height: 430px; background: linear-gradient(180deg, #7cc35a 0%, #3f8f3a 55%, #2f6f2c 100%); }
+  .stalk { transform-origin: bottom center; animation: sway 3.4s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+  .title-card { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #1f7a3a, #0b2a17 70%); color: #fff; text-align: center; }
+  .title-card h1 { font-size: 110px; letter-spacing: 1px; }
+  .title-card p { font-size: 44px; opacity: .9; margin-top: 18px; }
+  .farmer { position: absolute; bottom: 150px; left: -260px; width: 260px; }
+  .farmer.walk { animation: walkin 3.6s ease-out forwards; }
+  @keyframes walkin { to { transform: translateX(760px); } }
+  .farmer .leg { transform-origin: 50% 0; animation: step .45s ease-in-out infinite alternate; }
+  .farmer .leg.r { animation-delay: .45s; }
+  .farmer.stop .leg { animation: none; }
+  @keyframes step { from { transform: rotate(14deg); } to { transform: rotate(-14deg); } }
+  .zoom { position: absolute; right: 120px; top: 120px; width: 760px; height: 520px; border-radius: 50%; background: radial-gradient(circle, #e9f6dd 0%, #cfe9bd 70%); border: 10px solid #fff; box-shadow: 0 30px 80px #0005; transform: scale(0); transition: transform 1s cubic-bezier(.2,.9,.2,1.1); display: grid; place-items: center; }
+  .zoom.on { transform: scale(1); }
+  .lesion { opacity: 0; transition: opacity .6s; }
+  .zoom.on .lesion { opacity: 1; }
+  .stat { position: absolute; left: 110px; width: 760px; background: var(--card); border-radius: 26px; padding: 30px 38px; box-shadow: 0 20px 50px #0003; transform: translateX(-900px); transition: transform .8s cubic-bezier(.2,.9,.2,1); }
+  .stat.on { transform: translateX(0); }
+  .stat b { font-size: 92px; color: var(--danger); display: block; line-height: 1; }
+  .stat span { font-size: 36px; }
+  .stat small { display: block; font-size: 22px; color: var(--muted); margin-top: 10px; }
+  .chain { position: absolute; left: 0; right: 0; top: 330px; display: flex; justify-content: center; gap: 30px; opacity: 0; transition: opacity .6s; }
+  .chain.on { opacity: 1; }
+  .chip { background: #fff; border-radius: 22px; padding: 26px 34px; font-size: 40px; font-weight: 600; box-shadow: 0 16px 40px #0004; transform: scale(.6); opacity: 0; transition: all .5s; }
+  .chain.on .chip { transform: scale(1); opacity: 1; }
+  .chain.on .chip:nth-child(3) { transition-delay: .6s; } .chain.on .chip:nth-child(5) { transition-delay: 1.2s; }
+  .arrow { font-size: 60px; color: #fff; align-self: center; }
+  .dim { position: absolute; inset: 0; background: #0006; opacity: 0; transition: opacity .6s; }
+  .dim.on { opacity: 1; }
+
+  /* app scenes */
+  .split { position: absolute; inset: 0; background: linear-gradient(135deg, #f3fbef 0%, #e2f3da 60%, #cfe8c2 100%); }
+  .phone { position: absolute; top: 60px; width: 440px; height: 900px; border-radius: 58px; background: #111; padding: 18px; box-shadow: 0 40px 90px #0006; }
+  .phone .screen { width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: #fff; position: relative; }
+  .phone video, .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .phone .notch { position: absolute; top: 18px; left: 50%; width: 130px; height: 28px; margin-left: -65px; background: #111; border-radius: 0 0 18px 18px; z-index: 2; }
+  .callouts { position: absolute; left: 640px; top: 120px; width: 1150px; }
+  .callout { display: flex; gap: 26px; align-items: center; background: #fff; border-radius: 26px; padding: 28px 34px; margin-bottom: 30px; box-shadow: 0 16px 40px #0002; transform: translateX(80px); opacity: 0; transition: all .7s cubic-bezier(.2,.9,.2,1); }
+  .callout.on { transform: none; opacity: 1; }
+  .callout .ic { flex: 0 0 96px; height: 96px; border-radius: 24px; display: grid; place-items: center; font-size: 54px; background: #e3f4dc; }
+  .callout h3 { font-size: 44px; } .callout p { font-size: 30px; color: var(--muted); margin-top: 6px; }
+  .brand { position: absolute; left: 640px; top: 40px; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; color: var(--paddy-dark); }
+  .logo { width: 70px; height: 70px; }
+  .big-brand { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, #2a9a49, #0b2a17 75%); color: #fff; text-align: center; transition: opacity .8s; }
+  .big-brand.off { opacity: 0; }
+  .big-brand h1 { font-size: 120px; } .big-brand h2 { font-size: 64px; margin-top: 8px; } .big-brand p { font-size: 36px; margin-top: 26px; opacity: .9; }
+  .credit { position: absolute; left: 640px; bottom: 210px; font-size: 22px; color: var(--muted); }
+
+  /* map scene */
+  .mapwrap { position: absolute; left: 90px; top: 70px; width: 820px; height: 880px; }
+  .pin { transform: translateY(-160px); opacity: 0; transition: all .6s cubic-bezier(.3,1.6,.5,1); }
+  .pin.on { transform: none; opacity: 1; }
+  .ripple { transform-origin: center; transform-box: fill-box; animation: ripple 1.8s ease-out infinite; }
+  @keyframes ripple { from { transform: scale(.3); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
+  .alertcard { position: absolute; left: 1000px; top: 120px; width: 820px; background: #fff; border-radius: 30px; padding: 40px; box-shadow: 0 24px 60px #0003; border-left: 16px solid var(--gold); transform: scale(.7); opacity: 0; transition: all .7s cubic-bezier(.2,.9,.2,1.1); }
+  .alertcard.on { transform: none; opacity: 1; }
+  .alertcard h3 { font-size: 46px; } .alertcard p { font-size: 32px; margin-top: 12px; color: var(--muted); }
+  .badge { display: inline-block; font-size: 26px; padding: 8px 18px; border-radius: 999px; background: #fff3d6; color: #8a5a00; font-weight: 700; }
+  .stamp { position: absolute; right: 60px; top: 40px; font-size: 54px; font-weight: 900; color: var(--paddy); border: 8px solid var(--paddy); border-radius: 18px; padding: 6px 22px; transform: rotate(-12deg) scale(3); opacity: 0; transition: all .45s cubic-bezier(.2,.9,.3,1.3); }
+  .stamp.on { transform: rotate(-12deg) scale(1); opacity: 1; }
+  .reviewer { position: absolute; left: 1010px; top: 560px; display: flex; gap: 28px; align-items: center; opacity: 0; transition: opacity .6s; }
+  .reviewer.on { opacity: 1; }
+  .reviewer p { font-size: 34px; max-width: 640px; }
+  .farmerphone { position: absolute; left: 1000px; top: 760px; width: 820px; background: var(--paddy-dark); color: #fff; border-radius: 26px; padding: 26px 32px; font-size: 36px; opacity: 0; transform: translateY(40px); transition: all .7s; }
+  .farmerphone.on { opacity: 1; transform: none; }
+
+  /* architecture */
+  .arch { position: absolute; inset: 0; background: #0f2418; }
+  .node { position: absolute; background: #fff; border-radius: 22px; padding: 18px 24px; font-size: 30px; font-weight: 600; text-align: center; box-shadow: 0 14px 36px #0006; opacity: 0; transform: translateY(24px); transition: all .6s cubic-bezier(.2,.9,.2,1); }
+  .node small { display: block; font-size: 22px; font-weight: 400; color: var(--muted); margin-top: 4px; }
+  .node.on { opacity: 1; transform: none; }
+  .node.ai { background: #e6f2ff; border: 4px solid var(--sky); }
+  .node.guard { background: #fff6e0; border: 4px solid var(--gold); }
+  .node.db { background: #e8f6e5; border: 4px solid var(--paddy); }
+  .wire { stroke: #8fd19e; stroke-width: 6; fill: none; stroke-dasharray: 14 12; stroke-dashoffset: 400; opacity: 0; transition: opacity .4s; animation: flow 1.2s linear infinite; }
+  .wire.on { opacity: 1; }
+  @keyframes flow { to { stroke-dashoffset: 0; } }
+  .counter { position: absolute; left: 110px; top: 720px; color: #fff; text-align: left; max-width: 760px; opacity: 0; transition: opacity .6s; }
+  .counter.on { opacity: 1; }
+  .counter b { font-size: 92px; color: #9fe3a9; display: block; line-height: 1; }
+  .counter span { font-size: 34px; }
+  .tag { position: absolute; color: #fff; font-size: 30px; background: #ffffff1a; border: 2px solid #ffffff55; border-radius: 999px; padding: 10px 24px; opacity: 0; transition: opacity .6s; }
+  .tag.on { opacity: 1; }
+
+  /* impact */
+  .impact { position: absolute; inset: 0; background: linear-gradient(160deg, #fffaf0, #eaf6e4); }
+  .pillar { position: absolute; top: 210px; width: 540px; height: 520px; background: #fff; border-radius: 30px; padding: 44px; box-shadow: 0 24px 60px #0002; opacity: 0; transform: translateY(60px); transition: all .7s cubic-bezier(.2,.9,.2,1); }
+  .pillar.on { opacity: 1; transform: none; }
+  .pillar h3 { font-size: 46px; margin: 18px 0 14px; } .pillar p { font-size: 31px; color: var(--muted); line-height: 1.35; }
+  .pillar .ic { font-size: 84px; }
+  .end { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; background: radial-gradient(circle at 50% 40%, #2a9a49, #0b2a17 75%); color: #fff; opacity: 0; transition: opacity 1s; }
+  .end.on { opacity: 1; }
+  .end h1 { font-size: 110px; } .end h2 { font-size: 56px; margin-top: 6px; } .end p { font-size: 32px; margin-top: 24px; opacity: .95; }
+  .end .url { font-size: 34px; background: #ffffff22; padding: 12px 30px; border-radius: 999px; display: inline-block; margin-top: 28px; }
+  .end .src { font-size: 22px; margin-top: 30px; opacity: .8; }
+  .h-title { position: absolute; left: 110px; top: 70px; font-size: 64px; font-weight: 800; color: var(--paddy-dark); }
+</style>
+</head>
+<body>
+
+<!-- ===== Title + Problem ===== -->
+<section class="scene" id="s-problem">
+  <div class="sky"></div>
+  <div class="sun"></div>
+  <svg class="hills" viewBox="0 0 1920 220" preserveAspectRatio="none"><path d="M0 220 L0 120 Q240 30 520 110 T1080 90 T1600 110 T1920 70 L1920 220Z" fill="#9fd27c"/><path d="M0 220 L0 160 Q300 90 640 150 T1300 140 T1920 130 L1920 220Z" fill="#86c568"/></svg>
+  <div class="field"></div>
+  <svg id="paddy" style="position:absolute;left:0;bottom:0" width="1920" height="430"></svg>
+  <svg class="farmer" id="farmer" viewBox="0 0 260 520">
+    <!-- conical hat (mathal) -->
+    <path d="M70 92 L130 30 L190 92 Z" fill="#d9b25e" stroke="#9c7a33" stroke-width="4"/>
+    <ellipse cx="130" cy="92" rx="72" ry="12" fill="#c49a45"/>
+    <circle cx="130" cy="125" r="34" fill="#8a5a3b"/>
+    <!-- gamcha shirt -->
+    <path d="M86 165 Q130 150 174 165 L184 300 L76 300 Z" fill="#2e86c1"/>
+    <path d="M100 168 L160 168 L150 190 L110 190 Z" fill="#e74c3c" opacity=".85"/>
+    <!-- arm holding phone -->
+    <path id="arm" d="M172 180 Q215 220 205 255" stroke="#8a5a3b" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <rect x="192" y="238" width="30" height="50" rx="6" fill="#222"/>
+    <path d="M88 180 Q60 230 74 280" stroke="#8a5a3b" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <!-- lungi -->
+    <path d="M76 296 L184 296 L194 400 L66 400 Z" fill="#2c7a4b"/>
+    <path d="M76 330 L184 330" stroke="#1e5a37" stroke-width="6"/><path d="M72 365 L190 365" stroke="#1e5a37" stroke-width="6"/>
+    <g class="leg l"><rect x="92" y="398" width="24" height="96" rx="10" fill="#8a5a3b"/></g>
+    <g class="leg r"><rect x="146" y="398" width="24" height="96" rx="10" fill="#8a5a3b"/></g>
+  </svg>
+  <div class="zoom" id="zoom">
+    <svg width="640" height="400" viewBox="0 0 640 400">
+      <path d="M20 330 Q300 -40 620 60 Q360 180 20 330Z" fill="#4caf50" stroke="#2e7d32" stroke-width="6"/>
+      <path d="M20 330 Q320 150 620 60" stroke="#2e7d32" stroke-width="5" fill="none"/>
+      <g class="lesion">
+        <ellipse cx="250" cy="170" rx="46" ry="16" transform="rotate(-24 250 170)" fill="#cfc9b0" stroke="#7b4a2a" stroke-width="7"/>
+        <ellipse cx="380" cy="128" rx="38" ry="13" transform="rotate(-20 380 128)" fill="#d6d0b8" stroke="#7b4a2a" stroke-width="6"/>
+        <ellipse cx="160" cy="228" rx="30" ry="11" transform="rotate(-28 160 228)" fill="#d6d0b8" stroke="#7b4a2a" stroke-width="6"/>
+        <ellipse cx="470" cy="104" rx="24" ry="9" transform="rotate(-16 470 104)" fill="#d6d0b8" stroke="#7b4a2a" stroke-width="5"/>
+      </g>
+    </svg>
+    <div style="position:absolute;bottom:40px;font-size:30px;font-weight:700;color:#5d3a1f">Eye-shaped lesions · rice blast (illustration)</div>
+  </div>
+  <div class="stat" id="stat1" style="top:120px"><b>up to 80%</b><span>yield loss from <strong>blast</strong> in susceptible varieties</span><small>Source: BRRI Factsheet 4 (Blast)</small></div>
+  <div class="stat" id="stat2" style="top:400px"><b>~30%</b><span>average yield loss from <strong>bacterial leaf blight</strong></span><small>Source: BRRI Factsheet 2 (Patapora)</small></div>
+  <div class="dim" id="dim1"></div>
+  <div class="chain" id="chain"><div class="chip">Wrong guess</div><div class="arrow">→</div><div class="chip">Wrong spray, lost money</div><div class="arrow">→</div><div class="chip">Disease keeps spreading</div></div>
+  <div class="title-card" id="titlecard"><div><h1 class="bn">ফসল রক্ষী</h1><p>Crop Guardian · honest AI help for rice farmers in Bangladesh</p></div></div>
+</section>
+
+<!-- ===== Scan ===== -->
+<section class="scene" id="s-scan">
+  <div class="split"></div>
+  <div class="phone" style="left:120px"><div class="notch"></div><div class="screen"><video id="v-scan" muted playsinline></video></div></div>
+  <div class="brand"><svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#1f7a3a"/><path d="M20 44 Q32 8 46 18 Q44 40 20 44Z" fill="#9fe3a9"/></svg><span class="bn">ফসল রক্ষী</span>&nbsp;Crop Guardian</div>
+  <div class="callouts">
+    <div class="callout" id="c-s1"><div class="ic">🗺️</div><div><h3>Division, never GPS</h3><p>Bangla-first web app on any phone; works offline and syncs later</p></div></div>
+    <div class="callout" id="c-s2"><div class="ic">🧹</div><div><h3>GPS stripped · quality checked</h3><p>Dark or blurry photos are refused before any AI call</p></div></div>
+    <div class="callout" id="c-s3"><div class="ic">🦙</div><div><h3>Llama 4 vision · fixed list</h3><p>Must choose one of 9 BRRI rice diseases, healthy, or unknown</p></div></div>
+  </div>
+  <div class="credit">Leaf photos: RiceLeafBD field datasets (CC BY 4.0). Live app, demo data labelled SIMULATED.</div>
+  <div class="big-brand" id="bigbrand"><div><h1 class="bn">ফসল রক্ষী</h1><h2>Crop Guardian</h2><p>Photo → diagnosis or honest “not sure” → cited Bangla advice → human-approved alerts</p></div></div>
+</section>
+
+<!-- ===== Advice + not sure ===== -->
+<section class="scene" id="s-advice">
+  <div class="split"></div>
+  <div class="phone" style="left:120px"><div class="notch"></div><div class="screen"><video id="v-advice" muted playsinline></video></div></div>
+  <div class="callouts">
+    <div class="callout" id="c-a1"><div class="ic">📶</div><div><h3>A band, never a fake %</h3><p>The model's own confidence is not calibrated, so we don't pretend</p></div></div>
+    <div class="callout" id="c-a2"><div class="ic">📚</div><div><h3>3–5 Bangla steps, each cited</h3><p>Only from Bangladesh Rice Research Institute factsheets</p></div></div>
+    <div class="callout" id="c-a3"><div class="ic">🛡️</div><div><h3>Validator</h3><p>No invented numbers · no pesticide names · Bangla only · else verbatim factsheet text</p></div></div>
+    <div class="callout" id="c-a4"><div class="ic">🤔</div><div><h3 class="bn">“আমি নিশ্চিত নই” — I am not sure</h3><p>Retake tips + the local agriculture office instead of a guess</p></div></div>
+  </div>
+</section>
+
+<!-- ===== Outbreak ===== -->
+<section class="scene" id="s-outbreak">
+  <div class="split"></div>
+  <div class="h-title" style="left:110px;top:40px;font-size:54px">Human-approved outbreak alerts</div>
+  <svg class="mapwrap" viewBox="0 0 820 880">
+    <!-- stylised Bangladesh outline (not to scale) -->
+    <path d="M300 40 Q420 20 520 70 Q600 60 680 120 Q760 170 740 260 Q700 300 720 360 Q760 420 700 470 Q640 500 660 560 Q700 640 660 720 Q600 820 520 840 Q470 800 430 830 Q360 860 330 800 Q280 760 230 790 Q170 780 160 700 Q120 640 170 600 Q130 540 160 480 Q110 420 150 360 Q100 300 160 250 Q140 170 210 120 Q240 60 300 40Z" fill="#d6edcb" stroke="#1f7a3a" stroke-width="6"/>
+    <g font-size="26" font-family="Segoe UI" fill="#2c4a36">
+      <text x="300" y="170">Rangpur</text><text x="200" y="330">Rajshahi</text><text x="610" y="250">Sylhet</text>
+      <text x="380" y="300">Mymensingh</text><text x="360" y="470">Dhaka</text><text x="210" y="600">Khulna</text>
+      <text x="390" y="680">Barishal</text><text x="560" y="620">Chattogram</text>
+    </g>
+    <g id="pins">
+      <g class="pin" id="p1"><circle class="ripple" cx="600" cy="350" r="22" fill="#e2b33c55"/><path d="M600 352 l-18 -36 a20 20 0 1 1 36 0z" fill="#b3412b"/></g>
+      <g class="pin" id="p2"><circle class="ripple" cx="640" cy="330" r="22" fill="#e2b33c55"/><path d="M640 332 l-18 -36 a20 20 0 1 1 36 0z" fill="#b3412b"/></g>
+      <g class="pin" id="p3"><circle class="ripple" cx="620" cy="390" r="22" fill="#e2b33c55"/><path d="M620 392 l-18 -36 a20 20 0 1 1 36 0z" fill="#b3412b"/></g>
+    </g>
+  </svg>
+  <div class="alertcard" id="alertcard"><span class="badge">DRAFT · not visible to farmers</span><h3 style="margin-top:18px">Tungro · Sylhet division</h3><p>3 diagnosed photos in 7 days → rule creates one draft</p><div class="stamp" id="stamp">APPROVED</div></div>
+  <div class="reviewer" id="reviewer"><svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="58" fill="#e6f2ff"/><circle cx="60" cy="46" r="20" fill="#7a4e33"/><path d="M24 104 Q60 70 96 104" fill="#2a7fc4"/></svg><p>A human reviewer decides · step-up 2FA for real staff · every decision audit-logged</p></div>
+  <div class="farmerphone" id="farmerphone"><span class="bn" style="font-weight:700">সম্ভাব্য প্রাদুর্ভাব, যাচাই করা হয়নি</span><br><span style="font-size:28px;opacity:.85">“Possible outbreak, unverified” — only after approval</span></div>
+</section>
+
+<!-- ===== Architecture ===== -->
+<section class="scene" id="s-tech">
+  <div class="arch"></div>
+  <div class="h-title" style="color:#fff">Under the hood</div>
+  <svg style="position:absolute;inset:0" width="1920" height="1080">
+    <path class="wire" id="w1" d="M330 300 L470 300"/><path class="wire" id="w2" d="M770 300 L900 300"/>
+    <path class="wire" id="w3" d="M1050 360 L1050 430"/><path class="wire" id="w4" d="M1050 540 L1050 600"/>
+    <path class="wire" id="w5" d="M1200 660 L1330 660"/><path class="wire" id="w6" d="M1050 720 L1050 770"/>
+    <path class="wire" id="w7" d="M900 300 Q820 520 560 640"/>
+  </svg>
+  <div class="node" id="n-phone" style="left:110px;top:250px;width:220px">📱 Phone<small>Bangla web app</small></div>
+  <div class="node" id="n-vercel" style="left:470px;top:250px;width:300px">React · Vercel<small>/api → Render</small></div>
+  <div class="node" id="n-api" style="left:900px;top:250px;width:300px">FastAPI · Render<small>CSRF · rate limits</small></div>
+  <div class="node guard" id="n-gate" style="left:900px;top:430px;width:300px">Quality gate<small>EXIF/GPS strip · blur · size</small></div>
+  <div class="node ai" id="n-vision" style="left:900px;top:600px;width:300px">Llama 4 vision<small>abstain &lt; 0.60 · rice only</small></div>
+  <div class="node ai" id="n-advice" style="left:1330px;top:590px;width:480px">BRRI retrieval → Llama advice<small>disease filter · ≤ 8 cited passages</small></div>
+  <div class="node guard" id="n-valid" style="left:900px;top:770px;width:420px">Validator<small>citations · verbatim numbers · no pesticides</small></div>
+  <div class="node db" id="n-db" style="left:330px;top:600px;width:360px">Supabase Postgres<small>forced row-level security · audit log</small></div>
+  <div class="tag" id="t-photo" style="left:110px;top:420px">🚫📷 photo never stored</div>
+  <div class="tag" id="t-vec" style="left:110px;top:500px">vector search: planned, not claimed</div>
+  <div class="counter" id="counter"><b id="count">0</b><span>automated tests (778 backend + 265 frontend)</span><br><span style="font-size:28px;opacity:.85">built with Claude Code · KB transcribed by Claude</span></div>
+</section>
+
+<!-- ===== Impact ===== -->
+<section class="scene" id="s-impact">
+  <div class="impact"></div>
+  <div class="h-title">Honest by design</div>
+  <div class="pillar" id="pl1" style="left:110px"><div class="ic">🔎</div><h3>No accuracy claimed yet</h3><p>A public Trust Centre lists every source, every exclusion and every limit, straight from the live API.</p></div>
+  <div class="pillar" id="pl2" style="left:690px"><div class="ic">🧪</div><h3>Next</h3><p>Labelled evaluation on Bangladeshi field photos · agronomist review · more crops · vector search.</p></div>
+  <div class="pillar" id="pl3" style="left:1270px"><div class="ic">🤝</div><h3>Who pays</h3><p>Cooperatives, NGOs and extension programmes sponsor it; farmers use it free.</p></div>
+  <div class="end" id="end"><div><h1 class="bn">ফসল রক্ষী</h1><h2>Crop Guardian</h2><p>Honest help for every rice field.</p><div class="url">infinityaibuildfest-prototype-five.vercel.app</div><div class="src">Knowledge: BRRI rice-disease factsheets · Leaf photos: RiceLeafBD (CC BY 4.0) · Voice: synthetic · Demo data labelled SIMULATED</div></div></div>
+</section>
+
+<script>
+const TL = window.__TIMELINE || {scenes: []};
+const S = Object.fromEntries(TL.scenes.map(s => [s.id, s]));
+const $ = id => document.getElementById(id);
+const on = (id, v = true) => $(id) && $(id).classList.toggle('on', v);
+
+// procedural paddy rows (deterministic)
+(function paddy() {
+  const svg = $('paddy'); let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  let html = '';
+  for (let row = 0; row < 7; row++) {
+    const y = 80 + row * 52, h = 70 + row * 26, gap = 34 - row * 2;
+    for (let x = -20; x < 1940; x += gap) {
+      const xx = x + rnd() * 12, d = (rnd() * 3).toFixed(2), c = row % 2 ? '#2f8a35' : '#3fa34d';
+      html += `<g class="stalk" style="animation-delay:-${d}s"><path d="M${xx} ${y + h} q4 -${h * .6} ${-6 + rnd() * 12} -${h}" stroke="${c}" stroke-width="${3 + row * .6}" fill="none"/>` +
+              `<path d="M${xx} ${y + h} q-14 -${h * .4} -22 -${h * .7}" stroke="${c}" stroke-width="${2 + row * .5}" fill="none"/>` +
+              (row > 2 ? `<ellipse cx="${xx - 4}" cy="${y + 4}" rx="${3 + row * .5}" ry="${8 + row}" fill="#e2b33c"/>` : '') + '</g>';
+    }
+  }
+  svg.innerHTML = html;
+})();
+
+function play(vid, src, rate = 1) {
+  const v = $(vid); if (!src) return; v.src = src; v.playbackRate = rate; v.currentTime = 0;
+  v.onended = () => v.pause(); v.play().catch(() => {});
+}
+
+const CLIPS = window.__CLIPS || {};
+const at = [];
+function cue(t, fn) { at.push([t, fn, false]); }
+function sceneOn(id) { document.querySelectorAll('.scene').forEach(s => s.classList.toggle('on', s.id === 's-' + id)); }
+
+// --- cues (all relative to the narration timeline) ---
+const P = S.problem, SC = S.scan, A = S.advice, O = S.outbreak, T = S.tech, I = S.impact;
+if (P) {
+  cue(0, () => { sceneOn('problem'); on('titlecard'); });
+  cue(P.start + 0.2, () => { $('titlecard').style.transition = 'opacity .8s'; $('titlecard').style.opacity = 0; });
+  cue(P.lines[1].start - 0.5, () => { $('farmer').classList.add('walk'); });
+  cue(P.lines[1].start + 2.6, () => { $('farmer').classList.add('stop'); on('zoom'); });
+  cue(P.lines[2].start, () => { on('stat1'); });
+  cue(P.lines[2].start + 4.8, () => on('stat2'));
+  cue(P.lines[3].start, () => { on('zoom', false); on('stat1', false); on('stat2', false); on('dim1'); on('chain'); });
+}
+if (SC) {
+  cue(SC.start - 0.4, () => { sceneOn('scan'); });
+  cue(SC.lines[1].start, () => { $('bigbrand').classList.add('off'); play('v-scan', CLIPS.scan); on('c-s1'); });
+  cue(SC.lines[2].start, () => on('c-s2'));
+  cue(SC.lines[2].start + 4.5, () => on('c-s3'));
+}
+if (A) {
+  cue(A.start - 0.4, () => { sceneOn('advice'); play('v-advice', CLIPS.result); on('c-a1'); });
+  cue(A.lines[1].start, () => on('c-a2'));
+  cue(A.lines[2].start, () => on('c-a3'));
+  cue(A.lines[3].start, () => { play('v-advice', CLIPS.notsure); on('c-a1', false); on('c-a2', false); on('c-a3', false); setTimeout(() => on('c-a4'), 500); });
+}
+if (O) {
+  cue(O.start - 0.4, () => sceneOn('outbreak'));
+  cue(O.lines[0].start + 0.5, () => on('p1'));
+  cue(O.lines[0].start + 1.5, () => on('p2'));
+  cue(O.lines[0].start + 2.5, () => on('p3'));
+  cue(O.lines[0].start + 4.0, () => on('alertcard'));
+  cue(O.lines[2].start, () => on('reviewer'));
+  cue(O.lines[2].start + 2.2, () => on('stamp'));
+  cue(O.lines[2].start + 4.6, () => on('farmerphone'));
+}
+if (T) {
+  cue(T.start - 0.4, () => sceneOn('tech'));
+  const seq = [['n-phone', 0], ['w1', .6], ['n-vercel', .8], ['w2', 1.6], ['n-api', 1.8], ['w7', 4.2], ['n-db', 4.4]];
+  seq.forEach(([id, d]) => cue(T.lines[0].start + d, () => on(id)));
+  cue(T.lines[1].start, () => on('t-photo'));
+  [['w3', 0], ['n-gate', .2], ['w4', 1.2], ['n-vision', 1.4], ['w5', 3.0], ['n-advice', 3.2], ['w6', 5.0], ['n-valid', 5.2]].forEach(([id, d]) => cue(T.lines[2].start + d, () => on(id)));
+  cue(T.lines[2].start + 6.0, () => on('t-vec'));
+  cue(T.lines[3].start, () => { on('counter'); const t0 = performance.now(); const tick = () => { const k = Math.min(1, (performance.now() - t0) / 2200); $('count').textContent = Math.round(1043 * k).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(tick); }; tick(); });
+}
+if (I) {
+  cue(I.start - 0.4, () => sceneOn('impact'));
+  cue(I.lines[0].start, () => on('pl1'));
+  cue(I.lines[1].start, () => on('pl2'));
+  cue(I.lines[2].start, () => on('pl3'));
+  cue(I.lines[3].start - 0.3, () => on('end'));
+}
+
+window.__start = () => {
+  const t0 = performance.now();
+  const loop = () => {
+    const t = (performance.now() - t0) / 1000;
+    for (const c of at) if (!c[2] && t >= c[0]) { c[2] = true; try { c[1](); } catch (e) { console.error(e); } }
+    if (t < (TL.total || 0) + 1) requestAnimationFrame(loop); else window.__done = true;
+  };
+  loop();
+};
+</script>
+</body>
+</html>

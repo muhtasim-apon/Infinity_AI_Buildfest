@@ -314,3 +314,25 @@ def test_prepared_statement_names_are_unique_for_the_transaction_pooler() -> Non
 
     names = {unique_statement_name() for _ in range(1000)}
     assert len(names) == 1000 and all(n.startswith("__asyncpg_") for n in names)
+
+
+# ---------------------------------------------------------------- contextual retrieval
+def test_every_chunk_has_a_context_without_blocked_words() -> None:
+    for chunk in load_kb().chunks:
+        assert 20 <= len(chunk.context) <= 300, chunk.id
+        assert not any(term in chunk.context.lower() for term in av.BLOCKED_TERMS), chunk.id
+
+
+def test_search_matches_words_that_only_appear_in_the_context() -> None:
+    kb = load_kb()
+    # English disease names exist only in the context sentences, never in the Bangla passages
+    assert all("Tungro" not in c.text for c in kb.chunks)
+    hits = kb_search.search(kb.chunks, disease=None, question="Tungro")
+    assert hits and {h.chunk.disease for h in hits} == {"tungro"}
+
+
+def test_context_is_optional_for_old_kb_files() -> None:
+    raw = [
+        {"id": "abc", "source_id": "s", "page": 1, "disease": "d", "topic": "overview", "text": "t"}
+    ]
+    assert kb_search.parse_chunks(raw)[0].context == ""

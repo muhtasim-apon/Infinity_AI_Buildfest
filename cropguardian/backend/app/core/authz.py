@@ -89,6 +89,7 @@ POLICIES: dict[str, Policy] = {
     "scans:create": Policy(frozenset({"farmer"}), owner_only=True),
     "scans:read": Policy(frozenset({"farmer"}), owner_only=True),
     "alerts:read": Policy(frozenset({"farmer", "reviewer", "admin"})),
+    "scans:stats": Policy(frozenset({"reviewer", "admin"})),  # counts only, tenant-scoped by RLS
     # Approving an outbreak alert is the one action that reaches farmers: real staff need a fresh
     # step-up 2FA; the demo reviewer is exempt (demo tenant only, by RLS) - see authorize().
     "alerts:decide": Policy(frozenset({"reviewer", "admin"}), step_up=True),

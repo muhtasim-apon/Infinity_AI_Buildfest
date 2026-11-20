@@ -59,6 +59,7 @@ export const defaultHandlers = [
   http.get('*/api/v1/consents/texts', () => HttpResponse.json(CONSENTS)),
   http.get('*/api/v1/scans', () => HttpResponse.json({ scans: [] })),
   http.get('*/api/v1/alerts', () => HttpResponse.json({ alerts: [] })),
+  http.get('*/api/v1/scans-stats', () => HttpResponse.json({ days: 30, divisions: [] })),
 ]
 
 export const server = setupServer(...defaultHandlers)

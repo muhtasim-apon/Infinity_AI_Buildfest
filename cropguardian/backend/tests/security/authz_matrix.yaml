@@ -95,3 +95,7 @@ routes:
     # demo staff decide demo-tenant drafts only (RLS keeps them out of real data).
     overrides: {reviewer: 403, demo_reviewer: allow, demo_admin: allow}
   "GET /api/v1/kb/sources": {kind: public, ok: [200]}
+  "GET /api/v1/scans-stats":
+    kind: staff_only
+    ok: [200]
+    overrides: {demo_reviewer: allow, demo_admin: allow}  # counts of their own (demo) tenant only

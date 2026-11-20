@@ -130,6 +130,7 @@ def test_llm_down_gives_not_sure_never_500(app_client: Api) -> None:
     r = upload(farmer, leaf_jpeg())
     assert r.status_code == 201
     assert (r.json()["status"], r.json()["reason"]) == ("not_sure", "model_error")
+    assert r.json()["model"] == "unavailable:timeout"
 
 
 def test_low_confidence_abstains_and_advice_falls_back(app_client: Api) -> None:
@@ -201,3 +202,19 @@ def test_kb_sources_is_public_and_honest(app_client: Api) -> None:
     assert len(body["sources"]) == 9 and body["excluded"]
     assert "not calibrated" in body["limits"]["confidence"]
     assert body["limits"]["outbreak_rule"]["needs_reviewer_approval"] is True
+
+
+def test_scan_stats_are_staff_only_counts(app_client: Api) -> None:
+    stub(app_client, vision=BLAST, advice=None)
+    farmer = demo(app_client, "DEMO_FARMER")
+    upload(farmer, leaf_jpeg(), region="BD-A")
+    assert farmer.get("/api/v1/scans-stats").status_code == 403
+    reviewer = demo(app_client, "DEMO_REVIEWER")
+    body = reviewer.get("/api/v1/scans-stats").json()
+    assert body["days"] == 30 and len(body["divisions"]) == 8
+    barishal = next(d for d in body["divisions"] if d["region_code"] == "BD-A")
+    assert barishal["diagnosed"] >= 1
+    assert all(
+        set(d) == {"region_code", "region_bn", "region_en", "diagnosed", "not_sure", "healthy"}
+        for d in body["divisions"]
+    )

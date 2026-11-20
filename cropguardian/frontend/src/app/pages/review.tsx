@@ -11,6 +11,7 @@ import { isLocale } from '../../i18n'
 import { useAuth } from '../auth'
 import { FormError } from '../ui'
 import { AlertCard } from './farmer'
+import { ScanStatsChart } from './ScanStatsChart'
 
 /**
  * Reviewer console, outbreak drafts (Gantt P3 step 4). Nothing reaches farmers until a human
@@ -50,6 +51,7 @@ export function ReviewerAlertsPage() {
         {state?.role?.startsWith('DEMO_') ? <SimulatedBadge /> : null}
       </div>
       <p className="text-muted">{t('cg.review.intro')}</p>
+      <ScanStatsChart />
       {done ? (
         <p
           role="status"

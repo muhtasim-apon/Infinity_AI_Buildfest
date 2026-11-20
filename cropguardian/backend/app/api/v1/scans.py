@@ -91,6 +91,11 @@ async def get_scan(scan_id: str, p: Me, container: deps.Ctn) -> dict[str, Any]:
     return await scans_of(container).get(p, scan_id)
 
 
+@router.get("/scans-stats")
+async def scan_stats(p: Me, container: deps.Ctn) -> dict[str, Any]:
+    return await scans_of(container).stats(p)
+
+
 @router.get("/alerts")
 async def list_alerts(p: Me, container: deps.Ctn) -> dict[str, Any]:
     return {"alerts": await scans_of(container).list_alerts(p)}

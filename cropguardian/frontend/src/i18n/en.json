@@ -556,6 +556,16 @@
       "BD-F": "Rangpur",
       "BD-G": "Sylhet",
       "BD-H": "Mymensingh"
+    },
+    "stats": {
+      "chartTitle": "Photos by division, last 30 days",
+      "chartHint": "How many photos in each division were diagnosed, not sure, or healthy.",
+      "viewTable": "View as table",
+      "division": "Division",
+      "diagnosed": "Diagnosed",
+      "notSure": "Not sure",
+      "healthy": "Healthy",
+      "noData": "No photos in the last 30 days."
     }
   }
 }
