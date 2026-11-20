@@ -1,6 +1,26 @@
 {
   "components": {
     "schemas": {
+      "Body_create_scan_api_v1_scans_post": {
+        "properties": {
+          "image": {
+            "contentMediaType": "application/octet-stream",
+            "title": "Image",
+            "type": "string"
+          },
+          "region_code": {
+            "maxLength": 8,
+            "title": "Region Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image",
+          "region_code"
+        ],
+        "title": "Body_create_scan_api_v1_scans_post",
+        "type": "object"
+      },
       "ChangePasswordIn": {
         "additionalProperties": false,
         "properties": {
@@ -61,6 +81,24 @@
           "granted"
         ],
         "title": "ConsentPut",
+        "type": "object"
+      },
+      "Decision": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve",
+              "reject"
+            ],
+            "title": "Decision",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "title": "Decision",
         "type": "object"
       },
       "DemoIn": {
@@ -551,7 +589,7 @@
     }
   },
   "info": {
-    "title": "Crop Guardian API",
+    "title": "Kakatarua API",
     "version": "0.1.0"
   },
   "openapi": "3.1.0",
@@ -653,6 +691,81 @@
         "summary": "Admin Users",
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/api/v1/alerts": {
+      "get": {
+        "operationId": "list_alerts_api_v1_alerts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Alerts Api V1 Alerts Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Alerts",
+        "tags": [
+          "scans"
+        ]
+      }
+    },
+    "/api/v1/alerts/{alert_id}/decision": {
+      "post": {
+        "operationId": "decide_alert_api_v1_alerts__alert_id__decision_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "alert_id",
+            "required": true,
+            "schema": {
+              "title": "Alert Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Decision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Decide Alert Api V1 Alerts  Alert Id  Decision Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Decide Alert",
+        "tags": [
+          "scans"
         ]
       }
     },
@@ -1397,6 +1510,25 @@
         ]
       }
     },
+    "/api/v1/kb/sources": {
+      "get": {
+        "operationId": "kb_sources_api_v1_kb_sources_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Kb Sources Api V1 Kb Sources Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Kb Sources"
+      }
+    },
     "/api/v1/me": {
       "get": {
         "operationId": "get_me_api_v1_me_get",
@@ -1575,6 +1707,145 @@
         "summary": "Revoke My Session",
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/api/v1/scans": {
+      "get": {
+        "operationId": "list_scans_api_v1_scans_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Scans Api V1 Scans Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Scans",
+        "tags": [
+          "scans"
+        ]
+      },
+      "post": {
+        "operationId": "create_scan_api_v1_scans_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 80,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_scan_api_v1_scans_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Scan Api V1 Scans Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Scan",
+        "tags": [
+          "scans"
+        ]
+      }
+    },
+    "/api/v1/scans-stats": {
+      "get": {
+        "operationId": "scan_stats_api_v1_scans_stats_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Scan Stats Api V1 Scans Stats Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Scan Stats",
+        "tags": [
+          "scans"
+        ]
+      }
+    },
+    "/api/v1/scans/{scan_id}": {
+      "get": {
+        "operationId": "get_scan_api_v1_scans__scan_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_id",
+            "required": true,
+            "schema": {
+              "title": "Scan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Scan Api V1 Scans  Scan Id  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Scan",
+        "tags": [
+          "scans"
         ]
       }
     }

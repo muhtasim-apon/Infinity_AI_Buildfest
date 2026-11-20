@@ -50,7 +50,7 @@ jobs:
             cropguardian/ml/requirements-dev.txt
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # same major as the Vercel build (Node 24.x); Node 20's ICU formats compact numbers differently
           cache: npm
           cache-dependency-path: cropguardian/frontend/package-lock.json
       - name: Install dependencies
@@ -72,7 +72,8 @@ jobs:
       - name: "Phase gate (full - scanners, tests, real compose stack, edge checks)"
         run: python backend/scripts/phase_gate.py --phase "$(cat .phase)" --keep-going
         env:
-          HOSTED_HEALTH_URL: ${{ vars.HOSTED_API_URL != '' && format('{0}/health', vars.HOSTED_API_URL) || '' }}
+          # the live Render API (hostname really is "cropgurdian"); a repo variable overrides it
+          HOSTED_HEALTH_URL: ${{ format('{0}/health', vars.HOSTED_API_URL || 'https://cropgurdian-backend.onrender.com') }}
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: gate-report, path: cropguardian/runs/gates/ }

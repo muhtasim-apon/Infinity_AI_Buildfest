@@ -21,6 +21,7 @@ import time
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
 REPO = Path(__file__).resolve().parents[2]  # cropguardian/
 BACKEND = REPO / "backend"
@@ -64,6 +65,8 @@ def run(
             cwd=cwd,
             capture_output=True,
             text=True,
+            encoding="utf-8",  # tool output includes Bangla; never the Windows ANSI code page
+            errors="replace",
             timeout=timeout,
             env={**os.environ, **(env or {})},
             check=False,
@@ -111,14 +114,43 @@ TEST_STACK_ENV = {
 }  # fmt: skip
 
 
-def test_stack_up() -> bool:
-    """True when the test Postgres and Redis ports accept connections."""
-    for port in (55432, 56379):
-        try:
-            socket.create_connection(("127.0.0.1", port), timeout=1).close()
-        except OSError:
-            return False
+_STACK_KEYS = (
+    "MIGRATION_DATABASE_URL",
+    "TEST_SUPER_DATABASE_URL",
+    "TEST_API_DATABASE_URL",
+    "TEST_REDIS_URL",
+)
+
+
+def _reachable(host: str, port: int) -> bool:
+    try:
+        socket.create_connection((host, port), timeout=1).close()
+    except OSError:
+        return False
     return True
+
+
+def stack_env() -> dict[str, str] | None:
+    """Env for the real Postgres + Redis test stack, or None when no stack is reachable.
+
+    CI provides its own service containers through the four URLs in the environment; locally the
+    docker-compose.test.yml stack listens on 55432/56379 (TEST_STACK_ENV).
+    """
+    if all(os.environ.get(k) for k in _STACK_KEYS):
+        pg = urlsplit(os.environ["TEST_SUPER_DATABASE_URL"])
+        rd = urlsplit(os.environ["TEST_REDIS_URL"])
+        if _reachable(pg.hostname or "127.0.0.1", pg.port or 5432) and _reachable(
+            rd.hostname or "127.0.0.1", rd.port or 6379
+        ):
+            return {**{k: os.environ[k] for k in _STACK_KEYS}, "PYTHONPATH": str(BACKEND)}
+    if _reachable("127.0.0.1", 55432) and _reachable("127.0.0.1", 56379):
+        return dict(TEST_STACK_ENV)
+    return None
+
+
+def test_stack_up() -> bool:
+    """True when a real test Postgres and Redis accept connections."""
+    return stack_env() is not None
 
 
 def tool_step(
@@ -146,7 +178,14 @@ def tool_step(
 def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
     def environment() -> Step:
         t0 = time.time()
-        missing = [d for d in DEPENDS.get(phase, []) if not _gate_passed(d)]
+        here = {f.__name__ for f in steps_for(phase, offline, db_url)}
+        missing = [
+            d
+            for d in DEPENDS.get(phase, [])
+            if not _gate_passed(d)
+            # e.g. in CI: no stored phase-0 report, but every phase-0 step is re-run (and must pass) here
+            and not {f.__name__ for f in steps_for(d, offline, db_url)} <= here
+        ]
         if missing:
             return Step(
                 "1 environment", "FAIL", time.time() - t0, f"dependency gates not passed: {missing}"
@@ -319,7 +358,7 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
     def tests() -> Step:
         # Identity code (Phase 1+) is exercised by the real-Postgres tests, so the 85% floor only makes
         # sense over the whole suite. Without the test stack the unit-only run keeps the same floor.
-        stack = test_stack_up()
+        stack = stack_env()
         marker = "not perf and not chaos and not rag_live" + (
             "" if stack else " and not integration"
         )
@@ -339,7 +378,7 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
             ],
             BACKEND,
             offline,
-            env=TEST_STACK_ENV if stack else None,
+            env=stack,
         )
         if step.status == "PASS":
             step.note = (
@@ -401,7 +440,9 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
                 0.0,
                 "docker not running" + ("" if offline else " (use --offline)"),
             )
-        # 1) all compose files parse
+        # 1) all compose files parse (they interpolate .env secrets: generate them first)
+        if not (REPO / ".env").exists():
+            run([PY, "backend/scripts/make_env.py"], REPO)
         for files in (["docker-compose.yml"], ["docker-compose.test.yml"]):
             args = ["docker", "compose", *[x for f in files for x in ("-f", f)], "config", "-q"]
             code, note = run(args, REPO)
@@ -410,8 +451,6 @@ def steps_for(phase: int, offline: bool, db_url: str | None) -> list:
                     "20 P0 compose stack", "FAIL", time.time() - t0, f"config {files}: {note}"
                 )
         # 2) bring up the real stack, migrate, wait for the API to be healthy
-        if not (REPO / ".env").exists():
-            run([PY, "backend/scripts/make_env.py"], REPO)
         bash = shutil.which("bash")
         if bash is None:
             return Step("20 P0 compose stack", "SKIP", 0.0, "bash not found (needed for verify.sh)")

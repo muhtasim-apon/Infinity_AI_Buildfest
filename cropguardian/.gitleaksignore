@@ -6,9 +6,15 @@
 backend/tests/api/identity_support.py:generic-api-key:44
 backend/tests/security/authz_matrix.yaml:generic-api-key:24
 backend/tests/security/authz_matrix.yaml:generic-api-key:34
-backend/tests/api/test_identity_flows.py:generic-api-key:497
-backend/tests/api/test_identity_flows.py:generic-api-key:502
+backend/tests/api/test_identity_flows.py:generic-api-key:501
+backend/tests/api/test_identity_flows.py:generic-api-key:506
 frontend/src/app/guards.test.tsx:generic-api-key:69
 frontend/src/app/pages/auth.test.tsx:generic-api-key:344
 frontend/src/app/pages/auth.test.tsx:generic-api-key:370
 frontend/src/app/pages/auth.test.tsx:generic-api-key:379
+# Re-reviewed 2026-11-20: fixtures only (TOTP secret "ABCDEF234567", password "violet-harbor-lantern-91",
+# invite tokens "0123456789abcdefghij"); none is a credential.
+frontend/src/app/guards.test.tsx:generic-api-key:70
+frontend/src/app/pages/auth.test.tsx:generic-api-key:377
+frontend/src/app/pages/auth.test.tsx:generic-api-key:403
+frontend/src/app/pages/auth.test.tsx:generic-api-key:412

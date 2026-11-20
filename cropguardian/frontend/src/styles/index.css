@@ -162,6 +162,74 @@
   }
 }
 
+/* Swaying-grass footage (AppBackdrop): slow 3D drift + scroll parallax, then a readability wash. */
+.cg-grass {
+  perspective: 900px;
+}
+.cg-grass-media {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  filter: saturate(1.3) brightness(1.04);
+  transform: translate3d(0, var(--cg-parallax, 0px), 0) rotateX(4deg) scale(1.06);
+  transform-origin: 50% 100%;
+  animation: cg-grass-drift 24s var(--ease-standard) infinite alternate;
+}
+.cg-grass-off {
+  opacity: 0;
+}
+.cg-grass-on {
+  opacity: 1;
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+@keyframes cg-grass-drift {
+  from {
+    transform: translate3d(-1.5%, var(--cg-parallax, 0px), 0) rotateX(5deg) rotateY(-2deg)
+      scale(1.06);
+  }
+  to {
+    transform: translate3d(1.5%, var(--cg-parallax, 0px), -30px) rotateX(2deg) rotateY(2deg)
+      scale(1.14);
+  }
+}
+/* Light: a bright morning haze over the field; text keeps its contrast on the glass surfaces. */
+.cg-grass-wash {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 52%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 36%, transparent) 40%,
+    color-mix(in srgb, var(--primary-soft) 50%, transparent) 100%
+  );
+}
+:root[data-theme='dark'] .cg-grass-wash {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 78%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 62%, transparent) 45%,
+    color-mix(in srgb, var(--bg) 80%, transparent) 100%
+  );
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .cg-grass-wash {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg) 78%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 62%, transparent) 45%,
+      color-mix(in srgb, var(--bg) 80%, transparent) 100%
+    );
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cg-grass-media {
+    animation: none;
+  }
+}
+:root[data-reduced-motion='true'] .cg-grass-media {
+  animation: none;
+}
+
 /* Frosted glass for the header and cards floating over the 3D backdrop. */
 .cg-glass {
   background: color-mix(in srgb, var(--surface) 72%, transparent);
