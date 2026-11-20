@@ -306,3 +306,11 @@ def test_unknown_region_ignored() -> None:
 def test_min_cases_must_be_positive() -> None:
     with pytest.raises(ValueError):
         outbreak_rules.clusters([], NOW, min_cases=0)
+
+
+# ---------------------------------------------------------------- pooler-safe statement names
+def test_prepared_statement_names_are_unique_for_the_transaction_pooler() -> None:
+    from app.db.session import unique_statement_name
+
+    names = {unique_statement_name() for _ in range(1000)}
+    assert len(names) == 1000 and all(n.startswith("__asyncpg_") for n in names)

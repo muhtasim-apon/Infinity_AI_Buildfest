@@ -10,6 +10,7 @@ import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+from uuid import uuid4
 
 from sqlalchemy import MetaData, text
 from sqlalchemy.ext.asyncio import (
@@ -60,6 +61,10 @@ def normalise_async_url(url: str) -> str:
     return url
 
 
+def unique_statement_name() -> str:
+    return f"__asyncpg_{uuid4().hex}__"
+
+
 def make_engine(settings: Settings) -> AsyncEngine:
     if not settings.database_url:
         raise RuntimeError("DATABASE_URL not configured")
@@ -72,6 +77,10 @@ def make_engine(settings: Settings) -> AsyncEngine:
             # transaction pooler (pgbouncer/supavisor) cannot use prepared statements
             "statement_cache_size": 0,
             "prepared_statement_cache_size": 0,
+            # Unique names: SQLAlchemy's default `__asyncpg_stmt_N__` counter is per client
+            # connection, so two app connections multiplexed onto one server connection by the
+            # pooler collide ("prepared statement ... already exists", seen on Supabase 2026-11-20).
+            "prepared_statement_name_func": unique_statement_name,
             "timeout": 5,
             "server_settings": {
                 "statement_timeout": "5000",
