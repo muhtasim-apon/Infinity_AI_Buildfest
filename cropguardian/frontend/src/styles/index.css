@@ -77,11 +77,121 @@
   }
 }
 
-/* 3D page transition (AnimatedOutlet). Tokens from design/motion; ends at transform:none. */
+/* ---------------------------------------------------------------- app backdrop (AppBackdrop) */
+/* Never a flat page: layered token-coloured light that slowly drifts (the 3D layer floats above). */
+.cg-backdrop {
+  /* light: richer paddy-green, rice-gold and sky light so the page is never plain white */
+  background:
+    radial-gradient(
+      65% 45% at 10% 6%,
+      color-mix(in srgb, var(--primary) 34%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      55% 40% at 95% 20%,
+      color-mix(in srgb, var(--accent) 32%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 50% at 75% 96%,
+      color-mix(in srgb, var(--sky) 26%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      60% 45% at 4% 78%,
+      color-mix(in srgb, var(--success) 26%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(170deg, var(--primary-soft), var(--accent-bg) 55%, var(--sky-bg));
+  background-size: 140% 140%;
+  animation: cg-backdrop-drift 28s var(--ease-standard) infinite alternate;
+}
+:root[data-theme='dark'] .cg-backdrop {
+  background:
+    radial-gradient(
+      60% 45% at 12% 8%,
+      color-mix(in srgb, var(--primary) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 40% at 92% 22%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 50% at 70% 95%,
+      color-mix(in srgb, var(--sky) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 45% at 5% 80%,
+      color-mix(in srgb, var(--success) 14%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, var(--primary-soft), var(--bg) 45%, var(--accent-bg));
+  background-size: 140% 140%;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .cg-backdrop {
+    background:
+      radial-gradient(
+        60% 45% at 12% 8%,
+        color-mix(in srgb, var(--primary) 22%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        55% 40% at 92% 22%,
+        color-mix(in srgb, var(--accent) 18%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        70% 50% at 70% 95%,
+        color-mix(in srgb, var(--sky) 16%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(180deg, var(--primary-soft), var(--bg) 45%, var(--accent-bg));
+    background-size: 140% 140%;
+  }
+}
+@keyframes cg-backdrop-drift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 60%;
+  }
+}
+
+/* Frosted glass for the header and cards floating over the 3D backdrop. */
+.cg-glass {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+}
+
+/* ---------------------------------------------------------------- 3D transitions (AnimatedOutlet) */
+/* Page: the new screen swings in from depth around a vertical hinge; ends at transform:none. */
 @keyframes cg-page-in {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(16deg) translate3d(36px, 0, -180px);
+    filter: blur(3px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+/* Cards: each block flips up from below like a page of a book, one after another. */
+@keyframes cg-card-in {
   from {
     opacity: 0;
-    transform: perspective(1400px) rotateY(9deg) translate3d(0, 10px, -90px);
+    transform: perspective(900px) rotateX(-24deg) translate3d(0, 28px, -60px);
   }
   to {
     opacity: 1;
@@ -97,15 +207,49 @@
   }
 }
 .cg-page-in {
-  animation: cg-page-in var(--duration-page) var(--ease-emphasized) both;
-  transform-origin: 50% 0;
-  backface-visibility: hidden;
+  animation: cg-page-in var(--duration-slow) var(--ease-emphasized) both;
+  transform-origin: 0% 50%;
 }
+.cg-fade-only {
+  animation: cg-fade-in var(--duration-base) var(--ease-standard) both;
+}
+.cg-stagger > * > * {
+  animation: cg-card-in var(--duration-slow) var(--ease-emphasized) both;
+  transform-origin: 50% 0%;
+}
+.cg-stagger > * > :nth-child(1) {
+  animation-delay: 40ms;
+}
+.cg-stagger > * > :nth-child(2) {
+  animation-delay: 95ms;
+}
+.cg-stagger > * > :nth-child(3) {
+  animation-delay: 150ms;
+}
+.cg-stagger > * > :nth-child(4) {
+  animation-delay: 205ms;
+}
+.cg-stagger > * > :nth-child(5) {
+  animation-delay: 260ms;
+}
+.cg-stagger > * > :nth-child(n + 6) {
+  animation-delay: 300ms;
+}
+
+/* Reduced motion (OS or in-app): short fades only, no transforms, no drifting light. */
 @media (prefers-reduced-motion: reduce) {
-  .cg-page-in {
+  .cg-page-in,
+  .cg-stagger > * > * {
     animation: cg-fade-in var(--duration-fast) linear both;
   }
+  .cg-backdrop {
+    animation: none;
+  }
 }
-:root[data-reduced-motion='true'] .cg-page-in {
+:root[data-reduced-motion='true'] .cg-page-in,
+:root[data-reduced-motion='true'] .cg-stagger > * > * {
   animation: cg-fade-in var(--duration-fast) linear both;
+}
+:root[data-reduced-motion='true'] .cg-backdrop {
+  animation: none;
 }

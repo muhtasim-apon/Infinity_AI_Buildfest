@@ -2,6 +2,7 @@ import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'rea
 import { useTranslation } from 'react-i18next'
 import { Moon, Sun } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { AppBackdrop } from '../components/app/AppBackdrop'
 import { AnimatedOutlet } from '../components/app/PageTransition'
 import { useUiPrefs } from '../lib/uiPrefs'
 import { messageFor } from '../lib/errors'
@@ -177,26 +178,29 @@ export function Shell() {
       >
         {t('common.skipToContent')}
       </a>
+      <AppBackdrop />
       <DemoRibbon />
-      <header className="mx-auto flex max-w-md items-center justify-between gap-1.5 p-4">
-        <Link to="/" className="text-lg font-semibold text-primary">
-          {t('app.name')}
-        </Link>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <LanguageToggle />
-          {state?.authenticated ? (
-            <button
-              type="button"
-              className="min-h-[44px] whitespace-nowrap rounded-md border border-border px-2"
-              onClick={() => void signOut()}
-            >
-              {t('auth.logout')}
-            </button>
-          ) : null}
-        </div>
-      </header>
-      <main id="main" className="mx-auto max-w-md px-4 pb-12">
+      <div className="cg-glass sticky top-0 z-30">
+        <header className="mx-auto flex max-w-md items-center justify-between gap-1.5 px-4 py-3">
+          <Link to="/" className="text-lg font-semibold text-primary">
+            {t('app.name')}
+          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageToggle />
+            {state?.authenticated ? (
+              <button
+                type="button"
+                className="min-h-[44px] whitespace-nowrap rounded-md border border-border px-2"
+                onClick={() => void signOut()}
+              >
+                {t('auth.logout')}
+              </button>
+            ) : null}
+          </div>
+        </header>
+      </div>
+      <main id="main" className="mx-auto max-w-md px-4 pb-12 pt-2">
         <AnimatedOutlet depth="section" />
       </main>
     </>

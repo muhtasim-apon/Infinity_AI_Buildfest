@@ -112,7 +112,7 @@ export function FarmerLayout() {
           {t('cg.history.queued', { count: queued })}
         </p>
       ) : null}
-      <AnimatedOutlet depth="page" />
+      <AnimatedOutlet depth="page" stagger />
       <BottomTabBar />
     </div>
   )
@@ -217,7 +217,7 @@ export function FarmerHomePage() {
             {diseases.map(([code, names], idx) => (
               <li
                 key={code}
-                className="w-36 shrink-0 snap-start overflow-hidden rounded-lg border border-border bg-surface shadow-xs"
+                className="w-36 shrink-0 snap-start overflow-hidden rounded-lg border border-border cg-glass shadow-xs"
               >
                 <div
                   className={`flex h-20 items-center justify-center ${tones[idx % tones.length]}`}
@@ -287,7 +287,7 @@ function ScanRow({ scan }: { scan: Scan }) {
     <li>
       <Link
         to={`/app/scan/${scan.id}`}
-        className="flex min-h-[56px] items-center gap-3 rounded-lg border border-border bg-surface p-3 hover:border-primary"
+        className="flex min-h-[56px] items-center gap-3 rounded-lg border border-border cg-glass p-3 hover:border-primary"
       >
         <Icon className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
         <span className="flex-1">
@@ -792,11 +792,11 @@ export function MorePage() {
   const { t } = useTranslation()
   const { signOut } = useAuth()
   const linkClass =
-    'flex min-h-[56px] items-center gap-3 rounded-lg border border-border bg-surface p-3 hover:border-primary'
+    'flex min-h-[56px] items-center gap-3 rounded-lg border border-border cg-glass p-3 hover:border-primary'
   return (
     <section className="space-y-3">
       <h1 className="text-2xl font-semibold">{t('cg.more.title')}</h1>
-      <div className="flex items-center justify-between gap-2 rounded-lg border border-border bg-surface p-3">
+      <div className="flex items-center justify-between gap-2 rounded-lg border border-border cg-glass p-3">
         <span>{t('cg.more.language')}</span>
         <LanguageToggle />
       </div>
