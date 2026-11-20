@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 from typing import Any
 
 import httpx
@@ -162,8 +163,12 @@ async def test_vision_happy_path_sends_image_and_no_extra_fields() -> None:
 
     reply = await service(handler).vision(b"\xff\xd8\xffjpeg")
     assert reply.data == {"crop": "rice", "disease": "tungro"}
-    assert seen["url"].startswith("https://api.llama.com/")
+    assert seen["url"].startswith("https://api.meta.ai/v1/")
     assert seen["auth"].startswith("Bearer ")
+    body = json.loads(seen["body"])
+    assert body["model"] == "muse-spark-1.3"
+    assert body["max_completion_tokens"] == 300
+    assert "max_tokens" not in body
     assert b"data:image/jpeg;base64," in seen["body"]
 
 
@@ -311,16 +316,16 @@ def test_prompt_loader_rejects_path_tricks() -> None:
 @pytest.mark.parametrize(
     "raw",
     [
-        "LLM|1|abc",
-        " LLM|1|abc\n",
-        '"LLM|1|abc"',
-        "'LLM|1|abc'",
-        "Bearer LLM|1|abc",
-        " bearer LLM|1|abc ",
+        "LLM_1_abc",
+        " LLM_1_abc\n",
+        '"LLM_1_abc"',
+        "'LLM_1_abc'",
+        "Bearer LLM_1_abc",
+        " bearer LLM_1_abc ",
     ],
 )
 def test_api_key_copy_paste_noise_is_removed(raw: str) -> None:
-    assert llm_mod.clean_api_key(raw) == "LLM|1|abc"
+    assert llm_mod.clean_api_key(raw) == "LLM_1_abc"
 
 
 async def test_header_uses_the_cleaned_key() -> None:

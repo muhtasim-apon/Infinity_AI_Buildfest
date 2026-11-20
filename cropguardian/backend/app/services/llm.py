@@ -1,4 +1,4 @@
-"""Meta Llama API client (OpenAI-compatible endpoint): vision triage + Bangla advice (D-031).
+"""Meta Model API client (OpenAI-compatible endpoint): vision triage + Bangla advice (D-040).
 
 Safety properties:
 - every call goes through `AllowListedClient` (https, allow-listed host, no redirects, breaker);
@@ -85,7 +85,7 @@ def _content_text(payload: Any) -> str:
     try:
         content = payload["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
-        # native Llama API shape, in case the base URL points there
+        # Native response shape retained for compatibility with older Meta API clients.
         try:
             content = payload["completion_message"]["content"]
         except (KeyError, TypeError):
@@ -187,7 +187,7 @@ class LlamaService:
         body: dict[str, Any] = {
             "model": self.settings.llm_model,
             "messages": messages,
-            "max_tokens": max_tokens,
+            "max_completion_tokens": max_tokens,
             "temperature": 0.1,
             "response_format": {"type": "json_object"},
         }

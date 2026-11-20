@@ -63,11 +63,11 @@ class Settings(BaseSettings):
     storage_bucket_models: str = "models"
     max_upload_mb: int = Field(default=5, ge=1, le=20)
 
-    # --- LLM (Meta Llama API, OpenAI-compatible endpoint; DECISIONS D-031) ---------------------
+    # --- LLM (Meta Model API, OpenAI-compatible endpoint; DECISIONS D-040) ---------------------
     # The key is typed into the Render dashboard only; it is never logged or echoed.
     llama_api_key: str = ""
-    llm_base_url: str = "https://api.llama.com/compat/v1"
-    llm_model: str = "Llama-4-Maverick-17B-128E-Instruct-FP8"
+    llm_base_url: str = "https://api.meta.ai/v1"
+    llm_model: str = "muse-spark-1.3"
     llm_timeout_s: float = Field(default=20.0, ge=2, le=60)
     llm_daily_call_cap: int = Field(default=400, ge=0, le=20_000)  # hard stop on spend per day
     llm_daily_budget_usd: float = Field(default=2.0, ge=0)
@@ -75,7 +75,7 @@ class Settings(BaseSettings):
 
     # --- outbound allow-list (spec 16.7 / 17.3) -----------------------------------------------
     outbound_allowlist: list[str] = Field(
-        default_factory=lambda: ["api.llama.com", "api.open-meteo.com"]
+        default_factory=lambda: ["api.meta.ai", "api.open-meteo.com"]
     )
 
     # --- identity (Phase 1) -------------------------------------------------------------------
