@@ -97,6 +97,9 @@ async def auth_state(
         "display_name": user.display_name if user else "",
         "locale": session.locale,
         "step_up": principal.step_up,
+        # when this session ends (idle or absolute limit, whichever is first), UTC; the demo ribbon
+        # shows the time left. It is the caller's own expiry, not a secret.
+        "session_expires_at": min(session.expires_at, session.absolute_expires_at).isoformat(),
         "csrf_token": deps.issue_csrf(response, container, session.csrf_secret),
     }
 

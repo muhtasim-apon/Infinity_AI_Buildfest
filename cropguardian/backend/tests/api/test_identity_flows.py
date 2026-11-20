@@ -1,6 +1,7 @@
 """End-to-end identity flows through the real app, Postgres (RLS) and Redis."""
 
 import uuid
+from datetime import UTC, datetime
 
 import pyotp
 import pytest
@@ -286,6 +287,9 @@ def test_staff_forced_totp_setup_replay_and_recovery(app_client: Api):
     assert app_client.get("/api/v1/me").json()["code"] == "totp_required"
     state = app_client.get("/api/v1/auth/state").json()
     assert state["authenticated"] and state["next"] == "setup_totp"
+    # the SPA shows the time left of a demo session from this: a real, future, timezone-aware instant
+    expires = datetime.fromisoformat(state["session_expires_at"])
+    assert expires.tzinfo is not None and expires > datetime.now(UTC)
     setup = app_client.post("/api/v1/auth/totp/setup").json()
     totp = pyotp.TOTP(setup["secret"])
     stored = sql("SELECT secret_enc FROM totp_credentials WHERE user_id = %s", (uid,))[0][0]
@@ -546,3 +550,10 @@ def test_audit_chain_verifies_after_flows(app_client: Api):
     app_client.post("/api/v1/auth/logout")
     assert sql("SELECT audit_verify_chain()") == [(0,)]
     assert sql("SELECT count(*) FROM audit_log WHERE action LIKE 'auth.%%'")[0][0] >= 2
+
+
+def test_anonymous_auth_state_reveals_nothing_about_a_session(app_client: Api):
+    state = app_client.get("/api/v1/auth/state").json()
+    assert state["authenticated"] is False
+    for key in ("role", "tenant", "display_name", "session_expires_at", "step_up"):
+        assert key not in state, f"anonymous state must not expose {key}"

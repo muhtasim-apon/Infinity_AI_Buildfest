@@ -124,3 +124,23 @@ export function formatDays(days: number, locale: Locale): string {
     maximumFractionDigits: 0,
   }).format(Math.round(days))
 }
+
+export type DayPart = 'morning' | 'noon' | 'evening' | 'night'
+
+/**
+ * Greeting period in Asia/Dhaka, whatever the device clock zone is: morning 05-11, noon 12-15,
+ * evening 16-19, night otherwise. Pure: the instant is a parameter.
+ */
+export function dayPart(input: DateInput): DayPart {
+  const hour = Number(
+    new Intl.DateTimeFormat('en-GB', {
+      hour: 'numeric',
+      hourCycle: 'h23',
+      timeZone: DHAKA_TZ,
+    }).format(toDate(input)),
+  )
+  if (hour >= 5 && hour < 12) return 'morning'
+  if (hour >= 12 && hour < 16) return 'noon'
+  if (hour >= 16 && hour < 20) return 'evening'
+  return 'night'
+}

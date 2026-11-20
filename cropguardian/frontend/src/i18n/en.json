@@ -311,5 +311,131 @@
       "typeToConfirm": "Type “{{text}}” to confirm",
       "confirm": "Confirm"
     }
+  },
+  "farmerHome": {
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "noon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}",
+      "night": "Good night, {{name}}"
+    },
+    "hero": {
+      "title": "Take a photo of the leaf",
+      "body": "Find the disease and get the right advice.",
+      "cta": "Take photo"
+    },
+    "tiles": {
+      "title": "Quick actions",
+      "scan": "Find disease",
+      "history": "Past photos",
+      "alerts": "Area alerts",
+      "settings": "Settings"
+    },
+    "fields": {
+      "title": "My fields",
+      "empty": "No fields added yet.",
+      "hint": "Field details make the advice more accurate.",
+      "soon": "Adding fields is coming soon."
+    },
+    "recent": {
+      "title": "Recent photos",
+      "empty": "No photos taken yet.",
+      "hint": "Start by taking your first photo."
+    },
+    "alerts": {
+      "title": "Area alerts",
+      "empty": "No alerts right now.",
+      "hint": "Alerts will appear here when they arrive."
+    }
+  },
+  "history": {
+    "title": "Past photos",
+    "empty": "No photos taken yet.",
+    "hint": "Your photos and results will be kept here."
+  },
+  "scanIntro": {
+    "title": "How to take a good photo",
+    "close": "Fill the frame with the leaf.",
+    "light": "Take the photo where there is more light.",
+    "single": "Photograph one leaf at a time.",
+    "unavailable": "The camera arrives in the next phase."
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": {
+      "title": "Theme",
+      "system": "Follow device",
+      "light": "Day",
+      "dark": "Night"
+    },
+    "motion": {
+      "title": "Reduce motion",
+      "hint": "Cuts movement and animation."
+    },
+    "textSize": {
+      "title": "Text size",
+      "normal": "Normal",
+      "large": "Large",
+      "xlarge": "Extra large"
+    },
+    "account": {
+      "title": "Account"
+    }
+  },
+  "staff": {
+    "menu": "Menu",
+    "collapse": "Collapse menu",
+    "expand": "Expand menu",
+    "soon": "Soon",
+    "notMeasured": "Not yet measured",
+    "reviewer": {
+      "queue": "Review queue",
+      "map": "Outbreak map",
+      "drafts": "Alert drafts",
+      "agreement": "Agreement"
+    },
+    "admin": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "models": "Models",
+      "settings": "Settings",
+      "kb": "Knowledge base",
+      "simulation": "Simulation",
+      "alerts": "Alerts",
+      "audit": "Audit log",
+      "health": "System health"
+    },
+    "palette": {
+      "open": "Search",
+      "placeholder": "Search pages or actions",
+      "empty": "Nothing found.",
+      "theme": "Switch theme",
+      "pages": "Pages",
+      "actions": "Actions"
+    },
+    "dashboard": {
+      "waiting": "Photos waiting",
+      "scansToday": "Photos today",
+      "abstained": "Unsure results",
+      "emptyTitle": "No photos yet",
+      "emptyHint": "The queue appears here when photos arrive."
+    }
+  },
+  "footer": {
+    "tagline": "ফসল রক্ষী · for Bangladesh's rice farmers",
+    "honesty": "This is a demo. No results are claimed here."
+  },
+  "navShell": {
+    "main": "Main menu",
+    "tabs": "App menu",
+    "menu": "Menu",
+    "openMenu": "Open menu"
+  },
+  "pageErrors": {
+    "serverTitle": "Something went wrong on our side",
+    "serverBody": "Please try again in a moment.",
+    "offlineTitle": "You are offline",
+    "offlineBody": "Try again when the connection is back.",
+    "reload": "Reload the page"
   }
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  dayPart,
   formatCompact,
   formatDate,
   formatDays,
@@ -119,5 +120,31 @@ describe('durations', () => {
   it('rejects negative and non-finite spans', () => {
     expect(() => formatDays(-1, 'bn')).toThrow(RangeError)
     expect(() => formatDays(Number.NaN, 'bn')).toThrow(RangeError)
+  })
+})
+
+describe('dayPart (greeting period in Asia/Dhaka)', () => {
+  // Dhaka is UTC+6: 00:00 UTC is 06:00 there
+  const at = (utc: string) => dayPart(`2026-10-16T${utc}:00Z`)
+
+  it('maps Dhaka hours to the four periods', () => {
+    expect(at('00:00')).toBe('morning') // 06:00
+    expect(at('05:59')).toBe('morning') // 11:59
+    expect(at('06:00')).toBe('noon') // 12:00
+    expect(at('09:59')).toBe('noon') // 15:59
+    expect(at('10:00')).toBe('evening') // 16:00
+    expect(at('13:59')).toBe('evening') // 19:59
+    expect(at('14:00')).toBe('night') // 20:00
+    expect(at('22:59')).toBe('night') // 04:59 next day
+    expect(at('23:00')).toBe('morning') // 05:00 next day
+  })
+
+  it('ignores the device time zone: only the instant matters', () => {
+    expect(dayPart(Date.parse('2026-10-16T00:00:00Z'))).toBe('morning')
+    expect(dayPart(new Date('2026-10-16T14:00:00Z'))).toBe('night')
+  })
+
+  it('rejects an invalid instant', () => {
+    expect(() => dayPart('nope')).toThrow(RangeError)
   })
 })

@@ -8,7 +8,7 @@ export TEST_SUPER_DATABASE_URL ?= postgresql://postgres:test-only-password@127.0
 export TEST_API_DATABASE_URL ?= postgresql://cg_api:dev-api-pw@127.0.0.1:55432/cropguardian
 export MIGRATION_DATABASE_URL ?= postgresql://cg_migrator:dev-migrator-pw@127.0.0.1:55432/cropguardian
 
-.PHONY: budgets a11y visual visual-update lighthouse gallery help env certs up down logs up-prod migrate test test-unit test-backend test-frontend security \
+.PHONY: web dev budgets a11y visual visual-update lighthouse gallery help env certs up down logs up-prod migrate test test-unit test-backend test-frontend security \
         gate lock wheelhouse openapi lint fmt test-db test-db-down deps-update stubs
 
 help: ## list targets
@@ -90,6 +90,13 @@ deps-update: ## show outdated pins (review, then edit requirements.txt)
 # Phase 2 (spec 19.7): the accessibility, visual, performance and gallery targets. Playwright ones need
 # the stack up (`make up`); `visual` compares against committed baselines (`visual-update` rewrites them).
 E2E_WIDTHS := --project=w360 --project=w768 --project=w1366
+
+web: ## rebuild the frontend; https://localhost (nginx) serves frontend/dist, so this is all it needs
+	cd frontend && npm run build --silent
+	@echo "built: reload https://localhost"
+
+dev: ## hot-reload dev server on http://localhost:5180 (the compose stack must be up for /api)
+	cd frontend && npm run dev
 
 budgets: ## bundle budgets (spec 15.9) on a fresh production build
 	cd frontend && npm run build --silent

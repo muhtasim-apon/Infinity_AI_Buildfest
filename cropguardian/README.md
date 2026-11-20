@@ -13,10 +13,24 @@
 | **Preliminary deadline** | **31 October 2026, 12:00 BST** (3-minute video + package, §9.2) |
 | **Congress Day** | 26 December 2026 · Daffodil International University, Ashulia |
 
-> **Status — read this first.** This repository is a **template: specifications and documentation
-> only, no application code yet**, plus a static clickable [`prototype/`](prototype/README.md) that shows
-> **synthetic** data and says so on every screen. The team implements the code piece by piece from the
-> specs. Nothing has been trained or deployed; no accuracy or impact figure is claimed (Congress §15, §20.4).
+> **Status — read this first.** The backend (FastAPI), the React frontend, the database migrations and
+> the identity/session system exist, and the Phase 0 and Phase 1 gates pass; Phase 2 (design system, app
+> shells, landing page) is in progress. See [`PROGRESS.md`](PROGRESS.md) for the live status and gate tables.
+> The static clickable [`prototype/`](prototype/README.md) shows **synthetic** data and says so on every
+> screen. Nothing has been trained; no accuracy or impact figure is claimed (Congress §15, §20.4).
+
+### See it running (local)
+
+| What | Command / URL |
+|---|---|
+| Start the stack | `make env certs up` (needs Docker), then `make migrate` once |
+| Open the app | **https://localhost** (self-signed certificate: click *Advanced → Proceed*, or install [mkcert](https://github.com/FiloSottile/mkcert) and re-run `make certs` for a green lock) |
+| Rebuild the frontend after a change | `make web` (nginx serves `frontend/dist`) |
+| Hot-reload dev server | `make dev` → **http://localhost:5180** (proxies `/api` to the stack above) |
+| Prove it works | `make gate PHASE=2` and the checklist in [`docs/testing/MANUAL_CHECKLIST_P0-P2.md`](docs/testing/MANUAL_CHECKLIST_P0-P2.md) |
+
+Port note: the dev server deliberately does **not** use 5173, which other Vite projects on the same
+machine usually hold; if you see a different app there, that is why.
 
 ---
 

@@ -42,3 +42,9 @@ Defects found by the new gates and fixed: Bangla fonts 192.7 KB over the 120 KB 
 Result: frontend 262 tests, i18n/format/prefs/gate backend unit tests green, lint + tsc + build + budgets + CSP check pass, **axe E2E 84/84** (7 screens x light/dark x bn/en x 360/768/1366, zero CSP violations).
 Gate `make gate PHASE=2` (keep-going) now fails ONLY on: security review file (Block 4), layout/shells E2E spec (Block 2), visual spec, Lighthouse script, stills manifest (Block 3). No other step fails.
 Not done in Block 1 (moved): `/security-review` on the diff runs once at Block 4 over the whole P2 diff.
+
+### Block 0 - Make it visible - DONE 2026-10-22
+Why nothing was visible (D-029, D-030): port 5173 belongs to another Vite project; `https://localhost` has a self-signed certificate; the Vercel project deployed the repository root (no `index.html`, build `[0ms]`) behind Vercel login protection; and there was no favicon (404 console error).
+Done: dev server on 5180 proxying to the stack (verified with a real demo-farmer sign-in), `make web` / `make dev`, README corrected, favicon added, `.playwright-mcp/` ignored, Vercel project repaired and the prototype redeployed at `https://infinityaibuildfest-prototype-five.vercel.app` (`/` and 9 routes return 200, security headers present, public, no Vercel login), `docs/testing/MANUAL_CHECKLIST_P0-P2.md` written.
+Not done by me (needs you): trust the local certificate (Advanced -> Proceed, or mkcert); re-authenticate the Vercel MCP to account `syedmuhtasimapon-8894` if you want Claude's MCP (not the CLI) to see it.
+

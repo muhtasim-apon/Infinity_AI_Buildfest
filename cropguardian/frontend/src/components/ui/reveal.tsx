@@ -1,7 +1,7 @@
 import { motion, type Variants } from 'framer-motion'
 import type { ElementType, ReactNode } from 'react'
 import { useMotionPolicy } from '../../design/useMotion'
-import { fadeRise } from '../../design/variants'
+import { fadeRise, listContainer } from '../../design/variants'
 
 const TAGS = new Map<string, unknown>([
   ['div', motion.div],
@@ -44,6 +44,42 @@ export function Reveal({
     </Tag>
   ) : (
     <Tag className={className} variants={v} initial="hidden" animate="show">
+      {children}
+    </Tag>
+  )
+}
+
+/**
+ * A group whose direct `StaggerItem` children enter one after another (35 ms apart, at most 8
+ * animated, spec 15.2 "Lists / tables"). Reduced motion keeps the order but drops the movement.
+ */
+export function Stagger({ children, className }: { children: ReactNode; className?: string }) {
+  const { pick } = useMotionPolicy()
+  return (
+    <motion.div
+      className={className}
+      variants={pick(listContainer)}
+      initial="hidden"
+      animate="show"
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+export function StaggerItem({
+  children,
+  className,
+  as = 'div',
+}: {
+  children: ReactNode
+  className?: string
+  as?: 'div' | 'section' | 'li' | 'article'
+}) {
+  const { pick } = useMotionPolicy()
+  const Tag = (TAGS.get(as) ?? motion.div) as ElementType
+  return (
+    <Tag className={className} variants={pick(fadeRise)}>
       {children}
     </Tag>
   )

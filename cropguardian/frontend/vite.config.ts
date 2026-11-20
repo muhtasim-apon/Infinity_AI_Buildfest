@@ -14,7 +14,22 @@ export default defineConfig({
     manifest: true,
     modulePreload: { polyfill: false },
   },
-  server: { port: 5173, strictPort: true, proxy: { '/api': 'http://localhost:8000' } },
+  // Port 5180, not 5173: other Vite projects on the same machine usually hold 5173 (DECISIONS D-029).
+  // /api goes to the running compose stack (nginx on https://localhost, self-signed so secure:false),
+  // not to an unpublished :8000. The Origin header is rewritten so the API's CSRF origin check, which
+  // trusts only APP_BASE_URL, accepts dev requests. Override with VITE_API_PROXY.
+  server: {
+    port: 5180,
+    strictPort: true,
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_PROXY ?? 'https://localhost',
+        secure: false,
+        changeOrigin: true,
+        headers: { Origin: process.env.VITE_API_PROXY ?? 'https://localhost' },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

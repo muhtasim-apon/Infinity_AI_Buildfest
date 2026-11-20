@@ -1,5 +1,5 @@
 /**
- * Per-device UI preferences: theme, reduced motion, text size (spec 15.6 F7).
+ * Per-device UI preferences: language, theme, reduced motion, text size (spec 15.6 F7).
  *
  * This is the ONLY module allowed to touch web storage (check_forbidden: "UI preference allow-list").
  * Nothing sensitive, nothing identifying and nothing server-trusted is stored. Reads are validated
@@ -8,6 +8,7 @@
  */
 
 import { useSyncExternalStore } from 'react'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '../i18n'
 
 export const THEME_PREFS = ['system', 'light', 'dark'] as const
 export type ThemePref = (typeof THEME_PREFS)[number]
@@ -15,12 +16,18 @@ export const TEXT_SCALES = [100, 115, 130] as const
 export type TextScale = (typeof TEXT_SCALES)[number]
 
 export interface UiPrefs {
+  locale: Locale
   theme: ThemePref
   reducedMotion: boolean
   textScale: TextScale
 }
 
-export const DEFAULT_PREFS: UiPrefs = { theme: 'system', reducedMotion: false, textScale: 100 }
+export const DEFAULT_PREFS: UiPrefs = {
+  locale: DEFAULT_LOCALE,
+  theme: 'system',
+  reducedMotion: false,
+  textScale: 100,
+}
 export const PREFS_KEY = 'cg.ui.prefs'
 
 /** Validate untrusted JSON into preferences; unknown or invalid fields take their default. */
@@ -35,6 +42,7 @@ export function parsePrefs(raw: string | null): UiPrefs {
   if (typeof data !== 'object' || data === null) return { ...DEFAULT_PREFS }
   const o = data as Record<string, unknown>
   return {
+    locale: SUPPORTED_LOCALES.find((l) => l === o.locale) ?? DEFAULT_PREFS.locale,
     theme: THEME_PREFS.find((t) => t === o.theme) ?? DEFAULT_PREFS.theme,
     reducedMotion: o.reducedMotion === true,
     textScale: TEXT_SCALES.find((s) => s === o.textScale) ?? DEFAULT_PREFS.textScale,
@@ -60,6 +68,7 @@ function persist(prefs: UiPrefs): void {
 /** Reflect preferences on <html> so CSS (tokens.css, index.css, the `motion-ok:` variant) reacts. */
 export function applyPrefs(prefs: UiPrefs, doc: Document = document): void {
   const root = doc.documentElement
+  root.setAttribute('lang', prefs.locale)
   if (prefs.theme === 'system') root.removeAttribute('data-theme')
   else root.setAttribute('data-theme', prefs.theme)
   root.setAttribute('data-reduced-motion', String(prefs.reducedMotion))

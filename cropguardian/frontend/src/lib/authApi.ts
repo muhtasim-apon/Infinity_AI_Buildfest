@@ -11,6 +11,8 @@ export interface AuthState {
   display_name?: string
   locale?: 'bn' | 'en'
   step_up?: boolean
+  /** When this session ends (UTC ISO); the demo ribbon shows the time left. */
+  session_expires_at?: string
   csrf_token?: string
 }
 
@@ -34,7 +36,7 @@ export const isDemo = (role: Role | undefined): boolean => role?.startsWith('DEM
 
 /** Where each role lands after signing in. */
 export const homePath = (role: Role): string =>
-  ({ farmer: '/home', reviewer: '/review', admin: '/admin' })[baseRole(role)]
+  ({ farmer: '/app', reviewer: '/review', admin: '/admin' })[baseRole(role)]
 
 export const authApi = {
   state: () => api.get<AuthState>('/api/v1/auth/state', { quiet401: true }),

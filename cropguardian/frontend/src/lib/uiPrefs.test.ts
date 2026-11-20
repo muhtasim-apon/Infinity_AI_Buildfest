@@ -22,7 +22,10 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('parsePrefs (storage is untrusted input)', () => {
   it('accepts a valid value', () => {
-    expect(parsePrefs('{"theme":"dark","reducedMotion":true,"textScale":130}')).toEqual({
+    expect(
+      parsePrefs('{"locale":"en","theme":"dark","reducedMotion":true,"textScale":130}'),
+    ).toEqual({
+      locale: 'en',
       theme: 'dark',
       reducedMotion: true,
       textScale: 130,
@@ -53,21 +56,22 @@ describe('parsePrefs (storage is untrusted input)', () => {
   it('ignores unknown keys (a stored role or token is never read back)', () => {
     const out = parsePrefs('{"theme":"dark","role":"ADMIN","token":"abc"}')
     expect(out).toEqual({ ...DEFAULT_PREFS, theme: 'dark' })
-    expect(Object.keys(out).sort()).toEqual(['reducedMotion', 'textScale', 'theme'])
+    expect(Object.keys(out).sort()).toEqual(['locale', 'reducedMotion', 'textScale', 'theme'])
   })
 })
 
 describe('applyPrefs', () => {
   it('reflects preferences on <html>', () => {
-    applyPrefs({ theme: 'dark', reducedMotion: true, textScale: 115 })
+    applyPrefs({ locale: 'en', theme: 'dark', reducedMotion: true, textScale: 115 })
     const root = document.documentElement
+    expect(root.getAttribute('lang')).toBe('en')
     expect(root.getAttribute('data-theme')).toBe('dark')
     expect(root.getAttribute('data-reduced-motion')).toBe('true')
     expect(root.getAttribute('data-text-scale')).toBe('115')
   })
 
   it('removes theme and text-scale attributes for the defaults', () => {
-    applyPrefs({ theme: 'dark', reducedMotion: false, textScale: 130 })
+    applyPrefs({ locale: 'bn', theme: 'dark', reducedMotion: false, textScale: 130 })
     applyPrefs(DEFAULT_PREFS)
     const root = document.documentElement
     expect(root.hasAttribute('data-theme')).toBe(false)
