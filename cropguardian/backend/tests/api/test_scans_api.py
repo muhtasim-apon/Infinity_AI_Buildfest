@@ -218,3 +218,20 @@ def test_scan_stats_are_staff_only_counts(app_client: Api) -> None:
         set(d) == {"region_code", "region_bn", "region_en", "diagnosed", "not_sure", "healthy"}
         for d in body["divisions"]
     )
+
+
+def test_model_triage_is_stored_for_audit_but_never_returned(app_client: Api) -> None:
+    stub(
+        app_client, vision={**BLAST, "confidence": 0.41, "reasoning_short": "grey eye-shaped spots"}
+    )
+    farmer = demo(app_client, "DEMO_FARMER")
+    body = upload(farmer, leaf_jpeg(seed=77)).json()
+    assert body["reason"] == "low_confidence" and body["advice"] is None
+    rows = sql("SELECT advice->'triage' FROM scans WHERE id = %s", (body["id"],))
+    assert rows[0][0] == {
+        "crop": "rice",
+        "disease": "rice_blast",
+        "image_quality": "good",
+        "reasoning_short": "grey eye-shaped spots",
+        "confidence": 0.41,
+    }

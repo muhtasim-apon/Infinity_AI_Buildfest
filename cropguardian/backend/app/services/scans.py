@@ -161,6 +161,22 @@ def _quality_issue(rgb: Image.Image) -> str | None:
     return None
 
 
+def triage_record(data: Any) -> dict[str, Any] | None:
+    """The model's raw answer, size-capped, for audit and threshold tuning. Never shown to farmers
+    (the view strips it); contains no personal data (the model only ever saw the leaf photo)."""
+    if not isinstance(data, dict):
+        return {"parse": "invalid"}
+    out: dict[str, Any] = {}
+    for key in ("crop", "disease", "image_quality", "reasoning_short"):
+        value = data.get(key)
+        if isinstance(value, str):
+            out[key] = value[:200]
+    conf = data.get("confidence")
+    if isinstance(conf, int | float) and not isinstance(conf, bool):
+        out["confidence"] = round(float(conf), 3)
+    return out
+
+
 # ------------------------------------------------------------------------------------------------
 # service
 class ScanService:
@@ -190,7 +206,7 @@ class ScanService:
         disease = row.get("disease")
         names = self.kb.diseases.get(disease or "", {})
         cites = [c for c in (self._citation_view(i) for i in row.get("citations") or []) if c]
-        advice = row.get("advice") or {}
+        advice = {k: v for k, v in (row.get("advice") or {}).items() if k != "triage"}
         return {
             "id": str(row["id"]),
             "created_at": row["created_at"].isoformat(),
@@ -289,12 +305,14 @@ class ScanService:
         started = utcnow()
         model: str | None = None
         crop: str | None = None
+        triage: dict[str, Any] | None = None
         if processed.quality_issue is not None:
             result = decision.Decision(status="not_sure", reason="poor_image")
         else:
             try:
                 reply = await self.llm.vision(processed.jpeg)
                 model = reply.model
+                triage = triage_record(reply.data)
                 result = decision.decide(reply.data, self.kb.disease_codes)
             except LlmUnavailableError as exc:
                 # reason codes only (http_401, not_configured, daily_cap, ...): never a secret
@@ -308,6 +326,8 @@ class ScanService:
         if result.status == "diagnosed" and result.disease:
             advice, citations, advice_source = await self.make_advice(result.disease)
         latency_ms = int((utcnow() - started).total_seconds() * 1000)
+        if triage is not None:  # audit trail of what the model actually said (staff-visible only)
+            advice = {**advice, "triage": triage}
 
         row = {
             "tenant": p.tenant_id,

@@ -14,6 +14,8 @@ const { chromium } = require(path.resolve(__dirname, '../../../e2e/node_modules/
     for (const name of ['scan', 'result', 'notsure', 'review', 'trust']) {
       const f = path.join(clipsDir, `${name}.webm`)
       if (fs.existsSync(f)) clips[name] = 'file:///' + f.replace(/\\/g, '/')
+      const m = path.join(clipsDir, `${name}.json`)
+      if (fs.existsSync(m)) clips[name + 'At'] = JSON.parse(fs.readFileSync(m, 'utf8')).resultAt
     }
   }
   const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required', '--allow-file-access-from-files'] })
