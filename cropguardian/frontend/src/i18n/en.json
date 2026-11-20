@@ -581,6 +581,10 @@
       "diseasesTitle": "Diseases it knows",
       "viewAll": "View all",
       "diseaseHint": "BRRI factsheet"
+    },
+    "theme": {
+      "toDark": "Switch to dark mode",
+      "toLight": "Switch to light mode"
     }
   }
 }

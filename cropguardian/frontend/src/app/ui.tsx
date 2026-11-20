@@ -1,6 +1,9 @@
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet } from 'react-router-dom'
+import { Moon, Sun } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { AnimatedOutlet } from '../components/app/PageTransition'
+import { useUiPrefs } from '../lib/uiPrefs'
 import { messageFor } from '../lib/errors'
 import { isDemo } from '../lib/authApi'
 import { ApiError } from '../lib/api'
@@ -107,7 +110,7 @@ export function LanguageToggle() {
           type="button"
           lang={locale}
           aria-pressed={current === locale}
-          className="min-h-[44px] min-w-[44px] rounded-md border border-border px-3 aria-pressed:bg-primary aria-pressed:text-primary-on"
+          className="min-h-[44px] min-w-[44px] rounded-md border border-border px-2 aria-pressed:bg-primary aria-pressed:text-primary-on"
           onClick={() => {
             if (!isLocale(locale)) return
             void i18n.changeLanguage(locale)
@@ -136,6 +139,33 @@ export function DemoRibbon() {
   )
 }
 
+/** Sun/moon toggle. Light is the default (outdoor use); the choice is a stored UI preference. */
+export function ThemeToggle() {
+  const { t } = useTranslation()
+  const [prefs, setPrefs] = useUiPrefs()
+  const dark =
+    prefs.theme === 'dark' ||
+    (prefs.theme === 'system' &&
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-color-scheme: dark)').matches)
+  const label = dark ? t('cg.theme.toLight') : t('cg.theme.toDark')
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-border"
+      onClick={() => setPrefs({ theme: dark ? 'light' : 'dark' })}
+    >
+      {dark ? (
+        <Sun className="h-5 w-5" aria-hidden="true" />
+      ) : (
+        <Moon className="h-5 w-5" aria-hidden="true" />
+      )}
+    </button>
+  )
+}
+
 export function Shell() {
   const { t } = useTranslation()
   const { state, signOut } = useAuth()
@@ -148,16 +178,17 @@ export function Shell() {
         {t('common.skipToContent')}
       </a>
       <DemoRibbon />
-      <header className="mx-auto flex max-w-md items-center justify-between gap-2 p-4">
+      <header className="mx-auto flex max-w-md items-center justify-between gap-1.5 p-4">
         <Link to="/" className="text-lg font-semibold text-primary">
           {t('app.name')}
         </Link>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LanguageToggle />
           {state?.authenticated ? (
             <button
               type="button"
-              className="min-h-[44px] rounded-md border border-border px-3"
+              className="min-h-[44px] whitespace-nowrap rounded-md border border-border px-2"
               onClick={() => void signOut()}
             >
               {t('auth.logout')}
@@ -166,7 +197,7 @@ export function Shell() {
         </div>
       </header>
       <main id="main" className="mx-auto max-w-md px-4 pb-12">
-        <Outlet />
+        <AnimatedOutlet depth="section" />
       </main>
     </>
   )

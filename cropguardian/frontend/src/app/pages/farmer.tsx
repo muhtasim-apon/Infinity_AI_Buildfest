@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BottomTabBar } from '../../components/nav/BottomTabBar'
 import { OfflineBanner } from '../../components/nav/OfflineBanner'
 import { Badge, SimulatedBadge } from '../../components/ui/badge'
@@ -27,7 +27,8 @@ import { Button } from '../../components/ui/button'
 import { Card, CardTitle } from '../../components/ui/card'
 import { ConfidenceBandChip } from '../../components/ui/chips'
 import { Ring } from '../../components/ui/progress'
-import { FieldScene } from '../../components/app/FieldScene'
+import { HeroBackground } from '../../components/app/HeroBackground'
+import { AnimatedOutlet } from '../../components/app/PageTransition'
 import { NativeSelect } from '../../components/ui/controls'
 import { EmptyState, ErrorState, SkeletonCard } from '../../components/ui/states'
 import {
@@ -111,7 +112,7 @@ export function FarmerLayout() {
           {t('cg.history.queued', { count: queued })}
         </p>
       ) : null}
-      <Outlet />
+      <AnimatedOutlet depth="page" />
       <BottomTabBar />
     </div>
   )
@@ -144,9 +145,9 @@ export function FarmerHomePage() {
   return (
     <section className="space-y-5">
       <div className="relative -mx-4 -mt-2 h-72 overflow-hidden rounded-b-xl">
-        <FieldScene className="absolute inset-0" scarecrow={false} />
+        <HeroBackground scarecrow={false} />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-primary from-40% to-transparent to-90%"
+          className="absolute inset-0 bg-gradient-to-t from-primary from-30% to-transparent to-70%"
           aria-hidden="true"
         />
         <div className="absolute inset-x-0 bottom-0 p-5 text-primary-on">

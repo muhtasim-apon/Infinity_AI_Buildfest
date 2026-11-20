@@ -76,6 +76,10 @@ const TRANSFORM_KEYS = new Set([
   'rotate',
   'rotateX',
   'rotateY',
+  'rotateZ',
+  'z',
+  'scaleX',
+  'scaleY',
   'skewX',
   'skewY',
 ])

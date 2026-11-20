@@ -42,9 +42,9 @@ describe('parsePrefs (storage is untrusted input)', () => {
     expect(parsePrefs('{"theme":"neon","reducedMotion":"yes","textScale":999}')).toEqual(
       DEFAULT_PREFS,
     )
-    expect(parsePrefs('{"theme":"light","textScale":"130"}')).toEqual({
+    expect(parsePrefs('{"theme":"dark","textScale":"130"}')).toEqual({
       ...DEFAULT_PREFS,
-      theme: 'light',
+      theme: 'dark',
     })
   })
 
@@ -70,10 +70,12 @@ describe('applyPrefs', () => {
     expect(root.getAttribute('data-text-scale')).toBe('115')
   })
 
-  it('removes theme and text-scale attributes for the defaults', () => {
+  it('applies the light default and removes the theme attribute only for "system"', () => {
     applyPrefs({ locale: 'bn', theme: 'dark', reducedMotion: false, textScale: 130 })
     applyPrefs(DEFAULT_PREFS)
     const root = document.documentElement
+    expect(root.getAttribute('data-theme')).toBe('light')
+    applyPrefs({ ...DEFAULT_PREFS, theme: 'system' })
     expect(root.hasAttribute('data-theme')).toBe(false)
     expect(root.hasAttribute('data-text-scale')).toBe(false)
     expect(root.getAttribute('data-reduced-motion')).toBe('false')

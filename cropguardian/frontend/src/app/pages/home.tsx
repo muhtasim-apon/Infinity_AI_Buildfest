@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { authApi, homePath } from '../../lib/authApi'
 import { useAuth } from '../auth'
-import { FieldScene } from '../../components/app/FieldScene'
+import { HeroBackground } from '../../components/app/HeroBackground'
 import { Button, FormError } from '../ui'
 import { useCaptcha } from '../useCaptcha'
 
@@ -21,7 +21,7 @@ export function EntryPage() {
   return (
     <section className="-mx-4 -mt-2">
       <div className="relative h-[640px] overflow-hidden rounded-b-xl">
-        <FieldScene className="absolute inset-0" />
+        <HeroBackground />
         <div
           className="absolute inset-0 bg-gradient-to-t from-primary from-38% to-transparent to-62%"
           aria-hidden="true"

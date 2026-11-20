@@ -24,7 +24,9 @@ export interface UiPrefs {
 
 export const DEFAULT_PREFS: UiPrefs = {
   locale: DEFAULT_LOCALE,
-  theme: 'system',
+  // Light by default: the farmer app is used outdoors in sunlight (cropguardian-ui section 1).
+  // Dark stays one tap away (header toggle) and 'system' remains a valid stored choice.
+  theme: 'light',
   reducedMotion: false,
   textScale: 100,
 }
