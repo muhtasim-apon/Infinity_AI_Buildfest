@@ -35,7 +35,7 @@ from app.core.http import (
 from app.core.logging import get_logger
 
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "ai" / "prompts"
-VISION_PROMPT_VERSION = "vision_v1"
+VISION_PROMPT_VERSION = "vision_v2"  # v2 adds BRRI visual signs per label (D-041)
 ADVICE_PROMPT_VERSION = "advice_v1"
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
 log = get_logger("cg.llm")
