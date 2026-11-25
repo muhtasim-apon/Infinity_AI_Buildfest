@@ -3,7 +3,7 @@
 fastapi==0.156.4
 starlette==1.9.0  # pinned explicitly: security-critical transitive (7 advisories fixed vs 0.41.x)
 uvicorn[standard]==0.34.0
-gunicorn==23.0.0
+gunicorn==27.0.1
 pydantic==2.10.4
 pydantic-settings==2.7.1
 structlog==24.4.0
